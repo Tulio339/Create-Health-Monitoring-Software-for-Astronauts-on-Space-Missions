@@ -79,11 +79,14 @@ A partir daqui, dois caminhos **independentes** consomem esses dados:
 volta pro LLM, que **nunca inventa número nem decide nível** — só escolhe a ferramenta e explica.
 
 ### 2b. O painel React (mostra os números)
-Ver seção 3 — o painel **não lê `case_`/`alert` nem a diretiva nenhuma**. Ele pega só os números
-brutos (`telemetry`) via `/api/measurements`/`/api/baselines`/`/api/astronauts` e calcula o
+Ver seção 3 — pra **ler**, o painel não consulta `case_`/`alert` nem diretiva nenhuma: pega só os
+números brutos (`telemetry`) via `/api/measurements`/`/api/baselines`/`/api/astronauts` e calcula o
 próprio verde/amarelo/vermelho no navegador, com regras mais simples (`frontend/src/lib/classify.ts`).
 São dois sistemas de alerta paralelos, de propósito — o painel funciona mesmo se o agente/MCP/Ollama
-estiverem fora do ar.
+estiverem fora do ar. Mas pra **escrever** (medição manual, teste de reação, grade de Amsler), o
+painel agora entra no mesmo cano do passo 3 acima: `POST /api/measurements` grava uma amostra de
+telemetria de verdade e chama `motor.avaliar_astronauta` na hora — uma medição digitada pode abrir
+ou atualizar um caso de verdade, exatamente como uma leitura simulada.
 
 ---
 
@@ -97,8 +100,9 @@ Os componentes/páginas nunca chamam `fetch` diretamente.
 | `getAstronauts()` | `GET /api/astronauts` | `listar_astronautas` | tabela `astronaut` + `motor.mission_start_date` |
 | `getMeasurements(filtro)` | `GET /api/measurements?astronaut_id=` | `medicoes` | `_serie_medicoes_frontend` → tabela `telemetry`, achatada |
 | `getBaselines(id?)` | `GET /api/baselines?astronaut_id=` | `baselines` | `astronaut.baseline_json`, achatado |
+| `saveMeasurements(medições)` | `POST /api/measurements` | `registrar_medicoes` | grava em `telemetry` + chama `motor.avaliar_astronauta` (pode abrir caso) |
 | `getIndicatorInfo`, `getBodyRegions`, `getEnvironments` | — (nenhuma) | — | `frontend/src/knowledge/*.json`, local, sem relação com o backend |
-| `saveMeasurements`, `getAlertStatuses`, `setAlertStatus`, `getEnvironmentId` | — (nenhuma) | — | só `localStorage` do navegador, de propósito (ver §4) |
+| `getAlertStatuses`, `setAlertStatus`, `getEnvironmentId` | — (nenhuma) | — | só `localStorage` do navegador, de propósito (ver §4) |
 
 Quem chama `api.ts`:
 
@@ -108,8 +112,17 @@ App.tsx ──► getAstronauts, getMeasurements, getBaselines, getIndicatorInfo
   ├─► lib/dashboard.ts   (buildPanelsFor: junta medições + baseline + classify.ts → Panel[])
   ├─► lib/alerts.ts      (buildAlerts: agrupa leituras amarelas/vermelhas em episódios)
   └─► pages/*.tsx         (Dashboard, BodyMap, IndicatorDetail, Tests, RecordMeasurement, Alerts)
-         └─► RecordMeasurement.tsx ──► saveMeasurements()  (só localStorage, não chega no backend)
+         ├─► RecordMeasurement.tsx ──► saveMeasurements()
+         ├─► components/ReactionTest.tsx ──► saveMeasurements()
+         └─► components/AmslerTest.tsx ──► saveMeasurements()
 ```
+
+`saveMeasurements` grava no `localStorage` **e**, de melhor esforço (sem esperar, sem travar a
+tela se falhar), manda o mesmo payload pro `POST /api/measurements`. Offline ou com o backend fora
+do ar, a medição continua valendo só neste navegador — a tela não quebra, só não vira telemetria
+real nem é avaliada pelo motor de regras até a próxima tentativa. Quando o POST funciona,
+`getMeasurements` deduplica (chave astronauta+indicador+horário) pra não contar a mesma leitura
+duas vezes depois que ela também passa a vir da API.
 
 ### Conversões que `backend/api.py` faz (não são só troca de nome)
 
@@ -118,7 +131,7 @@ App.tsx ──► getAstronauts, getMeasurements, getBaselines, getIndicatorInfo
 | `heart_rate`, `bp_systolic`, `bp_diastolic`, `temperature`, `spo2`, `sleep`, `exercise`, `reaction_time` | `vitals.*` / `fitness.*` / `cognitive.*` | só renomeia (mesma escala, mesma unidade) |
 | `mood` | `behavioral.mood_score` | **÷ 2** — knowledge-base usa 0–10, frontend usa 1–5 |
 | `radiation` | `radiation.dose_rate_msv_h` | **não é o mesmo campo que o nome sugere.** O frontend soma cada leitura como se fosse a dose *daquele período* (`dashboard.ts` faz `total += m.value`). `radiation.cumulative_career_msv` já vem acumulado — se fosse passado direto, a soma do frontend dobraria a conta. Por isso o backend manda `dose_rate_msv_h × horas desde a amostra anterior` (o incremento), não o total. |
-| `glucose`, `amsler_marks`, `amsler_central` | **nenhuma** | não existem no telemetry.schema.json do knowledge-base; só aparecem se o astronauta registrar na mão (ficam só no `localStorage`, nunca voltam da API) |
+| `glucose`, `amsler_marks`, `amsler_central` | `lab.glucose_mg_dl`, `ocular.amsler_marks`, `ocular.amsler_central` | **extensões nossas** — não existem no telemetry.schema.json original do knowledge-base nem em nenhum gatilho de diretiva. São guardadas e devolvidas normalmente pela API, só não alimentam nenhum alerta/caso do motor de regras (nenhuma diretiva as referencia). |
 
 `GET /api/baselines` também aproxima o desvio-padrão (`std`) como 5% da média, porque o
 knowledge-base só guarda a média do pré-voo — não existe desvio-padrão medido em lugar nenhum do
@@ -128,14 +141,15 @@ modelo. Está marcado como aproximação no código (`backend/api.py`, função 
 
 ## 4. O que fica só no navegador (de propósito)
 
-- **Medição manual** (`RecordMeasurement.tsx` → `saveMeasurements`): o próprio texto da tela diz
-  "a medição fica guardada neste navegador". Não existe mais rota no backend para gravar uma
-  medição manual (a versão antiga, `POST /api/measurements`, foi removida quando o backend passou
-  a usar o modelo do knowledge-base). Ou seja: hoje, medir na tela **não** alimenta o motor de
-  regras real nem abre caso — só atualiza o painel local.
-- **Grade de Amsler** (`amsler_marks`/`amsler_central`): sem equivalente no knowledge-base.
+Medição manual, teste de reação e grade de Amsler **agora chegam no backend de verdade**
+(`POST /api/measurements`, ver §3) e passam pelo motor de regras — testei registrando uma
+frequência cardíaca manual de 140 bpm e vi o caso de `DIR-CARD-001` abrir de verdade. O que
+continua só no navegador, de propósito:
+
 - **Status de alerta dado pelo usuário** (`new`/`seen`/`resolved`) e **ambiente escolhido no
-  seletor**: preferência de interface, não dado de telemetria.
+  seletor**: preferência de interface, não dado de telemetria — não tem por que existir no backend.
+- **A cópia local da medição em si**, enquanto o `POST` não é confirmado (ou se falhar): é o que
+  garante a tela funcionar offline e responder na hora, sem esperar rede.
 
 ## 5. Como rodar as duas pontas
 
@@ -167,12 +181,12 @@ Acessando de outro host (não localhost), ajuste também o `allow_origin_regex` 
 
 ## 6. Gaps conhecidos (não resolvidos nesta integração)
 
-- Escrita de medição manual não chega ao backend (§4).
-- `glucose`/`amsler_marks`/`amsler_central` nunca vêm da API.
 - O painel React não mostra casos, diagnóstico diferencial nem o histórico do agente — isso só
   existe no chat (`POST /api/chat`) e nas rotas `/api/astronauts/{id}/cases` e `/api/cases/{id}`,
   que hoje não têm nenhuma tela no frontend consumindo.
 - `std` de baseline é aproximado (5% da média), não medido.
+- Radiação manual tem um arredondamento mínimo (~0,1%) no ciclo incremento→taxa→incremento
+  (`radiation.dose_rate_msv_h` arredondado em 4 casas); irrelevante pra qualquer gatilho real.
 - `backend/frontend/` (um painel estático simples, mencionado no `README.md` do backend) nunca
   existiu neste repositório — é um gap anterior a esta integração, sem relação com o `frontend/`
   React (que é o painel de verdade, documentado aqui).

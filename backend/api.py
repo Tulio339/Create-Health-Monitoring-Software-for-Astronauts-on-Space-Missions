@@ -10,7 +10,7 @@ from pydantic import BaseModel
 
 import ferramentas_kb as kb
 from engine import rules_engine
-from motor import carregar_amostras, carregar_perfil, conectar, mission_start_date
+from motor import avaliar_astronauta, carregar_amostras, carregar_perfil, conectar, mission_start_date
 
 FRONTEND = Path(__file__).parent / "frontend"
 
@@ -41,13 +41,16 @@ def ok_ou_erro(resultado):
     return resultado
 
 
-# Alias achatado dos indicadores mais usados, pra uma futura UI que ainda espera nomes
-# simples (ex.: heart_rate) não precisar entender o payload aninhado de telemetry.schema.json
+# Alias achatado dos indicadores do frontend (frontend/src/types.ts) para o payload aninhado de
+# telemetry.schema.json. glucose/amsler_marks/amsler_central não existem no schema original do
+# knowledge-base (nenhuma diretiva os usa); são extensões nossas, guardadas mas nunca avaliadas
+# por nenhum gatilho — ver FLUXO.md.
 _ALIAS_METRICAS = {
     "heart_rate": "vitals.hr_rest", "bp_systolic": "vitals.bp_sys", "bp_diastolic": "vitals.bp_dia",
     "temperature": "vitals.core_temp_c", "spo2": "vitals.spo2_pct", "sleep": "vitals.sleep_hours",
     "mood": "behavioral.mood_score", "exercise": "fitness.exercise_minutes",
     "radiation": "radiation.cumulative_career_msv", "reaction_time": "cognitive.pvt_mean_rt_ms",
+    "glucose": "lab.glucose_mg_dl", "amsler_marks": "ocular.amsler_marks", "amsler_central": "ocular.amsler_central",
 }
 
 
@@ -58,6 +61,14 @@ def _get_path(amostra, dotted):
             return None
         node = node[chave]
     return node
+
+
+def _set_path(amostra, dotted, valor):
+    partes = dotted.split(".")
+    node = amostra
+    for chave in partes[:-1]:
+        node = node.setdefault(chave, {})
+    node[partes[-1]] = valor
 
 
 def _flatten_ultima_amostra(conn, astronaut_id):
@@ -73,7 +84,16 @@ def _flatten_ultima_amostra(conn, astronaut_id):
 # unidades do frontend (frontend/src/lib/classify.ts) para cada alias
 _ALIAS_UNIDADES = {"heart_rate": "bpm", "bp_systolic": "mmHg", "bp_diastolic": "mmHg", "temperature": "°C",
                    "spo2": "%", "sleep": "h", "mood": "", "exercise": "min", "radiation": "mSv",
-                   "reaction_time": "ms"}
+                   "reaction_time": "ms", "glucose": "mg/dL", "amsler_marks": "áreas", "amsler_central": "áreas"}
+
+
+# fonte guardada na coluna `telemetry.source` -> MeasurementSource do frontend (types.ts)
+def _fonte_frontend(fonte_bruta):
+    if fonte_bruta and fonte_bruta.startswith("frontend:"):
+        valor = fonte_bruta.removeprefix("frontend:")
+        if valor in ("manual", "self_report", "cognitive_test", "vision_test", "device"):
+            return valor
+    return "wearable"  # cenario:*/sensores:* -> telemetria simulada
 
 
 def _serie_medicoes_frontend(conn, astronaut_id):
@@ -90,6 +110,7 @@ def _serie_medicoes_frontend(conn, astronaut_id):
     ts_anterior = None
     for amostra in amostras:
         ts = amostra["timestamp"]
+        fonte = _fonte_frontend(amostra.get("_source"))
         delta_h = 1.0
         if ts_anterior is not None:
             delta_h = max((rules_engine.parse_ts(ts) - rules_engine.parse_ts(ts_anterior)).total_seconds() / 3600, 0.0)
@@ -104,7 +125,7 @@ def _serie_medicoes_frontend(conn, astronaut_id):
                     valor = valor / 2
             if valor is not None:
                 medicoes.append({"astronaut_id": astronaut_id, "indicator": nome, "value": round(valor, 3),
-                                 "unit": _ALIAS_UNIDADES[nome], "timestamp": ts, "source": "wearable"})
+                                 "unit": _ALIAS_UNIDADES[nome], "timestamp": ts, "source": fonte})
     return medicoes
 
 
@@ -142,6 +163,79 @@ def medicoes(astronaut_id: str | None = None):
             if carregar_perfil(conn, aid) is not None:
                 saida.extend(_serie_medicoes_frontend(conn, aid))
         return saida
+    finally:
+        conn.close()
+
+
+class MedicaoIn(BaseModel):
+    astronaut_id: str
+    indicator: str
+    value: float
+    unit: str = ""
+    timestamp: str
+    source: str = "manual"
+
+
+@app.post("/api/measurements")
+def registrar_medicoes(medicoes: list[MedicaoIn]):
+    """Registra medições feitas pelo astronauta (formulário, teste de reação, grade de Amsler)
+    como telemetria de verdade e roda o motor de regras na hora — pode abrir/atualizar um caso.
+
+    Medições com o mesmo timestamp (ex.: sistólica+diastólica, ou marcas+centro do Amsler) viram
+    UMA amostra só, como uma leitura real do telemetry.schema.json. radiation é um caso especial:
+    o valor que chega é o incremento (dose desta leitura), mas o schema guarda dose ACUMULADA —
+    ver _serie_medicoes_frontend para a conversão inversa (GET).
+    """
+    if not medicoes:
+        return {"erro": "lista de medições vazia"}
+    astro_id = medicoes[0].astronaut_id
+    invalidos = [m.indicator for m in medicoes if m.indicator not in _ALIAS_METRICAS]
+    if invalidos:
+        return {"erro": f"indicador(es) {invalidos} não aceito(s) pelo backend", "disponiveis": sorted(_ALIAS_METRICAS)}
+    if any(m.astronaut_id != astro_id for m in medicoes):
+        return {"erro": "todas as medições de uma chamada devem ser do mesmo astronauta"}
+
+    conn = conectar()
+    try:
+        if carregar_perfil(conn, astro_id) is None:
+            raise HTTPException(status_code=404, detail=f"astronauta '{astro_id}' não existe")
+
+        por_timestamp: dict[str, dict] = {}
+        for m in medicoes:
+            por_timestamp.setdefault(m.timestamp, {})[m.indicator] = m.value
+
+        amostras_existentes = carregar_amostras(conn, astro_id)
+        for ts in sorted(por_timestamp):
+            valores = por_timestamp[ts]
+            amostra = {}
+            if "radiation" in valores:
+                anteriores = [a for a in amostras_existentes if a["timestamp"] < ts]
+                anterior = anteriores[-1] if anteriores else None
+                cum_career = (_get_path(anterior, "radiation.cumulative_career_msv") or 0.0) if anterior else 0.0
+                cum_mission = (_get_path(anterior, "radiation.cumulative_mission_msv") or 0.0) if anterior else 0.0
+                delta_h = 1.0
+                if anterior is not None:
+                    delta_h = max((rules_engine.parse_ts(ts) - rules_engine.parse_ts(anterior["timestamp"]))
+                                 .total_seconds() / 3600, 0.01)
+                incremento = valores.pop("radiation")
+                _set_path(amostra, "radiation.dose_rate_msv_h", round(incremento / delta_h, 4))
+                _set_path(amostra, "radiation.cumulative_career_msv", round(cum_career + incremento, 3))
+                _set_path(amostra, "radiation.cumulative_mission_msv", round(cum_mission + incremento, 3))
+            if "mood" in valores:
+                _set_path(amostra, _ALIAS_METRICAS["mood"], valores.pop("mood") * 2)  # frontend 1-5 -> knowledge-base 0-10
+            for nome, valor in valores.items():
+                _set_path(amostra, _ALIAS_METRICAS[nome], valor)
+
+            fonte = f"frontend:{medicoes[0].source}"
+            conn.execute("INSERT INTO telemetry (astronaut_id, timestamp, module, data_json, source) "
+                        "VALUES (?, ?, 'manual', ?, ?)",
+                        (astro_id, ts, json.dumps(amostra, ensure_ascii=False), fonte))
+            amostras_existentes.append({**amostra, "astronaut_id": astro_id, "timestamp": ts, "module": "manual"})
+        conn.commit()
+
+        alertas, _ = avaliar_astronauta(astro_id, conn)
+        return {"registrado": True, "astronaut_id": astro_id, "timestamps": sorted(por_timestamp),
+                "alertas_ativos": [{"directive_id": a["directive_id"], "level": a["level"]} for a in alertas]}
     finally:
         conn.close()
 
