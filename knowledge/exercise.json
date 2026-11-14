@@ -1,0 +1,48 @@
+{
+  "indicator": "exercise",
+  "name": "Exercício",
+  "short_name": "Exercício",
+  "unit": "min",
+  "what": "Minutos de exercício físico realizados no dia.",
+  "why_in_space": "O exercício diário é a principal contramedida contra a perda de ossos e músculos em microgravidade.",
+  "hazards": [
+    {
+      "id": "gravity",
+      "name": "Gravidade alterada",
+      "relation": "Sem o peso do corpo, os ossos que sustentam o corpo podem perder de 1% a 1,5% da densidade por mês e os músculos enfraquecem rapidamente."
+    },
+    {
+      "id": "distance",
+      "name": "Distância da Terra",
+      "relation": "Ao chegar a outro planeta não haverá equipe de resgate: a tripulação precisa estar forte para trabalhar sozinha logo após o pouso."
+    },
+    {
+      "id": "environment",
+      "name": "Ambiente fechado",
+      "relation": "Espaço e equipamentos são limitados e compartilhados, então cada sessão perdida é difícil de repor."
+    }
+  ],
+  "how_to_measure": [
+    "Inicie o registro no sensor de pulso ao começar a sessão.",
+    "Conte o tempo de esteira, bicicleta e exercício resistido, sem as pausas longas.",
+    "Encerre o registro ao terminar.",
+    "Some as sessões do dia e registre o total em minutos."
+  ],
+  "explanations": {
+    "green": "Dentro da faixa esperada e próximo da sua linha de base pessoal.",
+    "yellow": "Fora do seu padrão habitual ou no limite da faixa esperada. Vale agir e acompanhar.",
+    "red": "Fora da faixa segura. Precisa de avaliação do médico de voo."
+  },
+  "actions": {
+    "yellow": [
+      "Remarcar a sessão que faltou.",
+      "Dividir o treino em blocos menores ao longo do dia.",
+      "Registrar o motivo da redução (dor, cansaço, agenda)."
+    ],
+    "red": [
+      "Encaminhar ao médico de voo: enviar as medições e descrever os sintomas.",
+      "Informar se a causa é dor, lesão, doença ou falha de equipamento.",
+      "Combinar um plano de retomada antes de voltar ao treino completo."
+    ]
+  }
+}

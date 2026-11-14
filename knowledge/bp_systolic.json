@@ -1,0 +1,50 @@
+{
+  "indicator": "bp_systolic",
+  "name": "Pressão arterial sistólica",
+  "short_name": "Pressão sistólica",
+  "unit": "mmHg",
+  "what": "Pressão do sangue nas artérias no momento em que o coração contrai (o número maior).",
+  "why_in_space": "O sistema cardiovascular foi feito para trabalhar contra a gravidade. Em órbita ele se reorganiza, e a pressão é um dos primeiros sinais de como essa adaptação está indo.",
+  "hazards": [
+    {
+      "id": "gravity",
+      "name": "Gravidade alterada",
+      "relation": "Sem gravidade, o sangue e os fluidos sobem para o tórax e a cabeça, o volume de sangue diminui e o coração se adapta a trabalhar menos. Isso muda a pressão em órbita e pode causar tontura ao voltar à gravidade."
+    },
+    {
+      "id": "isolation",
+      "name": "Isolamento e confinamento",
+      "relation": "Estresse prolongado, carga de trabalho alta e sono ruim tendem a elevar a pressão."
+    },
+    {
+      "id": "distance",
+      "name": "Distância da Terra",
+      "relation": "Longe da Terra não há hospital nem evacuação rápida: uma tendência de alta precisa ser percebida cedo, com os recursos de bordo."
+    }
+  ],
+  "how_to_measure": [
+    "Fique em repouso por 5 minutos, sem falar, com o corpo preso e relaxado.",
+    "Coloque a braçadeira no braço, na altura do coração, sobre a pele.",
+    "Inicie o aparelho e fique imóvel até o fim da medição.",
+    "Faça duas medições com 1 minuto de intervalo e registre a média.",
+    "Meça sempre no mesmo horário, antes do exercício e do café."
+  ],
+  "explanations": {
+    "green": "Dentro da faixa esperada e próximo da sua linha de base pessoal.",
+    "yellow": "Fora do seu padrão habitual ou no limite da faixa esperada. Vale agir e acompanhar.",
+    "red": "Fora da faixa segura. Precisa de avaliação do médico de voo."
+  },
+  "actions": {
+    "yellow": [
+      "Repetir a medição após 5 minutos de repouso.",
+      "Conferir hidratação e consumo de sal nas últimas refeições.",
+      "Rever sono e estresse dos últimos dias.",
+      "Medir de novo em 12 horas e acompanhar a tendência."
+    ],
+    "red": [
+      "Encaminhar ao médico de voo: enviar as medições e descrever os sintomas.",
+      "Ficar em repouso e repetir a medição em 15 minutos.",
+      "Avisar imediatamente se houver dor no peito, dor de cabeça forte, falta de ar ou alteração na visão."
+    ]
+  }
+}

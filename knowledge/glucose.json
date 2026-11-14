@@ -1,0 +1,49 @@
+{
+  "indicator": "glucose",
+  "name": "Glicemia",
+  "short_name": "Glicemia",
+  "unit": "mg/dL",
+  "what": "Quantidade de glicose (açúcar) no sangue.",
+  "why_in_space": "O metabolismo muda em órbita: com menos uso dos músculos e uma rotina desregulada, o corpo pode responder pior à insulina.",
+  "hazards": [
+    {
+      "id": "gravity",
+      "name": "Gravidade alterada",
+      "relation": "Músculos menos usados captam menos glicose, o que reduz a sensibilidade à insulina."
+    },
+    {
+      "id": "isolation",
+      "name": "Isolamento e confinamento",
+      "relation": "Sono curto e relógio biológico desajustado alteram o controle da glicose e o apetite."
+    },
+    {
+      "id": "distance",
+      "name": "Distância da Terra",
+      "relation": "A comida é embalada e planejada com antecedência, sem alimentos frescos nem reposição; manter a dieta sob controle depende da tripulação."
+    }
+  ],
+  "how_to_measure": [
+    "Meça de preferência em jejum, ao acordar.",
+    "Higienize o dedo e deixe secar.",
+    "Use a lanceta na lateral da ponta do dedo e encoste a gota na tira do glicosímetro.",
+    "Registre o valor e descarte a lanceta e a tira no recipiente de resíduos biológicos."
+  ],
+  "explanations": {
+    "green": "Dentro da faixa esperada e próximo da sua linha de base pessoal.",
+    "yellow": "Fora do seu padrão habitual ou no limite da faixa esperada. Vale agir e acompanhar.",
+    "red": "Fora da faixa segura. Precisa de avaliação do médico de voo."
+  },
+  "actions": {
+    "yellow": [
+      "Repetir a medição em jejum.",
+      "Rever as últimas refeições e horários.",
+      "Manter o exercício programado.",
+      "Medir de novo no dia seguinte e acompanhar."
+    ],
+    "red": [
+      "Encaminhar ao médico de voo: enviar as medições e descrever os sintomas.",
+      "Se o valor estiver baixo e houver tremor, suor frio ou confusão, consumir uma fonte de açúcar e medir de novo em 15 minutos.",
+      "Não fazer exercício intenso até a avaliação."
+    ]
+  }
+}

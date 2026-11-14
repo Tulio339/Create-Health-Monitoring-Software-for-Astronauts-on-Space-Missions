@@ -1,0 +1,49 @@
+{
+  "indicator": "mood",
+  "name": "Humor",
+  "short_name": "Humor",
+  "unit": "1-5",
+  "what": "Autoavaliação diária do humor, de 1 (muito ruim) a 5 (muito bom).",
+  "why_in_space": "A saúde mental sustenta o desempenho e a convivência da tripulação. O humor costuma mudar antes de outros sinais aparecerem.",
+  "hazards": [
+    {
+      "id": "isolation",
+      "name": "Isolamento e confinamento",
+      "relation": "Meses com as mesmas poucas pessoas, em um espaço pequeno e sem privacidade, desgastam o humor e a convivência."
+    },
+    {
+      "id": "distance",
+      "name": "Distância da Terra",
+      "relation": "Quanto mais longe da Terra, maior o atraso na comunicação com a família e com a equipe de apoio; em Marte, uma mensagem pode levar até cerca de 20 minutos em cada sentido."
+    },
+    {
+      "id": "environment",
+      "name": "Ambiente fechado",
+      "relation": "Ruído, pouca luz natural e rotina repetitiva pesam ao longo da missão."
+    }
+  ],
+  "how_to_measure": [
+    "Responda sempre no mesmo horário, de preferência no fim do dia.",
+    "Pense em como se sentiu na maior parte do dia, não só no momento.",
+    "Escolha a nota de 1 (muito ruim) a 5 (muito bom).",
+    "Se quiser, anote em uma frase o que mais influenciou a nota."
+  ],
+  "explanations": {
+    "green": "Dentro da faixa esperada e próximo da sua linha de base pessoal.",
+    "yellow": "Fora do seu padrão habitual ou no limite da faixa esperada. Vale agir e acompanhar.",
+    "red": "Fora da faixa segura. Precisa de avaliação do médico de voo."
+  },
+  "actions": {
+    "yellow": [
+      "Reservar um tempo de descanso ou lazer hoje.",
+      "Conversar com a tripulação ou com a família.",
+      "Conferir sono e carga de trabalho dos últimos dias.",
+      "Manter o exercício: ele também ajuda o humor."
+    ],
+    "red": [
+      "Encaminhar ao médico de voo: enviar as medições e descrever os sintomas.",
+      "Pedir uma conversa privada com o apoio psicológico da missão.",
+      "Não se isolar: avisar um colega de confiança de como está se sentindo."
+    ]
+  }
+}

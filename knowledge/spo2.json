@@ -1,0 +1,49 @@
+{
+  "indicator": "spo2",
+  "name": "Saturação de oxigênio (SpO2)",
+  "short_name": "SpO2",
+  "unit": "%",
+  "what": "Percentual da hemoglobina do sangue que está carregando oxigênio.",
+  "why_in_space": "Todo o ar que a tripulação respira é produzido e reciclado pela nave. A saturação mostra se os pulmões e o ar da cabine estão dando conta.",
+  "hazards": [
+    {
+      "id": "environment",
+      "name": "Ambiente fechado",
+      "relation": "O ar da cabine depende do sistema de suporte à vida: falhas, vazamentos ou acúmulo de dióxido de carbono afetam a respiração de todos."
+    },
+    {
+      "id": "gravity",
+      "name": "Gravidade alterada",
+      "relation": "O deslocamento de fluidos para a parte superior do corpo causa congestão nasal e muda a distribuição do sangue nos pulmões."
+    },
+    {
+      "id": "distance",
+      "name": "Distância da Terra",
+      "relation": "Sem atendimento de emergência por perto, uma queda de oxigenação precisa ser tratada cedo com os recursos de bordo."
+    }
+  ],
+  "how_to_measure": [
+    "Aqueça as mãos e fique em repouso por 2 minutos.",
+    "Coloque o oxímetro no dedo indicador, sem esmalte ou sujeira.",
+    "Mantenha a mão parada e espere 30 segundos até o valor estabilizar.",
+    "Registre o valor estável."
+  ],
+  "explanations": {
+    "green": "Dentro da faixa esperada e próximo da sua linha de base pessoal.",
+    "yellow": "Fora do seu padrão habitual ou no limite da faixa esperada. Vale agir e acompanhar.",
+    "red": "Fora da faixa segura. Precisa de avaliação do médico de voo."
+  },
+  "actions": {
+    "yellow": [
+      "Reposicionar o sensor e repetir a medição.",
+      "Fazer respirações profundas por 2 minutos e medir de novo.",
+      "Verificar os indicadores de ar da cabine (oxigênio e dióxido de carbono).",
+      "Perguntar se outros tripulantes têm leituras parecidas."
+    ],
+    "red": [
+      "Encaminhar ao médico de voo: enviar as medições e descrever os sintomas.",
+      "Interromper a atividade e respirar devagar e fundo.",
+      "Conferir imediatamente os alarmes de ar da cabine e avisar a tripulação."
+    ]
+  }
+}

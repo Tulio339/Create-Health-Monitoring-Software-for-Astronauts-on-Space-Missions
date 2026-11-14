@@ -1,0 +1,51 @@
+{
+  "indicator": "amsler_central",
+  "name": "Grade de Amsler: centro da visão",
+  "short_name": "Amsler (centro)",
+  "unit": "áreas",
+  "what": "Número de áreas marcadas na região central da grade de Amsler, ao redor do ponto de fixação, somando os dois olhos. É a parte da visão usada para ler e operar instrumentos.",
+  "why_in_space": "Em voos longos, parte dos astronautas desenvolve a síndrome neuro-ocular associada ao voo espacial (SANS): o fundo do olho se achata, o nervo óptico incha e a visão muda. A grade de Amsler ajuda a perceber cedo uma distorção na visão central.",
+  "hazards": [
+    {
+      "id": "gravity",
+      "name": "Gravidade alterada",
+      "relation": "Sem gravidade, os fluidos do corpo sobem para a cabeça e aumentam a pressão atrás dos olhos. Com os meses, isso pode achatar o globo ocular, formar dobras na retina e inchar o nervo óptico."
+    },
+    {
+      "id": "distance",
+      "name": "Distância da Terra",
+      "relation": "Não há oftalmologista nem equipamento completo de exame a bordo. Um teste simples, repetido com frequência, é a forma de notar a mudança e avisar a equipe médica na Terra."
+    },
+    {
+      "id": "environment",
+      "name": "Ambiente fechado",
+      "relation": "O dióxido de carbono acima do normal na cabine é estudado como um fator que pode agravar a pressão dentro da cabeça."
+    }
+  ],
+  "how_to_measure": [
+    "Se usa óculos para ler, coloque-os.",
+    "Fique em um local bem iluminado e segure a tela a cerca de 30 cm dos olhos, a distância de leitura.",
+    "Cubra o olho esquerdo com a mão, sem apertar.",
+    "Com o olho direito, olhe fixamente para o ponto no centro da grade. Não mova o olhar durante o teste.",
+    "Sem tirar o olho do ponto, repare se alguma linha parece torta, borrada ou ausente e marque essas áreas.",
+    "Repita cobrindo o olho direito e olhando com o esquerdo."
+  ],
+  "explanations": {
+    "green": "Nenhuma área marcada: as linhas da grade parecem retas e completas nos dois olhos.",
+    "yellow": "Há áreas com linhas tortas, borradas ou ausentes, fora do centro da visão. Em voos longos isso pode ser um sinal inicial das alterações de visão da SANS. Vale repetir o teste e acompanhar.",
+    "red": "Há muitas áreas marcadas ou marcações no centro da visão, que é a parte usada para ler e operar instrumentos. Em voos longos esse quadro pode indicar SANS e precisa de avaliação do médico de voo."
+  },
+  "actions": {
+    "yellow": [
+      "Repetir o teste em 24 horas, no mesmo local e na mesma distância.",
+      "Anotar qual olho e quais áreas mudaram.",
+      "Observar se há dificuldade para ler de perto ou dor de cabeça.",
+      "Conferir se a distância e a iluminação estavam corretas."
+    ],
+    "red": [
+      "Encaminhar ao médico de voo: enviar o resultado e descrever o que mudou na visão.",
+      "Avisar imediatamente se houver perda súbita de visão, dor no olho ou flashes de luz.",
+      "Evitar tarefas que dependam de visão fina até a avaliação."
+    ]
+  }
+}
