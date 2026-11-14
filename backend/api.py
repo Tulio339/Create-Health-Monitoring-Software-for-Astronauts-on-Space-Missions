@@ -1,39 +1,37 @@
-import sqlite3
+import json
 from pathlib import Path
 
-import pandas as pd
 import uvicorn
 from fastapi import FastAPI, HTTPException
+from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import FileResponse
 from fastapi.staticfiles import StaticFiles
 from pydantic import BaseModel
 
-from assistente import (avaliar_status, consultar_medicoes, enviar_relatorio_terra,
-                        explicar_indicador, recomendar_acoes, registrar_medicao)
-from regras import DB_PATH, KB
-from simulador import ASTRONAUTS
+import ferramentas_kb as kb
+from engine import rules_engine
+from motor import carregar_amostras, carregar_perfil, conectar, mission_start_date
 
 FRONTEND = Path(__file__).parent / "frontend"
 
-app = FastAPI(title="Monitor de Saúde de Astronautas")
+app = FastAPI(title="Monitor de Saúde de Astronautas — agente do knowledge-base")
 
-
-class Medicao(BaseModel):
-    astronauta: str
-    indicador: str
-    valor: float
-    origem: str = "manual"
-
-
-class Relatorio(BaseModel):
-    astronauta: str
-    resumo: str
-    urgencia: str = "normal"
+# O frontend (Vite) roda em outra origem; sem isso o navegador bloqueia as chamadas mesmo com
+# HTTP 200 (a aba Rede mostra sucesso, mas o JS não consegue ler a resposta). Libera qualquer
+# porta em localhost/127.0.0.1 porque o Vite muda de porta sozinho se a 5173 já estiver ocupada.
+app.add_middleware(CORSMiddleware, allow_origin_regex=r"https?://(localhost|127\.0\.0\.1)(:\d+)?",
+                   allow_methods=["*"], allow_headers=["*"])
 
 
 class Mensagem(BaseModel):
     astronauta: str
     mensagem: str
+
+
+class Relatorio(BaseModel):
+    case_id: str
+    resumo: str
+    urgencia: str = "normal"  # normal | alta
 
 
 # As funções devolvem {"erro": ...} em vez de lançar exceção; aqui isso vira HTTP 400
@@ -43,61 +41,236 @@ def ok_ou_erro(resultado):
     return resultado
 
 
+# Alias achatado dos indicadores mais usados, pra uma futura UI que ainda espera nomes
+# simples (ex.: heart_rate) não precisar entender o payload aninhado de telemetry.schema.json
+_ALIAS_METRICAS = {
+    "heart_rate": "vitals.hr_rest", "bp_systolic": "vitals.bp_sys", "bp_diastolic": "vitals.bp_dia",
+    "temperature": "vitals.core_temp_c", "spo2": "vitals.spo2_pct", "sleep": "vitals.sleep_hours",
+    "mood": "behavioral.mood_score", "exercise": "fitness.exercise_minutes",
+    "radiation": "radiation.cumulative_career_msv", "reaction_time": "cognitive.pvt_mean_rt_ms",
+}
+
+
+def _get_path(amostra, dotted):
+    node = amostra
+    for chave in dotted.split("."):
+        if not isinstance(node, dict) or chave not in node:
+            return None
+        node = node[chave]
+    return node
+
+
+def _flatten_ultima_amostra(conn, astronaut_id):
+    amostras = carregar_amostras(conn, astronaut_id)
+    if not amostras:
+        return {}
+    saida = {nome: _get_path(amostras[-1], caminho) for nome, caminho in _ALIAS_METRICAS.items()}
+    if saida.get("mood") is not None:
+        saida["mood"] = saida["mood"] / 2  # knowledge-base usa 0-10; o frontend usa 1-5
+    return saida
+
+
+# unidades do frontend (frontend/src/lib/classify.ts) para cada alias
+_ALIAS_UNIDADES = {"heart_rate": "bpm", "bp_systolic": "mmHg", "bp_diastolic": "mmHg", "temperature": "°C",
+                   "spo2": "%", "sleep": "h", "mood": "", "exercise": "min", "radiation": "mSv",
+                   "reaction_time": "ms"}
+
+
+def _serie_medicoes_frontend(conn, astronaut_id):
+    """Série completa no formato Measurement do frontend (frontend/src/types.ts).
+
+    Duas conversões não são só renomeação:
+    - mood: knowledge-base usa 0-10, o frontend usa 1-5 -> divide por 2.
+    - radiation: knowledge-base guarda a dose ACUMULADA (radiation.cumulative_career_msv); o
+      frontend soma cada leitura como se fosse a dose DO PERÍODO (ver dashboard.ts). Por isso aqui
+      mandamos o incremento (dose_rate_msv_h × horas desde a amostra anterior), não o total.
+    """
+    amostras = carregar_amostras(conn, astronaut_id)
+    medicoes = []
+    ts_anterior = None
+    for amostra in amostras:
+        ts = amostra["timestamp"]
+        delta_h = 1.0
+        if ts_anterior is not None:
+            delta_h = max((rules_engine.parse_ts(ts) - rules_engine.parse_ts(ts_anterior)).total_seconds() / 3600, 0.0)
+        ts_anterior = ts
+        for nome, caminho in _ALIAS_METRICAS.items():
+            if nome == "radiation":
+                taxa = _get_path(amostra, "radiation.dose_rate_msv_h")
+                valor = taxa * delta_h if taxa is not None else None
+            else:
+                valor = _get_path(amostra, caminho)
+                if nome == "mood" and valor is not None:
+                    valor = valor / 2
+            if valor is not None:
+                medicoes.append({"astronaut_id": astronaut_id, "indicator": nome, "value": round(valor, 3),
+                                 "unit": _ALIAS_UNIDADES[nome], "timestamp": ts, "source": "wearable"})
+    return medicoes
+
+
+NIVEL_RANK = {"verde": 0, "atencao": 1, "alerta": 2, "critico": 3}
+
+
 @app.get("/api/astronauts")
 def listar_astronautas():
-    saida = []
-    for a in ASTRONAUTS:
-        status = avaliar_status(a["id"])
-        saida.append({"id": a["id"], "nome": a["name"], "ambiente": a["env"],
-                      "status_geral": status.get("status_geral", "sem dados")})
-    return saida
+    conn = conectar()
+    try:
+        linhas = conn.execute("SELECT id, name, role, mission_name, mission_phase FROM astronaut").fetchall()
+        saida = []
+        for row in linhas:
+            casos = conn.execute("SELECT level FROM case_ WHERE astronaut_id = ? AND status != 'encerrado'",
+                                 (row["id"],)).fetchall()
+            status_geral = max((c["level"] for c in casos), key=NIVEL_RANK.get, default="verde")
+            saida.append({"id": row["id"], "nome": row["name"], "name": row["name"], "role": row["role"],
+                          "mission_name": row["mission_name"], "mission_phase": row["mission_phase"],
+                          "mission_start": mission_start_date(conn, row["id"]),
+                          "status_geral": status_geral, "casos_abertos": len(casos),
+                          **_flatten_ultima_amostra(conn, row["id"])})
+        return saida
+    finally:
+        conn.close()
+
+
+@app.get("/api/measurements")
+def medicoes(astronaut_id: str | None = None):
+    """Série completa no formato Measurement do frontend (ver _serie_medicoes_frontend)."""
+    conn = conectar()
+    try:
+        ids = [astronaut_id] if astronaut_id else [r["id"] for r in conn.execute("SELECT id FROM astronaut")]
+        saida = []
+        for aid in ids:
+            if carregar_perfil(conn, aid) is not None:
+                saida.extend(_serie_medicoes_frontend(conn, aid))
+        return saida
+    finally:
+        conn.close()
+
+
+@app.get("/api/baselines")
+def baselines(astronaut_id: str | None = None):
+    """Baseline no formato do frontend (astronaut_id, indicator, mean, std).
+
+    O knowledge-base só guarda a média do pré-voo (profile.baseline); não existe desvio-padrão
+    em lugar nenhum do modelo. Aproximamos std como 5% da média, só para o cálculo de "quantos
+    desvios da sua linha de base" do frontend não quebrar — não é um valor medido.
+    """
+    conn = conectar()
+    try:
+        ids = [astronaut_id] if astronaut_id else [r["id"] for r in conn.execute("SELECT id FROM astronaut")]
+        saida = []
+        for aid in ids:
+            perfil = carregar_perfil(conn, aid)
+            if perfil is None:
+                continue
+            for nome, caminho in _ALIAS_METRICAS.items():
+                if caminho not in perfil["baseline"]:
+                    continue
+                media = perfil["baseline"][caminho]
+                if nome == "mood":
+                    media = media / 2
+                saida.append({"astronaut_id": aid, "indicator": nome, "mean": round(media, 3),
+                             "std": round(abs(media) * 0.05, 3) or 0.1})
+        return saida
+    finally:
+        conn.close()
 
 
 @app.get("/api/astronauts/{astronauta}/status")
 def status(astronauta: str):
-    resultado = ok_ou_erro(avaliar_status(astronauta))
-    # Anexa ações e nome em português a cada indicador, para o painel não precisar de outra chamada
-    for indicador, item in resultado["indicadores"].items():
-        item["nome"] = KB[indicador]["nome"]
-        if item["status"] != "verde":
-            item["acoes"] = recomendar_acoes(indicador, item["status"])["acoes"]
-    return resultado
+    conn = conectar()
+    try:
+        perfil = carregar_perfil(conn, astronauta)
+        if perfil is None:
+            raise HTTPException(status_code=404, detail=f"astronauta '{astronauta}' não existe")
+        contexto = ok_ou_erro(kb.get_open_cases(astronauta))
+        contexto["indicadores"] = _flatten_ultima_amostra(conn, astronauta)
+        return contexto
+    finally:
+        conn.close()
 
 
-@app.get("/api/astronauts/{astronauta}/measurements")
-def medicoes(astronauta: str, indicador: str | None = None, dias: int = 30):
-    return ok_ou_erro(consultar_medicoes(astronauta, indicador, dias))
+@app.get("/api/astronauts/{astronauta}/telemetry")
+def telemetria(astronauta: str, metrics: str, window: str = "7d", resolution: str | None = None):
+    """metrics: lista separada por vírgula (ex.: vitals.hr_rest,env.co2_mmhg)."""
+    return ok_ou_erro(kb.get_telemetry(astronauta, metrics.split(","), window, resolution))
 
 
-@app.get("/api/indicators")
-def listar_indicadores():
-    return {k: {"nome": v["nome"], "unidade": v["unidade"], "como_medir": v["como_medir"]} for k, v in KB.items()}
+@app.get("/api/astronauts/{astronauta}/cases")
+def casos_do_astronauta(astronauta: str):
+    conn = conectar()
+    try:
+        if carregar_perfil(conn, astronauta) is None:
+            raise HTTPException(status_code=404, detail=f"astronauta '{astronauta}' não existe")
+        linhas = conn.execute("SELECT * FROM case_ WHERE astronaut_id = ? ORDER BY opened_at DESC",
+                             (astronauta,)).fetchall()
+        return [_serializar_caso(r) for r in linhas]
+    finally:
+        conn.close()
 
 
-@app.get("/api/indicators/{indicador}")
-def indicador(indicador: str):
-    return ok_ou_erro(explicar_indicador(indicador))
+def _serializar_caso(row):
+    d = dict(row)
+    for campo in ("directives_json", "alert_ids_json", "hypotheses_json", "pending_questions_json",
+                 "exit_criteria_status_json", "ground_packet_json"):
+        bruto = d.pop(campo)
+        padrao = None if campo == "ground_packet_json" else []
+        d[campo[:-5]] = json.loads(bruto) if bruto else padrao
+    return d
 
 
-@app.post("/api/measurements")
-def nova_medicao(m: Medicao):
-    return ok_ou_erro(registrar_medicao(m.astronauta, m.indicador, m.valor, m.origem))
+@app.get("/api/cases/{case_id}")
+def caso(case_id: str):
+    conn = conectar()
+    try:
+        row = conn.execute("SELECT * FROM case_ WHERE case_id = ?", (case_id,)).fetchone()
+        if row is None:
+            raise HTTPException(status_code=404, detail=f"caso '{case_id}' não existe")
+        resultado = _serializar_caso(row)
+        resultado["timeline"] = [dict(r) for r in conn.execute(
+            "SELECT at, type, content FROM case_timeline WHERE case_id = ? ORDER BY id", (case_id,))]
+        resultado["events"] = [dict(r) for r in conn.execute(
+            "SELECT kind, created_at, recipient, level_or_priority, payload_json, answered, answer "
+            "FROM case_event WHERE case_id = ? ORDER BY id", (case_id,))]
+        return resultado
+    finally:
+        conn.close()
+
+
+@app.get("/api/directives")
+def listar_diretivas():
+    from motor import DIRECTIVES
+    return [{"id": d["id"], "title": d["title"], "hazards": d["hazards"]} for d in DIRECTIVES]
+
+
+@app.get("/api/directives/{directive_id}")
+def diretiva(directive_id: str):
+    return ok_ou_erro(kb.get_directive(directive_id))
 
 
 @app.post("/api/reports")
 def novo_relatorio(r: Relatorio):
-    return ok_ou_erro(enviar_relatorio_terra(r.astronauta, r.resumo, r.urgencia))
+    prioridade = "emergencia" if r.urgencia == "alta" else "rotina"
+    return ok_ou_erro(kb.send_ground_packet(
+        r.case_id, one_liner=r.resumo, questions=[],
+        default_plan_if_no_answer="Seguir as ações já recomendadas pela diretiva até a resposta do solo.",
+        priority=prioridade))
 
 
 @app.get("/api/reports")
 def listar_relatorios():
-    with sqlite3.connect(DB_PATH) as conn:
-        try:
-            df = pd.read_sql("SELECT criado_em, astronauta, urgencia, resumo, status_geral, atraso_min, chegada_prevista "
-                             "FROM ground_report ORDER BY criado_em DESC LIMIT 20", conn)
-        except pd.errors.DatabaseError:
-            return []
-    return df.to_dict(orient="records")
+    conn = conectar()
+    try:
+        linhas = conn.execute(
+            "SELECT case_id, created_at, recipient, level_or_priority, payload_json FROM case_event "
+            "WHERE kind = 'pacote_solo' ORDER BY created_at DESC LIMIT 20").fetchall()
+        saida = []
+        for r in linhas:
+            d = dict(r)
+            d["payload"] = json.loads(d.pop("payload_json"))
+            saida.append(d)
+        return saida
+    finally:
+        conn.close()
 
 
 # O agente é criado na primeira mensagem e reaproveitado; o histórico fica em memória por astronauta
@@ -110,7 +283,7 @@ async def chat(m: Mensagem):
     try:
         if "agente" not in agente_cache:
             from agente import montar_agente
-            agente_cache["agente"], _ = await montar_agente("assistente")
+            agente_cache["agente"], _ = await montar_agente("investigacao")
         historico = historicos.setdefault(m.astronauta, [
             {"role": "user", "content": f"Eu sou o astronauta {m.astronauta}."},
             {"role": "assistant", "content": f"Entendido, {m.astronauta}. Como posso ajudar?"},
@@ -121,16 +294,16 @@ async def chat(m: Mensagem):
         return {"resposta": resultado["messages"][-1].content}
     except Exception as erro:
         agente_cache.clear()
-        raise HTTPException(status_code=503, detail=f"Assistente indisponível ({type(erro).__name__}). "
+        raise HTTPException(status_code=503, detail=f"Agente indisponível ({type(erro).__name__}). "
                                                     "Confira se o Ollama está aberto com o modelo baixado.")
 
 
-app.mount("/static", StaticFiles(directory=FRONTEND), name="static")
+if FRONTEND.exists():
+    app.mount("/static", StaticFiles(directory=FRONTEND), name="static")
 
-
-@app.get("/")
-def pagina():
-    return FileResponse(FRONTEND / "index.html")
+    @app.get("/")
+    def pagina():
+        return FileResponse(FRONTEND / "index.html")
 
 
 # Sem reload: no Windows o modo reload impede o agente de abrir o servidor MCP como subprocesso

@@ -36,28 +36,28 @@ def verificar_servidor():
         sys.exit(1)
 
 
-# Cada modo recebe sua diretiva e só as tools que fazem sentido para ele
+# Único modo: agente de investigação/acompanhamento de casos (knowledge-base/agent/).
+# As 15 tools são as de ferramentas_kb.py (ver servidor_mcp.py).
 MODOS = {
-    "assistente": {"diretiva": "diretiva_assistente",
-                   "tools": {"avaliar_status", "consultar_medicoes", "explicar_indicador",
-                             "recomendar_acoes", "enviar_relatorio_terra"},
-                   "boas_vindas": "Assistente de saúde a bordo. Diga quem você é (ex.: sou o AST-01) e pergunte como está."},
-    "gerador": {"diretiva": "diretiva_gerador",
-                "tools": {"gerar_indicador", "gerar_cenario", "listar_lotes", "exportar_lote"},
-                "boas_vindas": "Gerador de dados simulados. Descreva os dados que quer gerar."},
+    "investigacao": {"diretiva": "diretiva_investigacao", "tools": None,
+                     "boas_vindas": "Agente de acompanhamento de saúde a bordo. Diga quem você é "
+                                    "(ex.: sou o AST-C) e pergunte como está."},
 }
 
 
-async def montar_agente(modo="assistente"):
+async def montar_agente(modo="investigacao"):
     client = MultiServerMCPClient(SERVIDORES)
-    tools = [t for t in await client.get_tools() if t.name in MODOS[modo]["tools"]]
+    permitidas = MODOS[modo]["tools"]
+    tools = await client.get_tools()
+    if permitidas is not None:
+        tools = [t for t in tools if t.name in permitidas]
     diretiva = await client.get_prompt("saude", MODOS[modo]["diretiva"])
     return create_agent(model=MODELO, tools=tools, system_prompt=diretiva[0].content), tools
 
 
 async def main():
     parser = argparse.ArgumentParser()
-    parser.add_argument("--modo", choices=list(MODOS), default="assistente")
+    parser.add_argument("--modo", choices=list(MODOS), default="investigacao")
     modo = parser.parse_args().modo
 
     verificar_servidor()
