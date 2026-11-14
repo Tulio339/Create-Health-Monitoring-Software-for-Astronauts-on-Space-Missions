@@ -90,13 +90,15 @@ def init_db(conn):
 # ── telemetria ────────────────────────────────────────────────────────────
 
 def carregar_amostras(conn, astronaut_id):
-    """Reconstrói a lista de amostras aninhadas (formato telemetry.schema.json) a partir do banco."""
-    rows = conn.execute("SELECT timestamp, module, data_json FROM telemetry "
+    """Reconstrói a lista de amostras aninhadas (formato telemetry.schema.json) a partir do banco.
+    `_source` (coluna de proveniência, ex. 'cenario:x', 'frontend:manual') vem junto, prefixado com
+    `_` pra não colidir com nenhum campo do schema; rules_engine ignora chaves que não conhece."""
+    rows = conn.execute("SELECT timestamp, module, data_json, source FROM telemetry "
                         "WHERE astronaut_id = ? ORDER BY timestamp", (astronaut_id,)).fetchall()
     amostras = []
     for r in rows:
         amostra = json.loads(r["data_json"])
-        amostra.update(astronaut_id=astronaut_id, timestamp=r["timestamp"], module=r["module"])
+        amostra.update(astronaut_id=astronaut_id, timestamp=r["timestamp"], module=r["module"], _source=r["source"])
         amostras.append(amostra)
     return amostras
 
