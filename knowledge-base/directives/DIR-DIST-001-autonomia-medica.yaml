@@ -1,0 +1,76 @@
+id: DIR-DIST-001
+title: Autonomia médica sob latência de comunicação
+version: 1.0.0
+hazards: [DIST]
+body_system: sistemico
+summary: >
+  Meta-diretiva: não monitora um órgão, e sim a CAPACIDADE DE RESPOSTA. Quando a latência ou um
+  apagão impede o apoio do solo, ou o kit médico fica baixo, o sistema passa para o modo autônomo.
+kb_refs: [hazards/distance-from-earth.md, protocols/escalation.md]
+scope: crew
+
+triggers:
+  - id: latencia-alta
+    level: atencao
+    description: Latência de uma via > 5 min (o solo não consegue conduzir uma emergência em tempo real)
+    when: { metric: mission.comm_latency_s, agg: last, op: ">", value: 300 }
+
+  - id: estoque-critico
+    level: alerta
+    description: Algum item essencial do kit médico abaixo de 20% do estoque inicial
+    when: { metric: mission.medkit_min_stock_pct, agg: last, op: "<", value: 20 }
+
+  - id: apagao-com-caso-aberto
+    level: critico
+    description: Sem comunicação com o solo E caso médico de nível alerta/crítico aberto
+    when:
+      all:
+        - { metric: mission.comm_available, agg: last, op: "==", value: 0 }
+        - { metric: mission.open_cases_alerta_or_above, agg: last, op: ">=", value: 1 }
+
+symptoms_to_check: []
+differential: []
+
+investigation:
+  data_to_collect:
+    - Próxima janela de comunicação prevista
+    - Inventário do kit médico e validade dos medicamentos
+    - Tripulantes com treino médico disponíveis
+  questions_to_astronaut: []
+
+actions:
+  atencao:
+    - Ativar o MODO AUTÔNOMO: o agente segue os protocolos de bordo sem esperar confirmação do solo
+    - Todos os pacotes ao solo passam a ser assíncronos (resumo + dados + perguntas objetivas)
+  alerta:
+    - Avisar o CMO e listar alternativas aos itens em falta
+    - Racionar o item crítico; pedir reabastecimento, se houver missão de carga
+  critico:
+    - O CMO tem autoridade de decisão médica a bordo
+    - O agente registra cada decisão com dados e justificativa para auditoria posterior
+    - Enviar o pacote completo do caso assim que houver janela
+
+astronaut_message:
+  atencao: "Modo autônomo ativo: a comunicação com a Terra está lenta. Os protocolos de bordo valem sem esperar resposta."
+  alerta: "Um item do kit médico está acabando. O responsável médico foi avisado."
+  critico: "Sem contato com a Terra e com um caso médico em andamento. O responsável médico de bordo tem autoridade total."
+
+follow_up:
+  atencao: { interval: 6h, duration: 30d }
+  alerta:  { interval: 24h, duration: 30d }
+  critico: { interval: 30m, duration: 48h }
+
+exit_criteria:
+  - description: Comunicação disponível com latência ≤ 5 min
+    when:
+      all:
+        - { metric: mission.comm_available, agg: last, op: "==", value: 1 }
+        - { metric: mission.comm_latency_s, agg: last, op: "<=", value: 300 }
+
+escalation:
+  notify_ground_at: alerta
+  flight_surgeon_required_at: critico
+
+references:
+  - https://www.nasa.gov/hrp/hazards/
+  - HRP Evidence Report — Risk of Adverse Health Outcomes and Decrements in Performance due to Inflight Medical Conditions

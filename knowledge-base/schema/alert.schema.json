@@ -1,0 +1,52 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "alert.schema.json",
+  "title": "Alerta",
+  "description": "Gerado pelo motor de regras quando uma diretiva dispara. É consumido pela aplicação (tela do astronauta) e pelo agente de IA.",
+  "type": "object",
+  "required": ["alert_id", "astronaut_id", "directive_id", "level", "created_at", "triggers"],
+  "properties": {
+    "alert_id": { "type": "string" },
+    "astronaut_id": { "type": "string" },
+    "directive_id": { "type": "string" },
+    "directive_title": { "type": "string" },
+    "hazards": { "type": "array", "items": { "enum": ["RAD", "ISO", "DIST", "GRAV", "ENV"] } },
+    "level": { "enum": ["atencao", "alerta", "critico"] },
+    "created_at": { "type": "string", "format": "date-time" },
+    "triggers": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "id": { "type": "string" },
+          "level": { "type": "string" },
+          "description": { "type": "string" },
+          "evidence": {
+            "type": "array",
+            "description": "Valor calculado de cada condição (para auditoria e explicação)",
+            "items": {
+              "type": "object",
+              "properties": {
+                "metric": { "type": "string" },
+                "agg": { "type": "string" },
+                "window": { "type": "string" },
+                "observed": {},
+                "op": { "type": "string" },
+                "threshold": {},
+                "relative_to": { "type": "string" },
+                "baseline": { "type": "number" }
+              }
+            }
+          }
+        }
+      }
+    },
+    "astronaut_message": { "type": "string" },
+    "actions": { "type": "array", "items": { "type": "string" } },
+    "symptoms_to_check": { "type": "array", "items": { "type": "string" } },
+    "notify_ground": { "type": "boolean" },
+    "flight_surgeon_required": { "type": "boolean" },
+    "privacy": { "enum": ["normal", "restricted"] },
+    "opens_case": { "type": "boolean" }
+  }
+}

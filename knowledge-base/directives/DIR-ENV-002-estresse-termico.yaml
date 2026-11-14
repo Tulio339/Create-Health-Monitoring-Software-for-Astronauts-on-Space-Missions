@@ -1,0 +1,84 @@
+id: DIR-ENV-002
+title: Estresse térmico e febre
+version: 1.0.0
+hazards: [ENV]
+body_system: termorregulacao
+summary: >
+  Temperatura central elevada pode vir do ambiente (cabine quente, traje de EVA, exercício) ou de
+  infecção (micróbios mais virulentos e imunidade reduzida em voo). Monitora temperatura central,
+  temperatura da cabine e sinais de desidratação.
+kb_refs: [hazards/hostile-environment.md]
+
+triggers:
+  - id: temp-subfebril
+    level: atencao
+    description: Temperatura central ≥ 37,8 °C em repouso, ou cabine > 27 °C por 2 h
+    when:
+      any:
+        - { metric: vitals.core_temp_c, agg: mean, window: 30m, op: ">=", value: 37.8 }
+        - { metric: env.cabin_temp_c, agg: mean, window: 2h, op: ">", value: 27 }
+
+  - id: febre
+    level: alerta
+    description: Temperatura central ≥ 38,3 °C
+    when: { metric: vitals.core_temp_c, agg: max, window: 30m, op: ">=", value: 38.3 }
+
+  - id: hipertermia
+    level: critico
+    description: Temperatura central ≥ 39,5 °C, ou ≥ 38,5 °C com confusão/síncope
+    when:
+      any:
+        - { metric: vitals.core_temp_c, agg: max, window: 15m, op: ">=", value: 39.5 }
+        - all:
+            - { metric: vitals.core_temp_c, agg: max, window: 30m, op: ">=", value: 38.5 }
+            - { symptoms_any: [confusao, sincope, pre_sincope], window: 1h }
+
+symptoms_to_check: [calafrios, sudorese, tosse, dor_garganta, erupcao_pele, confusao, fadiga]
+differential: [DIR-RAD-002, DIR-CARD-001, DIR-GRAV-003]
+
+investigation:
+  data_to_collect:
+    - Contexto da medição: exercício, EVA ou repouso
+    - Temperatura e umidade da cabine
+    - Sintomas de infecção (respiratória, urinária, pele)
+    - Outros tripulantes com sintomas (surto)
+  questions_to_astronaut:
+    - Está com calafrios, tosse, dor de garganta ou ardência ao urinar?
+    - Estava se exercitando ou em EVA?
+    - Mais alguém da tripulação está com sintomas parecidos?
+
+actions:
+  atencao:
+    - Repetir a medição após 30 min de repouso
+    - Hidratação; ajustar a temperatura da cabine
+  alerta:
+    - Repouso; antitérmico conforme protocolo do kit médico
+    - Isolamento leve (máscara, higiene) até descartar infecção
+    - Coletar amostras (swab, urina) se houver kit
+  critico:
+    - Resfriamento ativo; hidratação oral/IV
+    - Caso médico prioritário; CMO assume
+    - Suspender EVA de toda a tripulação se houver suspeita de surto
+
+astronaut_message:
+  atencao: "Sua temperatura está um pouco alta. Descanse, beba água e vamos medir de novo em 30 minutos."
+  alerta: "Você está com febre. Descanse, use máscara e siga o protocolo do kit médico."
+  critico: "Temperatura muito alta. Avise a tripulação. O responsável médico vai iniciar o resfriamento."
+
+follow_up:
+  atencao: { interval: 30m, duration: 6h }
+  alerta:  { interval: 2h, duration: 72h }
+  critico: { interval: 15m, duration: 24h }
+
+exit_criteria:
+  - description: Temperatura central < 37,5 °C por 24 h
+    when: { metric: vitals.core_temp_c, agg: max, window: 24h, op: "<", value: 37.5 }
+
+escalation:
+  notify_ground_at: alerta
+  flight_surgeon_required_at: critico
+
+references:
+  - https://www.nasa.gov/hrp/hazards/
+  - HRP Evidence Report — Risk of Adverse Health Event due to Altered Immune Response
+  - NASA-STD-3001 Vol.2 — Thermal environment

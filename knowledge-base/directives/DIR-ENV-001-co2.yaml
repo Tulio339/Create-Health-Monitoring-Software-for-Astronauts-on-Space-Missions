@@ -1,0 +1,79 @@
+id: DIR-ENV-001
+title: CO₂ elevado na cabine
+version: 1.0.0
+hazards: [ENV]
+body_system: respiratorio
+summary: >
+  Sem convecção natural, o CO₂ forma bolsões perto do rosto. Níveis acima de ~3 mmHg aumentam
+  cefaleia e reduzem a cognição, e podem agravar SANS. Afeta TODA a tripulação no mesmo módulo.
+kb_refs: [hazards/hostile-environment.md]
+scope: crew                      # o alerta vale para todos os tripulantes do módulo
+
+triggers:
+  - id: co2-acima-meta
+    level: atencao
+    description: CO₂ médio de 1 h > 2,5 mmHg
+    when: { metric: env.co2_mmhg, agg: mean, window: 1h, op: ">", value: 2.5 }
+
+  - id: co2-sintomatico
+    level: alerta
+    description: CO₂ médio de 1 h > 4 mmHg, ou > 3 mmHg com cefaleia relatada
+    when:
+      any:
+        - { metric: env.co2_mmhg, agg: mean, window: 1h, op: ">", value: 4.0 }
+        - all:
+            - { metric: env.co2_mmhg, agg: mean, window: 1h, op: ">", value: 3.0 }
+            - { symptoms_any: [cefaleia, letargia, dificuldade_concentracao], window: 6h }
+
+  - id: co2-perigoso
+    level: critico
+    description: CO₂ > 8 mmHg (~10.500 ppm) em qualquer leitura de 10 min
+    when: { metric: env.co2_mmhg, agg: max, window: 10m, op: ">", value: 8.0 }
+
+symptoms_to_check: [cefaleia, letargia, dificuldade_concentracao, dispneia, tontura]
+differential: [DIR-ISO-001, DIR-GRAV-001]
+
+investigation:
+  data_to_collect:
+    - Leituras de CO₂ de todos os módulos (achar a origem)
+    - Estado do sistema de remoção de CO₂ (CDRA/scrubber)
+    - Frequência respiratória e SpO₂ da tripulação
+    - Número de pessoas no módulo e atividade (exercício gera mais CO₂)
+  questions_to_astronaut:
+    - Está com dor de cabeça ou sentindo a cabeça "pesada"?
+    - Está difícil se concentrar?
+
+actions:
+  atencao:
+    - Ligar/ajustar o ventilador pessoal na área de trabalho ou de dormir
+    - Avisar o controle ambiental (ECLSS)
+  alerta:
+    - Sair do módulo afetado para um com CO₂ menor
+    - Evitar exercício intenso no módulo afetado
+    - Diagnóstico do sistema de remoção de CO₂
+  critico:
+    - Evacuar o módulo; usar máscara de oxigênio/respirador portátil se necessário
+    - Protocolo de emergência atmosférica
+
+astronaut_message:
+  atencao: "O CO₂ neste módulo está um pouco alto. Ligue o ventilador perto de você."
+  alerta: "CO₂ alto pode causar dor de cabeça e dificuldade de concentração. Vá para outro módulo se puder."
+  critico: "CO₂ PERIGOSO. Saia do módulo agora e use a máscara de oxigênio se precisar."
+
+follow_up:
+  atencao: { interval: 30m, duration: 6h }
+  alerta:  { interval: 10m, duration: 6h }
+  critico: { interval: 2m, duration: 2h }
+
+exit_criteria:
+  - description: CO₂ médio ≤ 2,5 mmHg por 2 h
+    when: { metric: env.co2_mmhg, agg: mean, window: 2h, op: "<=", value: 2.5 }
+
+escalation:
+  notify_ground_at: alerta
+  flight_surgeon_required_at: critico
+
+references:
+  - https://www.nasa.gov/hrp/hazards/
+  - NASA-STD-3001 Vol.2 — Atmosphere, CO₂ limits
+  - SMAC — Spacecraft Maximum Allowable Concentrations for CO₂

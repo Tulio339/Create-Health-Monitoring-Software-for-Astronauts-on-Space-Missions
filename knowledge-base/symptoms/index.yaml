@@ -1,0 +1,163 @@
+# ─────────────────────────────────────────────────────────────────────────────
+# ÍNDICE DE SINTOMAS → DIRETIVAS / RISCOS
+# Usado pelo agente para o DIAGNÓSTICO DIFERENCIAL: quando o astronauta relata um
+# sintoma, o agente vê quais condições podem explicá-lo e quais dados verificar.
+# `weight`: plausibilidade relativa no contexto espacial (alta | media | baixa).
+# `red_flag: true` → o relato sozinho já abre caso de nível "alerta".
+# Os códigos (snake_case, sem acento) são os mesmos de telemetry.symptoms.
+# ─────────────────────────────────────────────────────────────────────────────
+
+cefaleia:
+  label: Dor de cabeça
+  candidates:
+    - { directive: DIR-ENV-001, weight: alta,  check: "env.co2_mmhg (média de 1 h)" }
+    - { directive: DIR-GRAV-001, weight: alta, check: "OCT / acuidade de perto" }
+    - { directive: DIR-ISO-001, weight: media, check: "vitals.sleep_hours" }
+    - { directive: DIR-RAD-002, weight: baixa, check: "radiation.dose_rate_msv_h" }
+    - { directive: DIR-ENV-002, weight: baixa, check: "vitals.core_temp_c" }
+
+nausea:
+  label: Náusea / enjoo
+  candidates:
+    - { directive: DIR-RAD-002, weight: alta, check: "pico de dose nas últimas 12 h?" }
+    - { hazard: GRAV, condition: enjoo_espacial, weight: alta, check: "primeiros 3 dias de voo ou após mudança de gravidade?" }
+    - { directive: DIR-GRAV-002, weight: baixa, check: "dor no flanco (cálculo renal)" }
+    - { directive: DIR-ENV-002, weight: baixa, check: "febre" }
+
+vomito:
+  label: Vômito
+  red_flag: true
+  candidates:
+    - { directive: DIR-RAD-002, weight: alta, check: "tempo entre a dose e o vômito (< 2 h indica dose alta)" }
+    - { hazard: GRAV, condition: enjoo_espacial, weight: alta }
+
+visao_turva:
+  label: Visão turva (principalmente de perto)
+  candidates:
+    - { directive: DIR-GRAV-001, weight: alta, check: "ocular.near_visual_acuity_logmar_delta, OCT" }
+    - { directive: DIR-ISO-001, weight: baixa, check: "fadiga ocular por falta de sono" }
+
+tontura:
+  label: Tontura
+  candidates:
+    - { directive: DIR-GRAV-003, weight: alta, check: "vitals.bp_sys, hidratação" }
+    - { directive: DIR-CARD-001, weight: media, check: "vitals.afib_detected, ECG" }
+    - { directive: DIR-ENV-001, weight: media, check: "env.co2_mmhg" }
+    - { hazard: GRAV, condition: disfuncao_vestibular, weight: media }
+
+sincope:
+  label: Desmaio
+  red_flag: true
+  candidates:
+    - { directive: DIR-CARD-001, weight: alta, check: "ECG imediato" }
+    - { directive: DIR-GRAV-003, weight: alta, check: "PA" }
+    - { directive: DIR-ENV-002, weight: media, check: "temperatura central" }
+
+palpitacoes:
+  label: Palpitações / coração acelerado ou falhando
+  candidates:
+    - { directive: DIR-CARD-001, weight: alta, check: "ECG, vitals.ectopic_beats_per_h" }
+    - { directive: DIR-ISO-002, weight: media, check: "behavioral.stress_score (ansiedade)" }
+    - { directive: DIR-ISO-001, weight: media, check: "privação de sono, cafeína" }
+
+dor_peito:
+  label: Dor ou aperto no peito
+  red_flag: true
+  candidates:
+    - { directive: DIR-CARD-001, weight: alta, check: "ECG imediato, SpO2" }
+
+dispneia:
+  label: Falta de ar
+  red_flag: true
+  candidates:
+    - { directive: DIR-ENV-001, weight: alta, check: "env.co2_mmhg, env.o2_pct" }
+    - { directive: DIR-CARD-001, weight: media, check: "ECG, SpO2" }
+
+fadiga:
+  label: Cansaço fora do normal
+  candidates:
+    - { directive: DIR-ISO-001, weight: alta, check: "sono" }
+    - { directive: DIR-GRAV-003, weight: media, check: "VO2máx, FC de repouso" }
+    - { directive: DIR-GRAV-004, weight: media, check: "força" }
+    - { directive: DIR-RAD-002, weight: media, check: "dose recente" }
+    - { directive: DIR-ISO-002, weight: media, check: "humor" }
+    - { directive: DIR-ENV-002, weight: baixa, check: "febre" }
+
+dor_flanco:
+  label: Dor lateral nas costas / abaixo das costelas
+  red_flag: true
+  candidates:
+    - { directive: DIR-GRAV-002, weight: alta, check: "lab.urine_calcium_mg_day, ultrassom renal" }
+
+hematuria:
+  label: Sangue na urina
+  red_flag: true
+  candidates:
+    - { directive: DIR-GRAV-002, weight: alta }
+
+dor_lombar:
+  label: Dor lombar
+  candidates:
+    - { hazard: GRAV, condition: expansao_discal, weight: alta, check: "comum nas primeiras semanas" }
+    - { directive: DIR-GRAV-002, weight: media }
+    - { directive: DIR-GRAV-004, weight: media }
+
+insonia:
+  label: Dificuldade para dormir
+  candidates:
+    - { directive: DIR-ISO-001, weight: alta }
+    - { directive: DIR-ISO-002, weight: media }
+    - { directive: DIR-ENV-001, weight: media, check: "CO2 na área de dormir" }
+
+dificuldade_concentracao:
+  label: Dificuldade de concentração
+  candidates:
+    - { directive: DIR-ENV-001, weight: alta, check: "CO2" }
+    - { directive: DIR-ISO-001, weight: alta, check: "sono, PVT" }
+    - { directive: DIR-ISO-002, weight: media }
+    - { directive: DIR-RAD-001, weight: baixa, check: "efeito da radiação no SNC (longo prazo)" }
+
+tristeza:
+  label: Tristeza / humor baixo
+  candidates:
+    - { directive: DIR-ISO-002, weight: alta }
+    - { directive: DIR-ISO-001, weight: media }
+
+ansiedade:
+  label: Ansiedade
+  candidates:
+    - { directive: DIR-ISO-002, weight: alta }
+
+desesperanca:
+  label: Desesperança
+  red_flag: true
+  candidates:
+    - { directive: DIR-ISO-002, weight: alta }
+
+ideacao_autolesao:
+  label: Pensamentos de se machucar
+  red_flag: true
+  candidates:
+    - { directive: DIR-ISO-002, weight: alta }
+
+calafrios:
+  label: Calafrios
+  candidates:
+    - { directive: DIR-ENV-002, weight: alta, check: "temperatura central" }
+
+eritema_pele:
+  label: Vermelhidão / ardência na pele
+  candidates:
+    - { directive: DIR-RAD-002, weight: media, check: "dose alta recente" }
+    - { hazard: GRAV, condition: reativacao_viral, weight: media, check: "lesões tipo herpes" }
+
+rosto_inchado:
+  label: Rosto inchado
+  candidates:
+    - { hazard: GRAV, condition: deslocamento_fluidos, weight: alta, check: "esperado em microgravidade" }
+    - { directive: DIR-GRAV-001, weight: media }
+
+fraqueza_muscular:
+  label: Fraqueza muscular
+  candidates:
+    - { directive: DIR-GRAV-004, weight: alta }

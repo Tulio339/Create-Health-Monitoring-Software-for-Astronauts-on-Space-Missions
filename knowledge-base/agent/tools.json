@@ -1,0 +1,188 @@
+{
+  "description": "Ferramentas que a aplicação expõe ao agente (formato JSON Schema, compatível com tool use da maioria dos LLMs).",
+  "tools": [
+    {
+      "name": "get_telemetry",
+      "description": "Retorna a série temporal de uma ou mais métricas de um astronauta numa janela de tempo, já agregada se pedido.",
+      "input_schema": {
+        "type": "object",
+        "required": ["astronaut_id", "metrics", "window"],
+        "properties": {
+          "astronaut_id": { "type": "string" },
+          "metrics": { "type": "array", "items": { "type": "string" }, "description": "Ex.: [\"vitals.hr_rest\", \"env.co2_mmhg\"]" },
+          "window": { "type": "string", "description": "Ex.: 24h, 7d, 30d" },
+          "resolution": { "type": "string", "description": "Ex.: 1h, 1d (opcional)" }
+        }
+      }
+    },
+    {
+      "name": "get_baseline",
+      "description": "Retorna os valores de baseline pré-voo e o perfil do astronauta.",
+      "input_schema": {
+        "type": "object",
+        "required": ["astronaut_id"],
+        "properties": { "astronaut_id": { "type": "string" } }
+      }
+    },
+    {
+      "name": "get_directive",
+      "description": "Retorna a diretiva completa (gatilhos, investigação, ações, critério de saída).",
+      "input_schema": {
+        "type": "object",
+        "required": ["directive_id"],
+        "properties": { "directive_id": { "type": "string" } }
+      }
+    },
+    {
+      "name": "search_knowledge",
+      "description": "Busca semântica (RAG) na base de conhecimento: hazards/*.md, symptoms/index.yaml, protocols/*.md. Retorna trechos com a fonte.",
+      "input_schema": {
+        "type": "object",
+        "required": ["query"],
+        "properties": {
+          "query": { "type": "string" },
+          "hazard_filter": { "type": "array", "items": { "enum": ["RAD", "ISO", "DIST", "GRAV", "ENV"] } },
+          "top_k": { "type": "integer", "default": 5 }
+        }
+      }
+    },
+    {
+      "name": "lookup_symptom",
+      "description": "Consulta o índice de sintomas e retorna as diretivas/condições candidatas e o que verificar.",
+      "input_schema": {
+        "type": "object",
+        "required": ["symptom_code"],
+        "properties": { "symptom_code": { "type": "string" } }
+      }
+    },
+    {
+      "name": "evaluate_exit_criteria",
+      "description": "Roda o motor de regras para checar se os critérios de saída da diretiva estão atendidos agora.",
+      "input_schema": {
+        "type": "object",
+        "required": ["astronaut_id", "directive_id"],
+        "properties": { "astronaut_id": { "type": "string" }, "directive_id": { "type": "string" } }
+      }
+    },
+    {
+      "name": "ask_astronaut",
+      "description": "Envia perguntas para o app do astronauta. Prefira respostas estruturadas (escala, sim/não, múltipla escolha).",
+      "input_schema": {
+        "type": "object",
+        "required": ["astronaut_id", "case_id", "questions"],
+        "properties": {
+          "astronaut_id": { "type": "string" },
+          "case_id": { "type": "string" },
+          "questions": {
+            "type": "array",
+            "maxItems": 3,
+            "items": {
+              "type": "object",
+              "required": ["text", "type"],
+              "properties": {
+                "text": { "type": "string" },
+                "type": { "enum": ["sim_nao", "escala_0_10", "multipla_escolha", "texto"] },
+                "options": { "type": "array", "items": { "type": "string" } }
+              }
+            }
+          }
+        }
+      }
+    },
+    {
+      "name": "send_astronaut_message",
+      "description": "Mostra uma mensagem/recomendação no app do astronauta.",
+      "input_schema": {
+        "type": "object",
+        "required": ["astronaut_id", "case_id", "level", "message"],
+        "properties": {
+          "astronaut_id": { "type": "string" },
+          "case_id": { "type": "string" },
+          "level": { "enum": ["info", "atencao", "alerta", "critico"] },
+          "message": { "type": "string" },
+          "actions": { "type": "array", "items": { "type": "string" } }
+        }
+      }
+    },
+    {
+      "name": "update_case",
+      "description": "Atualiza status, nível, hipóteses ou critérios de saída do caso.",
+      "input_schema": {
+        "type": "object",
+        "required": ["case_id"],
+        "properties": {
+          "case_id": { "type": "string" },
+          "status": { "enum": ["aberto", "investigando", "acompanhando", "aguardando_solo", "encerrado"] },
+          "level": { "enum": ["atencao", "alerta", "critico"] },
+          "hypotheses": { "type": "array", "items": { "type": "object" } },
+          "summary": { "type": "string" },
+          "close_reason": { "type": "string" }
+        }
+      }
+    },
+    {
+      "name": "log_case_note",
+      "description": "Registra uma nota na linha do tempo do caso (decisão, raciocínio, dado coletado).",
+      "input_schema": {
+        "type": "object",
+        "required": ["case_id", "type", "content"],
+        "properties": {
+          "case_id": { "type": "string" },
+          "type": { "enum": ["acao", "dado_coletado", "nota_agente", "mudanca_nivel"] },
+          "content": { "type": "string" }
+        }
+      }
+    },
+    {
+      "name": "schedule_followup",
+      "description": "Agenda a próxima reavaliação automática do caso.",
+      "input_schema": {
+        "type": "object",
+        "required": ["case_id", "in"],
+        "properties": {
+          "case_id": { "type": "string" },
+          "in": { "type": "string", "description": "Ex.: 30m, 6h, 1d" },
+          "reason": { "type": "string" }
+        }
+      }
+    },
+    {
+      "name": "notify_crew_medical",
+      "description": "Notifica o CMO e/ou o comandante a bordo.",
+      "input_schema": {
+        "type": "object",
+        "required": ["case_id", "recipients", "message"],
+        "properties": {
+          "case_id": { "type": "string" },
+          "recipients": { "type": "array", "items": { "enum": ["cmo", "comandante"] } },
+          "message": { "type": "string" }
+        }
+      }
+    },
+    {
+      "name": "send_ground_packet",
+      "description": "Envia o pacote assíncrono do caso para o solo (médico de voo, psicólogo, especialistas).",
+      "input_schema": {
+        "type": "object",
+        "required": ["case_id", "one_liner", "questions", "default_plan_if_no_answer"],
+        "properties": {
+          "case_id": { "type": "string" },
+          "recipient": { "enum": ["medico_voo", "psicologo", "oftalmologia", "fisiologia", "radiacao", "direcao_missao"] },
+          "priority": { "enum": ["rotina", "prioritario", "emergencia"] },
+          "one_liner": { "type": "string" },
+          "questions": { "type": "array", "items": { "type": "string" } },
+          "default_plan_if_no_answer": { "type": "string" },
+          "answer_deadline": { "type": "string" }
+        }
+      }
+    },
+    {
+      "name": "check_medkit",
+      "description": "Consulta o estoque e a validade de itens do kit médico de bordo.",
+      "input_schema": {
+        "type": "object",
+        "properties": { "item": { "type": "string", "description": "Vazio = inventário completo" } }
+      }
+    }
+  ]
+}

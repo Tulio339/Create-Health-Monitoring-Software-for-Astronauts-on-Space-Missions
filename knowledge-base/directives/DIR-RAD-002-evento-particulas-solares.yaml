@@ -1,0 +1,87 @@
+id: DIR-RAD-002
+title: Evento de partículas solares (SPE)
+version: 1.0.0
+hazards: [RAD, DIST]
+body_system: hematologico
+summary: >
+  Detecta tempestades de prótons solares (fluxo > 10 MeV) e picos de taxa de dose, dispara o
+  protocolo de abrigo e acompanha sinais de síndrome aguda da radiação.
+kb_refs: [hazards/radiation.md, hazards/distance-from-earth.md]
+
+triggers:
+  - id: s1-tempestade
+    level: atencao
+    description: Fluxo de prótons > 10 MeV ≥ 10 pfu (tempestade NOAA S1)
+    when: { metric: env.proton_flux_10mev_pfu, agg: max, window: 30m, op: ">=", value: 10 }
+
+  - id: s2-ou-pico-dose
+    level: alerta
+    description: Fluxo ≥ 100 pfu (S2) ou taxa de dose ≥ 0,5 mSv/h
+    when:
+      any:
+        - { metric: env.proton_flux_10mev_pfu, agg: max, window: 30m, op: ">=", value: 100 }
+        - { metric: radiation.dose_rate_msv_h, agg: max, window: 30m, op: ">=", value: 0.5 }
+
+  - id: s3-ou-sintomas-prodromicos
+    level: critico
+    description: Fluxo ≥ 1.000 pfu (S3+), ou taxa de dose ≥ 5 mSv/h, ou pico de dose junto com náusea/vômito
+    when:
+      any:
+        - { metric: env.proton_flux_10mev_pfu, agg: max, window: 30m, op: ">=", value: 1000 }
+        - { metric: radiation.dose_rate_msv_h, agg: max, window: 30m, op: ">=", value: 5 }
+        - all:
+            - { metric: radiation.dose_rate_msv_h, agg: max, window: 12h, op: ">=", value: 0.5 }
+            - { symptoms_any: [nausea, vomito], window: 12h }
+
+symptoms_to_check: [nausea, vomito, fadiga, cefaleia, eritema_pele, anorexia]
+differential: [DIR-ENV-001, DIR-ENV-002]
+
+investigation:
+  data_to_collect:
+    - Dose total recebida desde o início do evento (por tripulante)
+    - Hora do início dos sintomas em relação ao pico de dose (início < 2 h indica dose alta)
+    - Contagem de linfócitos às 24 h e 48 h após o evento, se houver analisador a bordo
+    - Posição de cada tripulante durante o evento (abrigo ou não)
+  questions_to_astronaut:
+    - Você está sentindo enjoo, vontade de vomitar ou perda de apetite?
+    - Se vomitou, quanto tempo depois do início do alerta?
+    - Tem alguma vermelhidão ou ardência na pele?
+
+actions:
+  atencao:
+    - Avisar a tripulação e verificar se o abrigo de tempestade está pronto
+    - Não começar EVAs novas; preparar o retorno de EVAs em andamento
+  alerta:
+    - Toda a tripulação vai para o abrigo de tempestade (protocolo autônomo, sem esperar o solo)
+    - Encerrar EVAs em andamento imediatamente
+    - Registrar a dose de cada um a cada 15 minutos
+  critico:
+    - Ficar no abrigo até o fluxo cair abaixo de 10 pfu
+    - Antiemético do kit médico se houver náusea/vômito (conforme protocolo do médico de voo)
+    - Hidratação oral; registrar ingestão e vômitos
+    - Agente abre caso médico prioritário e envia pacote ao solo
+
+astronaut_message:
+  atencao: "Tempestade solar detectada. Prepare o abrigo e não comece atividades fora da nave."
+  alerta: "Tempestade solar forte. Vá para o abrigo de tempestade agora."
+  critico: "Radiação muito alta. Fique no abrigo. Se sentir enjoo ou vomitar, avise pelo app e siga o protocolo médico."
+
+follow_up:
+  atencao: { interval: 30m, duration: 12h }
+  alerta:  { interval: 15m, duration: 24h }
+  critico: { interval: 15m, duration: 72h }
+
+exit_criteria:
+  - description: Fluxo de prótons abaixo de S1 por 6 h
+    when: { metric: env.proton_flux_10mev_pfu, agg: max, window: 6h, op: "<", value: 10 }
+  - description: Taxa de dose < 0,1 mSv/h por 6 h (o agente também confirma ausência de sintomas por 48 h)
+    when: { metric: radiation.dose_rate_msv_h, agg: max, window: 6h, op: "<", value: 0.1 }
+
+escalation:
+  notify_ground_at: atencao
+  flight_surgeon_required_at: critico
+
+references:
+  - https://www.nasa.gov/hrp/hazards/
+  - NOAA Space Weather Scales — Solar Radiation Storms (S1–S5)
+  - HRP Evidence Report — Risk of Acute Radiation Syndromes due to Solar Particle Events

@@ -1,0 +1,88 @@
+id: DIR-GRAV-002
+title: Perda óssea e risco de cálculo renal
+version: 1.0.0
+hazards: [GRAV]
+body_system: musculoesqueletico
+summary: >
+  Sem carga mecânica, o osso perde ~1–1,5% de densidade por mês. O cálcio liberado aumenta o
+  risco de cálculo renal. Monitora marcadores de reabsorção, cálcio urinário, hidratação e exercício.
+kb_refs: [hazards/gravity.md]
+
+triggers:
+  - id: exercicio-resistivo-baixo
+    level: atencao
+    description: Média de exercício < 60 min/dia em 7 dias
+    when: { metric: fitness.exercise_minutes, agg: mean, window: 7d, op: "<", value: 60 }
+
+  - id: hidratacao-baixa
+    level: atencao
+    description: Ingestão média de líquidos < 2.000 mL/dia em 3 dias (risco de cálculo)
+    when: { metric: vitals.fluid_intake_ml, agg: mean, window: 3d, op: "<", value: 2000 }
+
+  - id: reabsorcao-alta
+    level: alerta
+    description: CTX (marcador de reabsorção óssea) ≥ 50% acima do baseline, ou cálcio urinário > 300 mg/dia
+    when:
+      any:
+        - { metric: lab.ctx_ng_ml, agg: last, op: ">=", value: 50, relative_to: baseline }
+        - { metric: lab.urine_calcium_mg_day, agg: last, op: ">", value: 300 }
+
+  - id: suspeita-calculo-renal
+    level: critico
+    description: Dor no flanco ou sangue na urina com cálcio urinário alto
+    when:
+      all:
+        - { symptoms_any: [dor_flanco, hematuria, colica_renal], window: 24h }
+        - { metric: lab.urine_calcium_mg_day, agg: last, op: ">", value: 250 }
+
+symptoms_to_check: [dor_flanco, hematuria, dor_lombar, dor_ossea, nausea]
+differential: [DIR-GRAV-004]
+
+investigation:
+  data_to_collect:
+    - Cálcio, oxalato e volume de urina de 24 h
+    - CTX/NTX séricos ou urinários
+    - Ultrassom renal se houver dor
+    - Registro de exercício resistivo (carga e volume) dos últimos 14 dias
+  questions_to_astronaut:
+    - Você tem sentido dor nas costas, do lado ou embaixo das costelas?
+    - Notou mudança na cor da urina?
+    - Quanto de água você bebeu ontem, mais ou menos?
+
+actions:
+  atencao:
+    - Lembrar a meta de exercício resistivo e reagendar sessões perdidas
+    - Meta de ingestão de líquidos ≥ 2,5 L/dia, com lembretes no app
+  alerta:
+    - Rever a dieta (cálcio, vitamina D, menos sódio) e a carga do exercício resistivo
+    - Solicitar análise de urina 24 h semanal
+    - Discutir bifosfonato com o médico de voo
+  critico:
+    - Ultrassom renal a bordo; analgesia conforme protocolo do kit médico
+    - Hidratação agressiva; filtrar a urina para recuperar o cálculo
+    - Caso médico prioritário; avaliar capacidade de trabalho
+
+astronaut_message:
+  atencao: "Seu exercício resistivo ou sua hidratação ficaram abaixo da meta. Isso ajuda a proteger ossos e rins."
+  alerta: "Seus exames mostram perda óssea acelerada. Vamos ajustar exercício e dieta junto com o médico de voo."
+  critico: "Possível cálculo renal. Siga o protocolo de dor e hidratação e avise imediatamente se a dor piorar."
+
+follow_up:
+  atencao: { interval: 2d, duration: 14d }
+  alerta:  { interval: 7d, duration: 60d }
+  critico: { interval: 2h, duration: 7d }
+
+exit_criteria:
+  - description: Exercício ≥ 90 min/dia em média por 7 dias
+    when: { metric: fitness.exercise_minutes, agg: mean, window: 7d, op: ">=", value: 90 }
+  - description: Ingestão de líquidos ≥ 2.500 mL/dia em média por 3 dias
+    when: { metric: vitals.fluid_intake_ml, agg: mean, window: 3d, op: ">=", value: 2500 }
+
+escalation:
+  notify_ground_at: alerta
+  flight_surgeon_required_at: critico
+
+references:
+  - https://www.nasa.gov/hrp/hazards/
+  - HRP Evidence Report — Risk of Early Onset Osteoporosis due to Spaceflight
+  - HRP Evidence Report — Risk of Renal Stone Formation

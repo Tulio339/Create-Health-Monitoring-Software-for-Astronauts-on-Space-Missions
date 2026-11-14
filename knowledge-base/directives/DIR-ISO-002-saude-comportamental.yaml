@@ -1,0 +1,86 @@
+id: DIR-ISO-002
+title: Saúde comportamental e desempenho cognitivo
+version: 1.0.0
+hazards: [ISO, DIST]
+body_system: comportamental
+summary: >
+  Isolamento, confinamento e distância podem causar humor deprimido, ansiedade, retraimento e queda
+  cognitiva. Monitora autorrelato de humor e estresse, contato social e testes cognitivos.
+  Dados SENSÍVEIS: só o médico de voo e o psicólogo veem os detalhes.
+kb_refs: [hazards/isolation-confinement.md, hazards/distance-from-earth.md]
+privacy: restricted              # o agente não compartilha detalhes com o resto da tripulação
+
+triggers:
+  - id: humor-baixo
+    level: atencao
+    description: Humor médio de 5 dias ≥ 25% abaixo do baseline
+    when: { metric: behavioral.mood_score, agg: mean, window: 5d, op: "<=", value: -25, relative_to: baseline }
+
+  - id: retraimento-social
+    level: atencao
+    description: Comunicação privada (família/amigos) < 30% do habitual em 7 dias
+    when: { metric: behavioral.private_comm_minutes, agg: mean, window: 7d, op: "<=", value: -70, relative_to: baseline }
+
+  - id: humor-e-estresse
+    level: alerta
+    description: Humor ≤ 4/10 E estresse ≥ 7/10 na média de 5 dias
+    when:
+      all:
+        - { metric: behavioral.mood_score, agg: mean, window: 5d, op: "<=", value: 4 }
+        - { metric: behavioral.stress_score, agg: mean, window: 5d, op: ">=", value: 7 }
+
+  - id: risco-comportamental
+    level: critico
+    description: Autorrelato de desesperança/pensamentos de autolesão, ou humor ≤ 2/10 por 3 dias
+    when:
+      any:
+        - { symptoms_any: [desesperanca, ideacao_autolesao], window: 7d }
+        - { metric: behavioral.mood_score, agg: max, window: 3d, op: "<=", value: 2 }
+
+symptoms_to_check: [tristeza, ansiedade, irritabilidade, apatia, insonia, dificuldade_concentracao, desesperanca]
+differential: [DIR-ISO-001, DIR-ENV-001, DIR-RAD-001]
+
+investigation:
+  data_to_collect:
+    - Tendência de humor, estresse e sono dos últimos 14 dias
+    - Carga de trabalho e horas extras
+    - Eventos recentes (notícias da família, conflito, falha da missão)
+    - Desempenho cognitivo (PVT, testes de memória)
+  questions_to_astronaut:
+    - Como você está se sentindo nos últimos dias, de verdade?
+    - Tem algo te preocupando, a bordo ou na Terra?
+    - Gostaria de agendar uma conversa privada com o psicólogo ou com sua família?
+
+actions:
+  atencao:
+    - Oferecer (sem obrigar) uma conversa privada com o psicólogo de apoio
+    - Sugerir tempo livre e atividades de lazer na agenda
+  alerta:
+    - Agendar conferência psicológica privada na próxima janela de comunicação
+    - Rever a carga de trabalho com a direção da missão (sem expor os detalhes)
+  critico:
+    - Contato imediato com o psicólogo/médico de voo (prioridade máxima de comunicação)
+    - O comandante é avisado apenas de que há uma situação médica que exige apoio
+    - Seguir o protocolo de saúde comportamental de bordo; nunca deixar o tripulante sozinho
+
+astronaut_message:
+  atencao: "Notamos que os últimos dias foram mais pesados. Se quiser, podemos agendar uma conversa privada com o psicólogo."
+  alerta: "Você tem relatado bastante estresse. Agendamos uma conversa privada com o psicólogo. Você não está sozinho."
+  critico: "Estamos aqui com você. O psicólogo vai entrar em contato agora. Procure alguém da tripulação para ficar ao seu lado."
+
+follow_up:
+  atencao: { interval: 2d, duration: 14d }
+  alerta:  { interval: 1d, duration: 14d }
+  critico: { interval: 1h, duration: 7d }
+
+exit_criteria:
+  - description: Humor dentro de -10% do baseline por 7 dias
+    when: { metric: behavioral.mood_score, agg: mean, window: 7d, op: ">=", value: -10, relative_to: baseline }
+
+escalation:
+  notify_ground_at: alerta
+  flight_surgeon_required_at: critico
+
+references:
+  - https://www.nasa.gov/hrp/hazards/
+  - HRP Evidence Report — Risk of Adverse Cognitive or Behavioral Conditions and Psychiatric Disorders

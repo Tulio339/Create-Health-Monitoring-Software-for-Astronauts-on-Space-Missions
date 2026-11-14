@@ -1,0 +1,87 @@
+id: DIR-CARD-001
+title: Arritmia cardíaca
+version: 1.0.0
+hazards: [GRAV, RAD, ISO]
+body_system: cardiovascular
+summary: >
+  Remodelação cardíaca, alterações eletrolíticas, estresse e falta de sono podem favorecer arritmias
+  (extrassístoles, fibrilação atrial). Monitora FC, eventos de arritmia detectados pelo wearable e sintomas.
+kb_refs: [hazards/gravity.md, hazards/isolation-confinement.md, hazards/radiation.md]
+
+triggers:
+  - id: extrassistoles-frequentes
+    level: atencao
+    description: Mais de 100 batimentos ectópicos por hora (média de 6 h)
+    when: { metric: vitals.ectopic_beats_per_h, agg: mean, window: 6h, op: ">", value: 100 }
+
+  - id: taquicardia-repouso
+    level: alerta
+    description: FC > 120 bpm em repouso por mais de 10 min, ou episódio de FA detectado
+    when:
+      any:
+        - { metric: vitals.hr_rest, agg: min, window: 10m, op: ">", value: 120 }
+        - { metric: vitals.afib_detected, agg: max, window: 1h, op: ">=", value: 1 }
+
+  - id: arritmia-instavel
+    level: critico
+    description: FA/taquicardia com sintomas de instabilidade (síncope, dor no peito, falta de ar) ou SpO₂ < 90%
+    when:
+      any:
+        - all:
+            - any:
+                - { metric: vitals.afib_detected, agg: max, window: 1h, op: ">=", value: 1 }
+                - { metric: vitals.hr, agg: max, window: 30m, op: ">", value: 150 }
+            - { symptoms_any: [sincope, dor_peito, dispneia, pre_sincope], window: 1h }
+        - all:
+            - { metric: vitals.afib_detected, agg: max, window: 1h, op: ">=", value: 1 }
+            - { metric: vitals.spo2_pct, agg: min, window: 30m, op: "<", value: 90 }
+
+symptoms_to_check: [palpitacoes, dor_peito, dispneia, tontura, sincope, fadiga]
+differential: [DIR-GRAV-003, DIR-ENV-002, DIR-ISO-001, DIR-ISO-002]
+
+investigation:
+  data_to_collect:
+    - ECG de 12 derivações imediato e Holter de 24 h
+    - Eletrólitos (potássio, magnésio), se houver analisador
+    - Consumo de cafeína, sono e estresse nas últimas 48 h
+    - Medicamentos usados recentemente (ex.: descongestionantes, hipnóticos)
+  questions_to_astronaut:
+    - Sentiu o coração acelerado, batendo forte ou falhando?
+    - Tem dor ou aperto no peito, ou falta de ar?
+    - Quanto café ou estimulante tomou hoje?
+
+actions:
+  atencao:
+    - Gravar ECG no próximo período de repouso
+    - Reduzir cafeína; verificar sono (DIR-ISO-001) e hidratação
+  alerta:
+    - Repouso imediato; ECG de 12 derivações e envio prioritário ao solo
+    - Suspender exercício de alta intensidade e EVA até a avaliação
+  critico:
+    - Protocolo de emergência cardíaca do kit médico; preparar o desfibrilador (DEA)
+    - Oxigênio suplementar se SpO₂ < 92%
+    - Tripulante com treino médico (CMO) assume; caso de emergência ao solo
+
+astronaut_message:
+  atencao: "Seu monitor registrou batimentos irregulares. Vamos gravar um ECG no seu próximo descanso. Evite cafeína em excesso."
+  alerta: "Ritmo cardíaco anormal detectado. Pare o que está fazendo, descanse e faça um ECG agora."
+  critico: "EMERGÊNCIA CARDÍACA. Avise a tripulação. O responsável médico vai iniciar o protocolo."
+
+follow_up:
+  atencao: { interval: 6h, duration: 3d }
+  alerta:  { interval: 1h, duration: 48h }
+  critico: { interval: 5m, duration: 12h }
+
+exit_criteria:
+  - description: Nenhum episódio de FA em 72 h
+    when: { metric: vitals.afib_detected, agg: max, window: 3d, op: "<", value: 1 }
+  - description: Extrassístoles < 50/h na média de 24 h
+    when: { metric: vitals.ectopic_beats_per_h, agg: mean, window: 24h, op: "<", value: 50 }
+
+escalation:
+  notify_ground_at: alerta
+  flight_surgeon_required_at: alerta
+
+references:
+  - https://www.nasa.gov/hrp/hazards/
+  - HRP Evidence Report — Risk of Cardiac Rhythm Problems during Spaceflight

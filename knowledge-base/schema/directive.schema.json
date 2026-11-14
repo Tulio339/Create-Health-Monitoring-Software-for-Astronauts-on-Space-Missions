@@ -1,0 +1,93 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "directive.schema.json",
+  "title": "Diretiva",
+  "description": "Estrutura dos arquivos directives/*.yaml. Ver directives/_TEMPLATE.yaml para os comentários.",
+  "type": "object",
+  "required": ["id", "title", "hazards", "triggers", "actions", "astronaut_message", "exit_criteria"],
+  "$defs": {
+    "level": { "enum": ["atencao", "alerta", "critico"] },
+    "condition": {
+      "oneOf": [
+        {
+          "type": "object",
+          "required": ["metric", "op", "value"],
+          "properties": {
+            "metric": { "type": "string" },
+            "agg": { "enum": ["last", "mean", "max", "min", "sum", "delta", "count"] },
+            "window": { "type": "string", "pattern": "^[0-9]+(m|h|d)$" },
+            "op": { "enum": [">", ">=", "<", "<=", "=="] },
+            "value": { "type": "number" },
+            "relative_to": { "const": "baseline" }
+          }
+        },
+        {
+          "type": "object",
+          "required": ["symptoms_any"],
+          "properties": {
+            "symptoms_any": { "type": "array", "items": { "type": "string" } },
+            "window": { "type": "string" }
+          }
+        },
+        { "type": "object", "required": ["all"], "properties": { "all": { "type": "array", "items": { "$ref": "#/$defs/condition" } } } },
+        { "type": "object", "required": ["any"], "properties": { "any": { "type": "array", "items": { "$ref": "#/$defs/condition" } } } }
+      ]
+    },
+    "byLevel": {
+      "type": "object",
+      "properties": { "atencao": {}, "alerta": {}, "critico": {} }
+    }
+  },
+  "properties": {
+    "id": { "type": "string", "pattern": "^DIR-[A-Z]+-[0-9]{3}$" },
+    "title": { "type": "string" },
+    "version": { "type": "string" },
+    "hazards": { "type": "array", "items": { "enum": ["RAD", "ISO", "DIST", "GRAV", "ENV"] }, "minItems": 1 },
+    "body_system": { "type": "string" },
+    "summary": { "type": "string" },
+    "kb_refs": { "type": "array", "items": { "type": "string" } },
+    "privacy": { "enum": ["normal", "restricted"] },
+    "scope": { "enum": ["individual", "crew"] },
+    "triggers": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["id", "level", "when"],
+        "properties": {
+          "id": { "type": "string" },
+          "level": { "$ref": "#/$defs/level" },
+          "description": { "type": "string" },
+          "when": { "$ref": "#/$defs/condition" }
+        }
+      }
+    },
+    "symptoms_to_check": { "type": "array", "items": { "type": "string" } },
+    "differential": { "type": "array", "items": { "type": "string" } },
+    "investigation": {
+      "type": "object",
+      "properties": {
+        "data_to_collect": { "type": "array", "items": { "type": "string" } },
+        "questions_to_astronaut": { "type": "array", "items": { "type": "string" } }
+      }
+    },
+    "actions": { "$ref": "#/$defs/byLevel" },
+    "astronaut_message": { "$ref": "#/$defs/byLevel" },
+    "follow_up": { "$ref": "#/$defs/byLevel" },
+    "exit_criteria": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["description", "when"],
+        "properties": { "description": { "type": "string" }, "when": { "$ref": "#/$defs/condition" } }
+      }
+    },
+    "escalation": {
+      "type": "object",
+      "properties": {
+        "notify_ground_at": { "$ref": "#/$defs/level" },
+        "flight_surgeon_required_at": { "$ref": "#/$defs/level" }
+      }
+    },
+    "references": { "type": "array", "items": { "type": "string" } }
+  }
+}

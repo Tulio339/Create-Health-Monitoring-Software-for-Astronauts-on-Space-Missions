@@ -1,0 +1,88 @@
+id: DIR-ISO-001
+title: Déficit de sono e dessincronização circadiana
+version: 1.0.0
+hazards: [ISO, ENV]
+body_system: neurologico
+summary: >
+  Sono curto e fora de horário reduz a vigilância e aumenta o risco de erro operacional.
+  Monitora horas e eficiência do sono (actigrafia) e o teste de vigilância psicomotora (PVT).
+kb_refs: [hazards/isolation-confinement.md, hazards/hostile-environment.md]
+
+triggers:
+  - id: sono-curto-3-noites
+    level: atencao
+    description: Média de sono < 6 h nas últimas 3 noites
+    when: { metric: vitals.sleep_hours, agg: mean, window: 3d, op: "<", value: 6 }
+
+  - id: eficiencia-baixa
+    level: atencao
+    description: Eficiência do sono < 80% na média de 3 noites
+    when: { metric: vitals.sleep_efficiency_pct, agg: mean, window: 3d, op: "<", value: 80 }
+
+  - id: sono-curto-com-lapsos
+    level: alerta
+    description: Sono < 6 h E lapsos no PVT ≥ 50% acima do baseline
+    when:
+      all:
+        - { metric: vitals.sleep_hours, agg: mean, window: 3d, op: "<", value: 6 }
+        - { metric: cognitive.pvt_lapses, agg: last, op: ">=", value: 50, relative_to: baseline }
+
+  - id: privacao-grave
+    level: critico
+    description: Média < 4 h em 2 noites, ou lapsos no PVT ≥ 3x o baseline antes de tarefa crítica
+    when:
+      any:
+        - { metric: vitals.sleep_hours, agg: mean, window: 2d, op: "<", value: 4 }
+        - { metric: cognitive.pvt_lapses, agg: last, op: ">=", value: 200, relative_to: baseline }
+
+symptoms_to_check: [sonolencia, insonia, irritabilidade, dificuldade_concentracao, cefaleia]
+differential: [DIR-ENV-001, DIR-ISO-002, DIR-GRAV-001]
+
+investigation:
+  data_to_collect:
+    - CO₂, temperatura e ruído na área de dormir durante a noite
+    - Mudanças de turno ou de agenda (slam shifts) na última semana
+    - Uso de hipnóticos e cafeína
+    - Exposição à luz antes de dormir
+  questions_to_astronaut:
+    - Como você avalia seu sono nas últimas noites (0 a 10)?
+    - O que está atrapalhando: barulho, temperatura, preocupação, dor, agenda?
+    - Está sonolento durante o trabalho?
+
+actions:
+  atencao:
+    - Proteger 8,5 h de janela de sono na agenda
+    - Ajustar a iluminação (luz quente/baixa 2 h antes de dormir)
+    - Checar o ambiente da área de dormir (CO₂, ruído, temperatura)
+  alerta:
+    - Evitar escalar o tripulante sozinho em tarefa crítica nas próximas 24 h
+    - Permitir cochilo estratégico (≤ 30 min)
+    - Médico de voo avalia uso de melatonina ou hipnótico
+  critico:
+    - Tirar o tripulante de tarefas críticas (EVA, robótica, acoplamento) até recuperar o sono
+    - Período de sono de recuperação na agenda
+    - Notificar a direção da missão
+
+astronaut_message:
+  atencao: "Você está dormindo menos do que precisa. Separamos uma janela de sono maior e ajustamos a iluminação."
+  alerta: "A falta de sono está afetando sua atenção. Evite tarefas críticas sozinho e aproveite um cochilo curto."
+  critico: "Privação de sono grave. Você vai sair das tarefas críticas até recuperar o sono. Isso é para sua segurança."
+
+follow_up:
+  atencao: { interval: 1d, duration: 5d }
+  alerta:  { interval: 12h, duration: 5d }
+  critico: { interval: 6h, duration: 3d }
+
+exit_criteria:
+  - description: Sono médio ≥ 6,5 h por 3 noites
+    when: { metric: vitals.sleep_hours, agg: mean, window: 3d, op: ">=", value: 6.5 }
+  - description: Lapsos no PVT dentro de +20% do baseline
+    when: { metric: cognitive.pvt_lapses, agg: last, op: "<=", value: 20, relative_to: baseline }
+
+escalation:
+  notify_ground_at: alerta
+  flight_surgeon_required_at: critico
+
+references:
+  - https://www.nasa.gov/hrp/hazards/
+  - HRP Evidence Report — Risk of Performance Decrements and Adverse Health Outcomes from Sleep Loss, Circadian Desynchronization, and Work Overload

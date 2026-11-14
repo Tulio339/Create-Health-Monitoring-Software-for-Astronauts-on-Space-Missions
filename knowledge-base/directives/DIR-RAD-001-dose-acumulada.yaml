@@ -1,0 +1,75 @@
+id: DIR-RAD-001
+title: Dose de radiação acumulada
+version: 1.0.0
+hazards: [RAD]
+body_system: sistemico
+summary: >
+  Acompanha a dose efetiva acumulada na missão e na carreira contra o limite de 600 mSv da NASA
+  e detecta taxa de dose crônica acima do esperado para o perfil da missão.
+kb_refs: [hazards/radiation.md]
+
+triggers:
+  - id: carreira-75pct
+    level: atencao
+    description: Dose de carreira chegou a 75% do limite (450 mSv)
+    when: { metric: radiation.cumulative_career_msv, agg: last, op: ">=", value: 450 }
+
+  - id: taxa-cronica-alta
+    level: atencao
+    description: Taxa média de 24 h acima de 0,1 mSv/h (~2,4 mSv/dia), maior que o trânsito interplanetário típico
+    when: { metric: radiation.dose_rate_msv_h, agg: mean, window: 24h, op: ">", value: 0.1 }
+
+  - id: carreira-90pct
+    level: alerta
+    description: Dose de carreira chegou a 90% do limite (540 mSv)
+    when: { metric: radiation.cumulative_career_msv, agg: last, op: ">=", value: 540 }
+
+  - id: carreira-limite
+    level: critico
+    description: Limite de carreira de 600 mSv atingido
+    when: { metric: radiation.cumulative_career_msv, agg: last, op: ">=", value: 600 }
+
+symptoms_to_check: [fadiga, nausea, alteracao_cognitiva]
+differential: [DIR-RAD-002]
+
+investigation:
+  data_to_collect:
+    - Leituras do dosímetro pessoal x dosímetro de área (descartar falha de sensor)
+    - Tempo de EVA e passagens pela Anomalia do Atlântico Sul nas últimas 72 h
+    - Projeção de dose até o fim da missão no ritmo atual
+  questions_to_astronaut:
+    - Seu dosímetro pessoal ficou com você o tempo todo nas últimas 24 horas?
+    - Você fez alguma atividade fora do habitat ou em módulos menos protegidos?
+
+actions:
+  atencao:
+    - Calcular a dose projetada até o fim da missão e mostrar a margem que resta
+    - Priorizar áreas mais blindadas para sono e descanso
+  alerta:
+    - Rever o plano de EVA com o solo; adiar EVAs que não sejam essenciais
+    - Revezar tarefas em áreas de maior exposição entre tripulantes com mais margem de dose
+  critico:
+    - Suspender EVA e trabalho em áreas pouco blindadas para este tripulante
+    - Médico de voo e direção da missão decidem a continuidade das tarefas
+
+astronaut_message:
+  atencao: "Sua dose de radiação acumulada está chegando perto do limite planejado. Prefira as áreas mais protegidas para dormir e descansar."
+  alerta: "Você já usou 90% do seu limite de radiação de carreira. Os planos de EVA vão ser revistos com o solo."
+  critico: "Você atingiu o limite de radiação de carreira. Não faça EVA nem fique em áreas pouco blindadas até nova orientação."
+
+follow_up:
+  atencao: { interval: 24h, duration: 7d }
+  alerta:  { interval: 12h, duration: 14d }
+  critico: { interval: 6h,  duration: 30d }
+
+exit_criteria:
+  - description: Taxa de dose de 24 h voltou ao nível esperado
+    when: { metric: radiation.dose_rate_msv_h, agg: mean, window: 24h, op: "<=", value: 0.1 }
+
+escalation:
+  notify_ground_at: alerta
+  flight_surgeon_required_at: critico
+
+references:
+  - https://www.nasa.gov/hrp/hazards/
+  - NASA-STD-3001 Vol.1 Rev C, 4.8 — Space Permissible Exposure Limit (600 mSv)
