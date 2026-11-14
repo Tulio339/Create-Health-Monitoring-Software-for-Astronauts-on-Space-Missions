@@ -1,0 +1,9 @@
+numpy
+pandas
+fastapi
+uvicorn[standard]
+mcp
+langchain
+langchain-mcp-adapters
+langchain-ollama
+python-dotenv
