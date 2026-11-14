@@ -13,7 +13,7 @@ from assistente import (avaliar_status, consultar_medicoes, enviar_relatorio_ter
 from regras import DB_PATH, KB
 from simulador import ASTRONAUTS
 
-FRONTEND = Path(__file__).parent / "frontend"
+FRONTEND_DIST = Path(__file__).resolve().parent.parent / "frontend" / "dist"
 
 app = FastAPI(title="Monitor de Saúde de Astronautas")
 
@@ -125,12 +125,19 @@ async def chat(m: Mensagem):
                                                     "Confira se o Ollama está aberto com o modelo baixado.")
 
 
-app.mount("/static", StaticFiles(directory=FRONTEND), name="static")
-
-
 @app.get("/")
 def pagina():
-    return FileResponse(FRONTEND / "index.html")
+    index = FRONTEND_DIST / "index.html"
+    if not index.is_file():
+        raise HTTPException(
+            status_code=503,
+            detail="Frontend build not found. Run `npm run build` in the frontend directory.",
+        )
+    return FileResponse(index)
+
+
+if FRONTEND_DIST.is_dir():
+    app.mount("/", StaticFiles(directory=FRONTEND_DIST, html=True), name="frontend")
 
 
 # Sem reload: no Windows o modo reload impede o agente de abrir o servidor MCP como subprocesso

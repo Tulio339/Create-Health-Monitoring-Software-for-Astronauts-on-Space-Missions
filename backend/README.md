@@ -13,7 +13,14 @@ python simulador.py      # 1x: cria o banco com 30 dias de histórico e o "norma
 python api.py            # sobe o sistema em http://127.0.0.1:8000
 ```
 
-Abra **http://127.0.0.1:8000** no navegador.
+Em outro terminal, inicie o frontend Vite a partir da pasta `frontend`:
+
+```bash
+npm install
+npm run dev
+```
+
+Abra o endereço mostrado pelo Vite (normalmente **http://localhost:5173**). A API fica disponível em **http://127.0.0.1:8000** e sua documentação em **http://127.0.0.1:8000/docs**. Para servir uma versão compilada pela API, rode `npm run build` na pasta `frontend`.
 
 Para ver os dados chegando ao vivo, abra **outro terminal** e rode:
 
