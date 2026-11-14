@@ -111,14 +111,22 @@ export interface MeasurementFilter {
   to?: string
 }
 
-/** Medições (API + registradas neste navegador) em ordem cronológica.
- * glucose/amsler_marks/amsler_central não têm equivalente no knowledge-base: só vêm do
- * localStorage (teste/registro manual), nunca da API — ver FLUXO.md. */
+/** Uma medição pode existir nos dois lados ao mesmo tempo: o navegador grava no localStorage
+ * na hora (saveMeasurements) e manda pro backend em paralelo, de melhor esforço. Depois que o
+ * POST é confirmado, a mesma medição também passa a vir da API — sem isso ela apareceria em
+ * dobro no gráfico. Chave: astronauta+indicador+horário (o valor é o mesmo nos dois lados). */
+function dedupeMeasurements(items: Measurement[]): Measurement[] {
+  const porChave = new Map<string, Measurement>()
+  for (const m of items) porChave.set(`${m.astronaut_id}|${m.indicator}|${m.timestamp}`, m)
+  return [...porChave.values()]
+}
+
+/** Medições (API + registradas neste navegador) em ordem cronológica. */
 export async function getMeasurements(filter: MeasurementFilter = {}): Promise<Measurement[]> {
   const path = filter.astronautId
     ? `/api/measurements?astronaut_id=${encodeURIComponent(filter.astronautId)}`
     : '/api/measurements'
-  const all = [...(await load<Measurement[]>(path)), ...localMeasurements()]
+  const all = dedupeMeasurements([...(await load<Measurement[]>(path)), ...localMeasurements()])
   const from = filter.from ? Date.parse(filter.from) : -Infinity
   const to = filter.to ? Date.parse(filter.to) : Infinity
   return all
@@ -174,10 +182,32 @@ export async function setEnvironmentId(id: EnvironmentId): Promise<void> {
 
 // --- Escrita -----------------------------------------------------------------
 
-/** Registra medições novas (uma, ou duas no caso da pressão arterial). */
+/** Remove do cache as respostas que ficaram desatualizadas depois de uma escrita confirmada. */
+function invalidate(prefix: string): void {
+  for (const key of cache.keys()) if (key.startsWith(prefix)) cache.delete(key)
+}
+
+/** Registra medições novas (uma, ou duas no caso da pressão arterial ou da grade de Amsler).
+ *
+ * Grava no localStorage na hora (a tela mostra o resultado sem esperar rede — funciona offline)
+ * e manda pro backend em paralelo, de melhor esforço: se der erro (backend fora do ar, sem
+ * rede), a medição continua valendo neste navegador, só não vira telemetria "de verdade" nem
+ * passa pelo motor de regras (POST /api/measurements em backend/api.py) até a próxima tentativa. */
 export async function saveMeasurements(measurements: Measurement[]): Promise<void> {
   writeLocal(MEASUREMENTS_KEY, [...localMeasurements(), ...measurements])
   notify()
+  void fetch(`${API_BASE}/api/measurements`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(measurements),
+  })
+    .then(() => {
+      invalidate('/api/measurements')
+      invalidate('/api/astronauts') // status_geral pode ter mudado (motor de regras rodou de novo)
+    })
+    .catch(() => {
+      // offline ou backend fora do ar: já está salvo no localStorage, que é a fonte usada pela UI.
+    })
 }
 
 /** Quantas medições foram registradas neste navegador. */
