@@ -1,6 +1,10 @@
 # Monitor de Saúde de Astronautas
 
-Protótipo de hackathon (desafio estilo NASA Space Apps): um painel que coleta indicadores de saúde e ajuda o astronauta a **avaliar e agir** sobre o próprio estado de saúde durante missões longas, quando o médico de voo está a minutos de distância.
+Protótipo de hackathon (desafio estilo NASA Space Apps): um sistema que detecta alterações de
+saúde de astronautas em missões longas e abre um **caso de acompanhamento** investigado por um
+agente de IA — usando o modelo clínico completo do [`knowledge-base/`](../knowledge-base) (pasta
+irmã deste repositório): 12 diretivas baseadas nos 5 riscos do NASA Human Research Program, níveis
+atenção/alerta/crítico, diagnóstico diferencial e critérios de saída.
 
 > Protótipo educacional. Não é um dispositivo médico.
 
@@ -9,26 +13,25 @@ Protótipo de hackathon (desafio estilo NASA Space Apps): um painel que coleta i
 ```bash
 pip install -r requirements.txt
 
-python simulador.py      # 1x: cria o banco com 30 dias de histórico e o "normal pré-voo" de cada astronauta
-python api.py            # sobe o sistema em http://127.0.0.1:8000
+python simulador_kb.py   # 1x: popula o banco com os 10 astronautas e cenários do knowledge-base
+python api.py            # sobe a API em http://127.0.0.1:8000
 ```
 
-Em outro terminal, inicie o frontend Vite a partir da pasta `frontend`:
+
+Para ver um cenário "ao vivo" (a telemetria chegando aos poucos e o motor abrindo/escalando o
+caso sozinho), abra **outro terminal** e rode:
+
 
 ```bash
-npm install
-npm run dev
+python sensores_kb.py --cenario cardiaca --intervalo 1     # uma amostra por segundo
 ```
 
-Abra o endereço mostrado pelo Vite (normalmente **http://localhost:5173**). A API fica disponível em **http://127.0.0.1:8000** e sua documentação em **http://127.0.0.1:8000/docs**. Para servir uma versão compilada pela API, rode `npm run build` na pasta `frontend`.
+Cenários disponíveis: `original` (AST-B) e os 9 em
+[`knowledge-base/examples/scenarios/`](../knowledge-base/examples/scenarios) — `cardiaca`,
+`ossea`, `descondicionamento`, `atrofia`, `comportamental`, `termico`, `distancia`, `radiacao`,
+`saudavel` (caso de controle, 0 alertas).
 
-Para ver os dados chegando ao vivo, abra **outro terminal** e rode:
-
-```bash
-python sensores.py       # simula os sensores da nave: 1 dia de missão a cada 2 segundos
-```
-
-O assistente de saúde (chat) precisa do Ollama aberto com o modelo baixado:
+O agente de investigação (chat) precisa do Ollama aberto com o modelo baixado:
 
 ```bash
 ollama pull qwen2.5:7b
@@ -36,88 +39,101 @@ ollama pull qwen2.5:7b
 
 Sem o Ollama, todo o resto funciona; só o chat avisa que está indisponível.
 
-> **Windows:** rode `python api.py`, e não `uvicorn api:app --reload`. O modo `--reload` impede o chat de abrir o servidor MCP.
+> **Windows:** rode `python api.py`, e não `uvicorn api:app --reload`. O modo `--reload` impede o
+> agente de abrir o servidor MCP como subprocesso.
+
+> **Painel web:** `api.py` ainda tenta servir um painel estático em `frontend/` (HTML/JS/CSS), mas
+> essa pasta não existe neste repositório — é um gap conhecido, fora do escopo desta etapa. A API
+> funciona normalmente sem ela (o mount só acontece se a pasta existir).
 
 ## O ciclo que o sistema resolve
 
-**medir → classificar → explicar → agir → acompanhar**
+**medir → detectar (determinístico) → investigar (IA) → agir → acompanhar → encerrar**
 
-1. **Medir:** os dados chegam dos sensores (automático) ou do astronauta (formulário e teste de reação).
-2. **Classificar:** o motor de regras dá verde, amarelo ou vermelho a cada indicador.
-3. **Explicar:** a base de conhecimento diz por que o espaço afeta aquele indicador.
-4. **Agir:** cada alerta vem com ações; no vermelho, um relatório vai para a Terra.
-5. **Acompanhar:** gráficos mostram a evolução e a tendência.
+1. **Medir:** a telemetria chega no formato de
+   [`telemetry.schema.json`](../knowledge-base/schema/telemetry.schema.json) — simulada por
+   [`simulador_kb.py`](simulador_kb.py)/[`sensores_kb.py`](sensores_kb.py), vinda dos cenários do knowledge-base.
+2. **Detectar:** [`motor.py`](motor.py) roda o motor de regras determinístico do knowledge-base
+   (`engine/rules_engine.py`) contra cada diretiva. A IA **nunca** decide se um alerta dispara.
+3. **Abrir caso:** alertas de nível `alerta`/`crítico` (ou correlacionados por sintoma) abrem um
+   caso (`case_`), seguindo o ciclo de vida de
+   [`agent/investigation-workflow.md`](../knowledge-base/agent/investigation-workflow.md).
+4. **Investigar/agir:** o agente de IA ([`agente.py`](agente.py) + [`servidor_mcp.py`](servidor_mcp.py) +
+   [`ferramentas_kb.py`](ferramentas_kb.py)) usa as 15 ferramentas para buscar dados, cruzar
+   sintomas, recomendar as ações da diretiva e registrar tudo no caso.
+5. **Acompanhar/encerrar:** a cada reavaliação, `motor.reavaliar_casos_pendentes` confere o
+   critério de saída; crítico só fecha com registro do CMO/médico de voo.
 
 ## Estrutura
 
 ```
-agents/
-├── api.py                  API FastAPI: liga tudo e serve o painel
-├── frontend/               painel (HTML + JS + CSS, sem build)
-│   ├── index.html
-│   ├── app.js
-│   ├── style.css
-│   └── vendor/chart.umd.min.js   gráficos, incluído para funcionar offline
-├── regras.py               motor de regras: decide as cores
-├── conhecimento/
-│   └── indicadores.json    faixas, explicações, como medir e ações de cada indicador
-├── assistente.py           funções de consulta, avaliação, registro e relatório
-├── simulador.py            gera o histórico de 30 dias com anomalias plantadas
-├── sensores.py             simula os sensores enviando dados ao vivo
-├── servidor_mcp.py         expõe as funções como ferramentas para o agente (MCP)
-├── agente.py               agente com LLM (assistente ou gerador de dados)
-├── ferramentas.py          ferramentas do agente gerador de dados
-├── diretivas/              instruções (system prompts) de cada agente
+backend/
+├── api.py                  API FastAPI: liga tudo
+├── motor.py                adapta o SQLite ao rules_engine.py do knowledge-base; abre/atualiza casos
+├── simulador_kb.py         popula o banco com os astronautas e cenários do knowledge-base
+├── sensores_kb.py          replay ao vivo de um cenário (chama o motor a cada lote)
+├── ferramentas_kb.py       as 15 ferramentas do agente (knowledge-base/agent/tools.json + get_open_cases)
+├── prompt_kb.py            monta o system prompt a partir de knowledge-base/agent/system-prompt.md
+├── servidor_mcp.py         expõe as ferramentas e o prompt para o agente (MCP)
+├── agente.py               agente com LLM (LangChain + Ollama, via MCP)
+├── exportacoes/            saída de check_medkit/exportações manuais (git-ignorado)
 └── dados_simulados/
-    └── health.db           banco SQLite (criado pelo simulador)
+    └── health.db           banco SQLite (criado pelo simulador; git-ignorado)
 ```
+
+A base de conhecimento (diretivas, motor de regras de referência, schemas, cenários de
+telemetria) vive em [`../knowledge-base/`](../knowledge-base), importada diretamente por
+`motor.py` (não duplicada aqui).
 
 ## Como os dados passam
 
-**Uma medição:** sensor ou formulário → `POST /api/measurements` → validação (valor impossível é rejeitado) → grava em `measurement` → motor de regras → status → painel atualiza (a cada 3 s).
+**Uma leitura de telemetria:** `sensores_kb.py` → grava em `telemetry` → `motor.avaliar_astronauta`
+(roda as 12 diretivas) → grava `alert` → abre/atualiza `case_` + `case_timeline`.
 
-**Uma pergunta no chat:** painel → `POST /api/chat` → agente (LLM + diretiva) → escolhe ferramenta → servidor MCP → `assistente.py` / `regras.py` → resultado volta ao LLM → resposta explicada.
+**Uma pergunta no chat:** `POST /api/chat` → agente (LLM + diretiva de `system-prompt.md`) → escolhe
+uma das 15 ferramentas → `servidor_mcp.py` → `ferramentas_kb.py`/`motor.py` → resultado volta ao
+LLM → resposta explicada.
 
-O LLM **nunca** inventa números nem decide cores: isso sempre vem do código. Ele só escolhe qual ferramenta chamar e explica o resultado.
-
-## Motor de regras (`regras.py`)
-
-Cada indicador passa por três checagens; vale a pior cor:
-
-1. **Faixa absoluta:** ex.: temperatura ≥ 38 °C é vermelho.
-2. **Comparação com o normal pré-voo do próprio astronauta:** só na direção perigosa (pressão acima do normal alerta; abaixo, que é adaptação ao voo, não).
-3. **Tendência dos últimos 7 dias:** pega uma subida antes de ela estourar a faixa.
-
-Testado contra o gabarito do simulador: **13 de 13 anomalias detectadas, 0,7% de alarmes falsos.**
+O LLM **nunca** inventa números, diretivas nem decide níveis: isso sempre vem do código. Ele só
+escolhe qual ferramenta chamar e explica o resultado — inclusive o contexto do caso atual (dia de
+missão, modo de operação, casos abertos), que ele busca sob demanda via `get_open_cases` em vez de
+receber pronto, para nunca trabalhar com dado desatualizado numa conversa longa.
 
 ## Rotas da API
 
 | Rota | O que faz |
 |---|---|
-| `GET /api/astronauts` | lista os astronautas com o status geral |
-| `GET /api/astronauts/{id}/status` | cor, motivos, tendência e ações de cada indicador |
-| `GET /api/astronauts/{id}/measurements` | histórico (para os gráficos) |
-| `GET /api/indicators` e `/api/indicators/{nome}` | explicações e como medir |
-| `POST /api/measurements` | registra uma medição manual ou de teste |
-| `POST /api/reports` e `GET /api/reports` | relatórios para o médico de voo, com atraso de comunicação |
-| `POST /api/chat` | pergunta ao assistente de saúde |
+| `GET /api/astronauts` | lista os astronautas com o status geral (pior nível entre os casos abertos) |
+| `GET /api/astronauts/{id}/status` | contexto completo (`get_open_cases`): dia/fase da missão, modo de operação, casos e alertas |
+| `GET /api/astronauts/{id}/telemetry?metrics=...&window=7d` | série temporal de métricas (`get_telemetry`) |
+| `GET /api/astronauts/{id}/cases` e `GET /api/cases/{case_id}` | casos do astronauta / detalhe com linha do tempo |
+| `GET /api/directives` e `/api/directives/{id}` | as 12 diretivas do knowledge-base |
+| `POST /api/reports` e `GET /api/reports` | pacote assíncrono para o solo (`send_ground_packet`), com atraso de comunicação |
+| `POST /api/chat` | conversa com o agente de investigação |
 
 Documentação interativa automática: **http://127.0.0.1:8000/docs**
 
 ## Roteiro sugerido para a demo
 
-1. Abra o painel com o `sensores.py` rodando: os dias avançam e as cores mudam sozinhas.
-2. Mostre o corpo: clique numa região vermelha e explique o indicador.
-3. Clique num card vermelho: gráfico, "por que o espaço afeta isso" e "o que fazer agora".
-4. Peça a um jurado para digitar uma temperatura de 38,5 °C: o painel fica vermelho na hora.
-5. Faça o teste de reação.
-6. Pergunte no chat: "por que minha pressão está alta?".
-7. Envie um relatório à Terra e mostre o atraso de comunicação (até ~24 min em Marte).
+1. `python sensores_kb.py --cenario cardiaca --intervalo 1`: acompanhe no terminal o caso de
+   arritmia escalando de "sem alerta" para `crítico` nos últimos minutos de replay.
+2. `GET /api/astronauts/AST-C/cases` num segundo terminal: mostre o caso aberto automaticamente.
+3. Pergunte no chat (`POST /api/chat`, astronauta `AST-C`): "como eu estou?" — o agente deve
+   investigar (telemetria, diretiva, diagnóstico diferencial) sem inventar números.
+4. Mostre `GET /api/cases/{case_id}`: a linha do tempo completa (alerta, notificação à
+   tripulação, perguntas, ações, reavaliações).
+5. Rode `python sensores_kb.py --cenario saudavel` para mostrar o caso de controle: 0 alertas.
 
 ## O que ficou de fora (de propósito)
 
-Gamificação, agendador de lembretes, grade de Amsler e tela do médico de voo. Ficaram fora para priorizar um ciclo completo que funciona.
+Painel visual (o `frontend/` do backend nunca existiu neste repositório — há um `frontend/` React
+separado na raiz do monorepo, com seu próprio modelo de dados, ainda não ligado a esta API),
+scheduler de parede real para `schedule_followup` (usa o relógio da simulação), fila de resposta
+estruturada para `ask_astronaut`/`notify_crew_medical`/`send_ground_packet` (fica tudo registrado
+no caso, sem mecanismo de entrega).
 
 ## Antes de apresentar
 
-Revisem `conhecimento/indicadores.json` contra as fontes da NASA (Human Research Program). As faixas e textos são ilustrativos e podem ser ajustados sem mexer no código.
+Revisem as diretivas em [`../knowledge-base/directives/`](../knowledge-base/directives) contra as
+fontes da NASA (Human Research Program). Os limiares são **referências para protótipo**, não
+orientação médica operacional (ver aviso em [`knowledge-base/README.md`](../knowledge-base/README.md)).
