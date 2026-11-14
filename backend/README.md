@@ -17,8 +17,10 @@ python simulador_kb.py   # 1x: popula o banco com os 10 astronautas e cenários 
 python api.py            # sobe a API em http://127.0.0.1:8000
 ```
 
+
 Para ver um cenário "ao vivo" (a telemetria chegando aos poucos e o motor abrindo/escalando o
 caso sozinho), abra **outro terminal** e rode:
+
 
 ```bash
 python sensores_kb.py --cenario cardiaca --intervalo 1     # uma amostra por segundo

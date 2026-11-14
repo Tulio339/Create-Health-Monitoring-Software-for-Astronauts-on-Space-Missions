@@ -12,7 +12,7 @@ import ferramentas_kb as kb
 from engine import rules_engine
 from motor import carregar_amostras, carregar_perfil, conectar, mission_start_date
 
-FRONTEND = Path(__file__).parent / "frontend"
+FRONTEND_DIST = Path(__file__).resolve().parent.parent / "frontend" / "dist"
 
 app = FastAPI(title="Monitor de Saúde de Astronautas — agente do knowledge-base")
 
@@ -304,6 +304,7 @@ if FRONTEND.exists():
     @app.get("/")
     def pagina():
         return FileResponse(FRONTEND / "index.html")
+
 
 
 # Sem reload: no Windows o modo reload impede o agente de abrir o servidor MCP como subprocesso
