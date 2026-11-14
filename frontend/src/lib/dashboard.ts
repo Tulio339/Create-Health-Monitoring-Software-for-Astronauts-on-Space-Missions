@@ -47,6 +47,16 @@ export interface Panel {
   infos: IndicatorInfo[]
 }
 
+/** Todos os painéis possíveis, na ordem do contrato de dados. */
+export const PANEL_IDS: readonly PanelId[] = [
+  'blood_pressure',
+  ...INDICATORS.filter(
+    (i): i is Exclude<IndicatorId, 'bp_systolic' | 'bp_diastolic' | 'amsler_marks' | 'amsler_central'> =>
+      i !== 'bp_systolic' && i !== 'bp_diastolic' && i !== 'amsler_marks' && i !== 'amsler_central',
+  ),
+  'amsler',
+]
+
 /** Indicadores (do contrato de dados) que compõem cada painel. */
 export function panelIndicators(id: PanelId): IndicatorId[] {
   if (id === 'blood_pressure') return ['bp_systolic', 'bp_diastolic']

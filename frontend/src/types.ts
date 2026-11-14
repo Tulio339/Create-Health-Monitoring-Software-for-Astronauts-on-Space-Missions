@@ -114,3 +114,123 @@ export interface Environment {
   /** Por que a autoavaliação é necessária neste ambiente. */
   self_assessment: string
 }
+
+// --- Motor de regras do backend (fonte de verdade do nível) -----------------------------------
+
+/** Níveis que o motor de regras emite (knowledge-base/protocols/alert-levels.md). */
+export type BackendLevel = 'atencao' | 'alerta' | 'critico'
+
+/** Nível mostrado no painel: os do backend + ausência de caso (normal) e leitura atrasada. */
+export type Level = 'normal' | BackendLevel | 'sem-dado'
+
+export type OperatingMode = 'assistido' | 'hibrido' | 'autonomo'
+
+export interface OpenCase {
+  case_id: string
+  status: string
+  level: BackendLevel
+  directives: string[]
+  summary: string
+}
+
+export interface RecentAlert {
+  alert_id: string
+  directive_id: string
+  level: BackendLevel
+  created_at: string
+}
+
+/** GET /api/astronauts/{id}/status */
+export interface MissionStatus {
+  astronaut_id: string
+  mission_name: string
+  mission_day: number | null
+  mission_phase: string
+  comm_latency_s: number | null
+  operating_mode: OperatingMode
+  casos_abertos: OpenCase[]
+  alertas_recentes: RecentAlert[]
+  indicadores: Partial<Record<IndicatorId, number | null>>
+}
+
+/** GET /api/astronauts/{id}/indicator-levels (só indicadores com diretiva disparada). */
+export interface IndicatorLevel {
+  level: BackendLevel
+  directive_id: string
+  reason: string
+  privacy: 'normal' | 'restricted'
+}
+
+export type IndicatorLevels = Partial<Record<IndicatorId, IndicatorLevel>>
+
+/** GET /api/indicator-thresholds: limiares absolutos das diretivas, já na escala do frontend. */
+export interface DirectiveThreshold {
+  directive_id: string
+  level: BackendLevel
+  op: '>' | '>=' | '<' | '<='
+  value: number
+  agg: string
+  window: string | null
+  description: string
+}
+
+export type IndicatorThresholds = Partial<Record<IndicatorId, DirectiveThreshold[]>>
+
+/** GET /api/directives/{id} (só os campos que o painel usa). */
+export interface Directive {
+  id: string
+  title: string
+  summary?: string
+  privacy?: 'normal' | 'restricted'
+  actions?: Partial<Record<BackendLevel, string[]>>
+  astronaut_message?: Partial<Record<BackendLevel, string>>
+}
+
+export interface CaseTimelineEntry {
+  at: string
+  type: string
+  content: string
+}
+
+export interface CaseEvent {
+  kind: string
+  created_at: string
+  recipient: string | null
+  level_or_priority: string | null
+  payload_json: string | null
+  answered: number
+  answer: string | null
+}
+
+export interface ExitCriterionStatus {
+  description: string
+  met: boolean
+}
+
+/** GET /api/cases/{id} */
+export interface CaseDetail {
+  case_id: string
+  astronaut_id: string
+  status: string
+  level: BackendLevel
+  directives: string[]
+  opened_at: string
+  closed_at: string | null
+  summary: string
+  next_review_at: string | null
+  exit_criteria_status: ExitCriterionStatus[]
+  timeline: CaseTimelineEntry[]
+  events: CaseEvent[]
+}
+
+export interface TelemetryPoint {
+  timestamp: string
+  valor: number
+}
+
+/** GET /api/astronauts/{id}/telemetry */
+export interface TelemetryResponse {
+  astronaut_id: string
+  window: string
+  series: Record<string, TelemetryPoint[]>
+}

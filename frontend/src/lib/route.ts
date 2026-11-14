@@ -6,13 +6,14 @@
 //   #/ast-01/corpo[/heart]      mapa do corpo (região opcional já aberta)
 //   #/ast-01/testes[/reacao]    testes que rodam no app (reacao ou amsler)
 //   #/ast-01/missao             tarefas do dia, progresso e metas da tripulação
+//   #/ast-01/caso/CASE-1        linha do tempo de um caso do motor de regras
 //   #/alertas[/ast-01]          alertas (filtro por astronauta opcional)
 import { useEffect, useState } from 'react'
 
 export interface Route {
-  page: 'dashboard' | 'detail' | 'record' | 'body' | 'tests' | 'mission' | 'alerts'
+  page: 'dashboard' | 'detail' | 'record' | 'body' | 'tests' | 'mission' | 'case' | 'alerts'
   astronautId?: string
-  /** Indicador (detalhe, registrar), região do corpo (mapa) ou teste (testes). */
+  /** Indicador (detalhe, registrar), região do corpo (mapa), teste (testes) ou caso. */
   panelId?: string
 }
 
@@ -21,6 +22,7 @@ const ALERTS = 'alertas'
 const BODY = 'corpo'
 const TESTS = 'testes'
 const MISSION = 'missao'
+const CASE = 'caso'
 
 export function parseRoute(hash: string): Route {
   const [first, second, third] = hash.replace(/^#\/?/, '').split('/').filter(Boolean).map(decodeURIComponent)
@@ -29,6 +31,7 @@ export function parseRoute(hash: string): Route {
   if (second === BODY) return { page: 'body', astronautId: first, panelId: third }
   if (second === TESTS) return { page: 'tests', astronautId: first, panelId: third }
   if (second === MISSION) return { page: 'mission', astronautId: first }
+  if (second === CASE) return { page: 'case', astronautId: first, panelId: third }
   if (second) return { page: 'detail', astronautId: first, panelId: second }
   return { page: 'dashboard', astronautId: first }
 }
@@ -52,6 +55,8 @@ export const testsHref = (astronautId: string, testId?: TestId) =>
   `#/${enc(astronautId)}/${TESTS}${testId ? `/${testId}` : ''}`
 
 export const missionHref = (astronautId: string) => `#/${enc(astronautId)}/${MISSION}`
+
+export const caseHref = (astronautId: string, caseId: string) => `#/${enc(astronautId)}/${CASE}/${enc(caseId)}`
 
 export const alertsHref = (astronautId?: string) => `#/${ALERTS}${astronautId ? `/${enc(astronautId)}` : ''}`
 

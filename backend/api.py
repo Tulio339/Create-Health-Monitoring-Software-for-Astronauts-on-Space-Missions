@@ -283,6 +283,77 @@ def status(astronauta: str):
         conn.close()
 
 
+# Métrica do knowledge-base -> indicador do frontend. Inclui métricas que as diretivas usam mas o
+# frontend não tem com o mesmo nome (vitals.hr, dose_rate): elas colorem o indicador mais próximo.
+_METRICA_PARA_INDICADOR = {caminho: nome for nome, caminho in _ALIAS_METRICAS.items()}
+_METRICA_PARA_INDICADOR.update({"vitals.hr": "heart_rate", "radiation.dose_rate_msv_h": "radiation"})
+NIVEL_ORDEM = {"atencao": 1, "alerta": 2, "critico": 3}
+
+
+def _metricas_da_condicao(cond):
+    if not isinstance(cond, dict):
+        return []
+    if "metric" in cond:
+        return [cond]
+    return [m for chave in ("any", "all") for c in cond.get(chave, []) for m in _metricas_da_condicao(c)]
+
+
+@app.get("/api/astronauts/{astronauta}/indicator-levels")
+def niveis_por_indicador(astronauta: str):
+    """Nível de cada indicador segundo o motor de regras: diretivas dos casos abertos (último alerta
+    de cada uma) + alertas da avaliação mais recente. Só lê; não muda nível nem limiar."""
+    conn = conectar()
+    try:
+        if carregar_perfil(conn, astronauta) is None:
+            raise HTTPException(status_code=404, detail=f"astronauta '{astronauta}' não existe")
+        diretivas = set()
+        for c in conn.execute("SELECT directives_json FROM case_ WHERE astronaut_id = ? AND status != 'encerrado'",
+                              (astronauta,)):
+            diretivas.update(json.loads(c["directives_json"]))
+        ultima = conn.execute("SELECT MAX(timestamp) AS ts FROM telemetry WHERE astronaut_id = ?",
+                              (astronauta,)).fetchone()["ts"]
+        alertas = {}
+        for r in conn.execute("SELECT directive_id, data_json FROM alert WHERE astronaut_id = ? "
+                              "AND (created_at = ? OR directive_id IN (%s)) ORDER BY created_at"
+                              % ",".join("?" * len(diretivas)), (astronauta, ultima, *diretivas)):
+            alertas[r["directive_id"]] = json.loads(r["data_json"])  # fica o mais recente de cada diretiva
+        saida = {}
+        for alerta in alertas.values():
+            for gatilho in alerta.get("triggers", []):
+                for ev in gatilho.get("evidence", []):
+                    nome = _METRICA_PARA_INDICADOR.get(ev.get("metric"))
+                    if nome is None:
+                        continue
+                    atual = saida.get(nome)
+                    if atual is None or NIVEL_ORDEM[gatilho["level"]] > NIVEL_ORDEM[atual["level"]]:
+                        saida[nome] = {"level": gatilho["level"], "directive_id": alerta["directive_id"],
+                                       "reason": gatilho.get("description", ""),
+                                       "privacy": alerta.get("privacy", "normal")}
+        return saida
+    finally:
+        conn.close()
+
+
+@app.get("/api/indicator-thresholds")
+def limiares_por_indicador():
+    """Limiares absolutos das diretivas por indicador do frontend (para as linhas tracejadas do gráfico).
+    Gatilhos relativos ao baseline ficam de fora (são %, não valor). Humor é convertido para 1-5."""
+    from motor import DIRECTIVES
+    saida = {}
+    for d in DIRECTIVES:
+        for gatilho in d.get("triggers", []):
+            for cond in _metricas_da_condicao(gatilho["when"]):
+                nome = _METRICA_PARA_INDICADOR.get(cond["metric"])
+                if nome is None or cond.get("relative_to") or cond["metric"] == "radiation.dose_rate_msv_h":
+                    continue
+                valor = cond["value"] / 2 if nome == "mood" else cond["value"]
+                saida.setdefault(nome, []).append({"directive_id": d["id"], "level": gatilho["level"],
+                                                   "op": cond["op"], "value": valor,
+                                                   "agg": cond.get("agg", "last"), "window": cond.get("window"),
+                                                   "description": gatilho.get("description", "")})
+    return saida
+
+
 @app.get("/api/astronauts/{astronauta}/telemetry")
 def telemetria(astronauta: str, metrics: str, window: str = "7d", resolution: str | None = None):
     """metrics: lista separada por vírgula (ex.: vitals.hr_rest,env.co2_mmhg)."""
@@ -392,12 +463,12 @@ async def chat(m: Mensagem):
                                                     "Confira se o Ollama está aberto com o modelo baixado.")
 
 
-if FRONTEND.exists():
-    app.mount("/static", StaticFiles(directory=FRONTEND), name="static")
+if FRONTEND_DIST.exists():
+    app.mount("/static", StaticFiles(directory=FRONTEND_DIST), name="static")
 
     @app.get("/")
     def pagina():
-        return FileResponse(FRONTEND / "index.html")
+        return FileResponse(FRONTEND_DIST / "index.html")
 
 
 

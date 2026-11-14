@@ -154,23 +154,10 @@ export function BodyFigure({ regions, selectedId, onSelect, layer, side, heartRa
             {visible.map(regionLabel).join('; ')}.
           </desc>
           <defs>
-            <clipPath id="holo-clip">
-              <path d={SILHOUETTE} />
-            </clipPath>
-            <pattern id="holo-scan" width={6} height={4} patternUnits="userSpaceOnUse">
-              <path d="M0 0.5 H6" stroke="var(--color-accent)" strokeWidth={0.4} opacity={0.16} />
-            </pattern>
             <linearGradient id="holo-body-fill" gradientUnits="userSpaceOnUse" x1="0" y1="12" x2="0" y2="545">
-              <stop offset="0" stopColor="var(--color-accent)" stopOpacity={0.16} />
-              <stop offset="0.55" stopColor="var(--color-accent)" stopOpacity={0.07} />
+              <stop offset="0" stopColor="var(--color-accent)" stopOpacity={0.05} />
+              <stop offset="0.55" stopColor="var(--color-accent)" stopOpacity={0.03} />
               <stop offset="1" stopColor="var(--color-accent)" stopOpacity={0.02} />
-            </linearGradient>
-            <filter id="holo-blur" x="-20%" y="-5%" width="140%" height="110%">
-              <feGaussianBlur stdDeviation="3.2" />
-            </filter>
-            <linearGradient id="holo-sweep-fill" x1="0" y1="0" x2="0" y2="1">
-              <stop offset="0" stopColor="var(--color-accent)" stopOpacity={0} />
-              <stop offset="1" stopColor="var(--color-accent)" stopOpacity={0.35} />
             </linearGradient>
           </defs>
 
@@ -185,17 +172,7 @@ export function BodyFigure({ regions, selectedId, onSelect, layer, side, heartRa
             {/* Silhueta: de costas é espelhada, como o resto do corpo. */}
             <g aria-hidden="true" transform={back ? MIRROR : undefined} style={{ color: 'var(--color-accent)' }}>
               <path d={SILHOUETTE} fill="url(#holo-body-fill)" />
-              <path d={SILHOUETTE} fill="url(#holo-scan)" />
-              <g clipPath="url(#holo-clip)">
-                <g className="holo-sweep">
-                  <rect x={0} y={-30} width={260} height={30} fill="url(#holo-sweep-fill)" />
-                  <path d="M0 0 H260" stroke="var(--color-accent)" strokeWidth={0.8} opacity={0.7} />
-                </g>
-              </g>
               <g fill="none" stroke="currentColor" strokeLinejoin="round" strokeLinecap="round">
-                <g filter="url(#holo-blur)" strokeWidth={3} opacity={0.6}>
-                  <path d={SILHOUETTE} />
-                </g>
                 <path d={SILHOUETTE} strokeWidth={1.1} />
                 <path d={CHIN} strokeWidth={1.1} />
               </g>
