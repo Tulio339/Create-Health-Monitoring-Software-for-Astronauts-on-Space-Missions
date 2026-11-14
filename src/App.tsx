@@ -6,6 +6,8 @@ import {
   getAstronauts,
   getBaselines,
   getBodyRegions,
+  getEnvironmentId,
+  getEnvironments,
   getIndicatorInfo,
   getMeasurements,
   subscribe,
@@ -24,13 +26,23 @@ import { BackLink, IndicatorDetail } from './pages/IndicatorDetail'
 import { RecordMeasurement } from './pages/RecordMeasurement'
 import { Tests } from './pages/Tests'
 import { INDICATORS } from './types'
-import type { AlertStatus, Astronaut, Baseline, BodyRegion, IndicatorInfo, Measurement } from './types'
+import type {
+  AlertStatus,
+  Astronaut,
+  Baseline,
+  BodyRegion,
+  Environment,
+  EnvironmentId,
+  IndicatorInfo,
+  Measurement,
+} from './types'
 
 interface Data {
   measurements: Measurement[]
   baselines: Baseline[]
   alertStatuses: Record<string, AlertStatus>
   localCount: number
+  environmentId: EnvironmentId
 }
 
 export default function App() {
@@ -38,17 +50,19 @@ export default function App() {
   const [astronauts, setAstronauts] = useState<Astronaut[]>([])
   const [infos, setInfos] = useState<IndicatorInfo[]>([])
   const [regions, setRegions] = useState<BodyRegion[]>([])
+  const [environments, setEnvironments] = useState<Environment[]>([])
   const [data, setData] = useState<Data>()
   const [error, setError] = useState<string>()
   /** Último astronauta aberto, para a tela de Alertas saber para onde voltar. */
   const [lastAstronautId, setLastAstronautId] = useState<string>()
 
   useEffect(() => {
-    Promise.all([getAstronauts(), Promise.all(INDICATORS.map(getIndicatorInfo)), getBodyRegions()])
-      .then(([crew, texts, body]) => {
+    Promise.all([getAstronauts(), Promise.all(INDICATORS.map(getIndicatorInfo)), getBodyRegions(), getEnvironments()])
+      .then(([crew, texts, body, envs]) => {
         setAstronauts(crew)
         setInfos(texts)
         setRegions(body)
+        setEnvironments(envs)
       })
       .catch((e: Error) => setError(e.message))
   }, [])
@@ -57,9 +71,9 @@ export default function App() {
   useEffect(() => {
     let stale = false
     const reload = () =>
-      Promise.all([getMeasurements(), getBaselines(), getAlertStatuses(), countLocalMeasurements()])
-        .then(([measurements, baselines, alertStatuses, localCount]) => {
-          if (!stale) setData({ measurements, baselines, alertStatuses, localCount })
+      Promise.all([getMeasurements(), getBaselines(), getAlertStatuses(), countLocalMeasurements(), getEnvironmentId()])
+        .then(([measurements, baselines, alertStatuses, localCount, environmentId]) => {
+          if (!stale) setData({ measurements, baselines, alertStatuses, localCount, environmentId })
         })
         .catch((e: Error) => setError(e.message))
     void reload()
@@ -218,7 +232,8 @@ export default function App() {
           {ready && (
             <AnimatePresence mode="wait">
               <motion.div
-                key={`${route.page}/${route.page === 'alerts' ? '' : astronaut.id}/${route.page === 'detail' || route.page === 'tests' ? (route.panelId ?? '') : ''}`}
+                // No mapa do corpo, trocar de astronauta atualiza a figura na hora, sem remontar a página.
+                key={`${route.page}/${route.page === 'alerts' || route.page === 'body' ? '' : astronaut.id}/${route.page === 'detail' || route.page === 'tests' ? (route.panelId ?? '') : ''}`}
                 initial={{ opacity: 0, y: 8 }}
                 animate={{ opacity: 1, y: 0 }}
                 exit={{ opacity: 0 }}
@@ -250,7 +265,14 @@ export default function App() {
                   />
                 )}
                 {route.page === 'body' && (
-                  <BodyMap astronaut={astronaut} panels={panels} regions={regions} regionId={route.panelId} />
+                  <BodyMap
+                    astronaut={astronaut}
+                    panels={panels}
+                    regions={regions}
+                    regionId={route.panelId}
+                    environments={environments}
+                    environmentId={data.environmentId}
+                  />
                 )}
                 {route.page === 'tests' && (
                   <Tests

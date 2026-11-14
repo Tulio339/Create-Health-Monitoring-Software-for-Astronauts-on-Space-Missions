@@ -26,6 +26,151 @@ body {
   font-family: var(--font-sans);
 }
 
+/* --- Holograma do mapa do corpo --------------------------------------------- */
+
+/* Fundo escuro com grade sutil e um clarão atrás da figura. */
+.holo-stage {
+  background:
+    radial-gradient(ellipse 60% 50% at 50% 42%, rgb(76 201 240 / 0.12), transparent 70%),
+    linear-gradient(rgb(76 201 240 / 0.06) 1px, transparent 1px) 0 0 / 100% 24px,
+    linear-gradient(90deg, rgb(76 201 240 / 0.06) 1px, transparent 1px) 0 0 / 24px 100%,
+    var(--color-void);
+}
+
+.holo-glow {
+  filter: drop-shadow(0 0 3px currentColor);
+}
+
+.holo-shape {
+  fill: currentColor;
+  fill-opacity: 0.14;
+  stroke: currentColor;
+  stroke-width: 1.2;
+  transition:
+    fill-opacity 0.15s,
+    stroke-width 0.15s;
+}
+.holo-open {
+  fill: none;
+}
+.holo-soft {
+  opacity: 0.6;
+}
+.holo-region:hover .holo-shape,
+.holo-region:focus-visible .holo-shape {
+  fill-opacity: 0.34;
+}
+.holo-region[aria-pressed='true'] .holo-shape {
+  fill-opacity: 0.45;
+  stroke-width: 2;
+}
+.holo-region:focus-visible .holo-shape {
+  stroke: var(--color-ink);
+  stroke-width: 2.4;
+}
+.holo-region:hover .holo-label,
+.holo-region:focus-visible .holo-label,
+.holo-region[aria-pressed='true'] .holo-label {
+  text-decoration: underline;
+}
+
+/* Halo de alerta: parado por padrão; o vermelho só pulsa se o sistema permite movimento. */
+.holo-alert,
+.holo-halo {
+  stroke-width: 4.5;
+  opacity: 0.4;
+}
+
+.holo-beat,
+.holo-breathe {
+  transform-box: fill-box;
+  transform-origin: center;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .holo-alert {
+    animation: holo-pulse 1.1s ease-out infinite;
+  }
+  /* Coração: a duração (60/FC s) vem do componente, pela FC real do astronauta. */
+  .holo-beat {
+    animation: holo-beat 1s ease-in-out infinite;
+  }
+  .holo-breathe {
+    animation: holo-breathe 4.6s ease-in-out infinite;
+  }
+  .holo-eyes {
+    animation: holo-eyes 3.4s ease-in-out infinite;
+  }
+  .holo-float {
+    animation: holo-float 7s ease-in-out infinite;
+  }
+  .holo-sweep {
+    animation: holo-sweep 9s linear infinite;
+  }
+}
+
+@keyframes holo-pulse {
+  from {
+    stroke-width: 1.5;
+    opacity: 0.9;
+  }
+  to {
+    stroke-width: 12;
+    opacity: 0;
+  }
+}
+@keyframes holo-beat {
+  0%,
+  45%,
+  100% {
+    transform: scale(1);
+  }
+  10% {
+    transform: scale(1.14);
+  }
+  22% {
+    transform: scale(1);
+  }
+  32% {
+    transform: scale(1.08);
+  }
+}
+@keyframes holo-breathe {
+  0%,
+  100% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.05);
+  }
+}
+@keyframes holo-eyes {
+  0%,
+  100% {
+    filter: drop-shadow(0 0 1px currentColor);
+  }
+  50% {
+    filter: drop-shadow(0 0 5px currentColor);
+  }
+}
+@keyframes holo-float {
+  0%,
+  100% {
+    transform: translateY(-4px);
+  }
+  50% {
+    transform: translateY(3px);
+  }
+}
+@keyframes holo-sweep {
+  from {
+    transform: translateY(0);
+  }
+  to {
+    transform: translateY(570px);
+  }
+}
+
 :focus-visible {
   outline: 2px solid var(--color-accent);
   outline-offset: 2px;
