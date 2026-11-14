@@ -1,0 +1,15 @@
+{
+ "astronaut_id": "AST-G",
+ "name": "Tripulante G",
+ "role": "Cientista de carga útil",
+ "age": 33,
+ "mission": {
+  "name": "ARTEMIS-SIM",
+  "day": 200,
+  "phase": "transito"
+ },
+ "baseline": {
+  "behavioral.mood_score": 7.2,
+  "behavioral.private_comm_minutes": 35
+ }
+}

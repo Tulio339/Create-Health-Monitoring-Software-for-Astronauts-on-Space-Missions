@@ -1,0 +1,18 @@
+{
+ "astronaut_id": "AST-K",
+ "name": "Tripulante K",
+ "role": "Especialista de missão",
+ "age": 35,
+ "mission": {
+  "name": "ARTEMIS-SIM",
+  "day": 30,
+  "phase": "transito"
+ },
+ "baseline": {
+  "vitals.hr_rest": 58,
+  "vitals.hrv_rmssd_ms": 52,
+  "fitness.vo2max_ml_kg_min": 46,
+  "behavioral.mood_score": 7.5,
+  "behavioral.private_comm_minutes": 38
+ }
+}

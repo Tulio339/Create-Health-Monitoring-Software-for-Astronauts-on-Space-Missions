@@ -1,0 +1,14 @@
+{
+ "astronaut_id": "AST-D",
+ "name": "Tripulante D",
+ "role": "Engenheira de voo",
+ "age": 45,
+ "mission": {
+  "name": "ARTEMIS-SIM",
+  "day": 120,
+  "phase": "superficie"
+ },
+ "baseline": {
+  "lab.ctx_ng_ml": 0.32
+ }
+}

@@ -1,0 +1,11 @@
+{
+ "astronaut_id": "AST-H",
+ "name": "Tripulante H",
+ "role": "Especialista de EVA",
+ "age": 40,
+ "mission": {
+  "name": "ARTEMIS-SIM",
+  "day": 60,
+  "phase": "superficie"
+ }
+}

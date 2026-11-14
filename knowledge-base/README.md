@@ -58,6 +58,7 @@ knowledge-base/
 ├── agent/                        ← prompt de sistema, ferramentas e fluxo do agente
 ├── engine/                       ← motor de regras de referência (Python)
 └── examples/                     ← perfil + telemetria de exemplo para testar
+    └── scenarios/                 ← um cenário por diretiva (ver tabela abaixo)
 ```
 
 ## Diretivas iniciais
@@ -76,6 +77,35 @@ knowledge-base/
 | [DIR-ENV-001](directives/DIR-ENV-001-co2.yaml) | CO₂ elevado na cabine | ENV |
 | [DIR-ENV-002](directives/DIR-ENV-002-estresse-termico.yaml) | Estresse térmico / febre | ENV |
 | [DIR-DIST-001](directives/DIR-DIST-001-autonomia-medica.yaml) | Autonomia médica sob latência de comunicação | DIST |
+
+## Cenários de teste
+
+[examples/telemetry.json](examples/telemetry.json) (astronauta AST-B, gerado por
+[examples/generate_example.py](examples/generate_example.py)) cobre CO₂ + sono + SPE. Os demais
+cenários — um por diretiva ainda não exercitada por ele — ficam em
+[examples/scenarios/](examples/scenarios/), gerados por
+[examples/generate_scenarios.py](examples/generate_scenarios.py):
+
+| Cenário | Astronauta | Diretiva(s) exercitada(s) | Nível final |
+|---|---|---|---|
+| `cardiaca` | AST-C | DIR-CARD-001 (arritmia) | crítico |
+| `ossea` | AST-D | DIR-GRAV-002 (perda óssea/cálculo renal) | crítico |
+| `descondicionamento` | AST-E | DIR-GRAV-003 (cardiovascular) | crítico |
+| `atrofia` | AST-F | DIR-GRAV-004 (muscular) | crítico |
+| `comportamental` | AST-G | DIR-ISO-002 (saúde comportamental) | alerta |
+| `termico` | AST-H | DIR-ENV-002 (estresse térmico/febre) | crítico |
+| `distancia` | AST-I | DIR-DIST-001 (autonomia médica) | crítico |
+| `radiacao` | AST-J | DIR-RAD-001 (dose acumulada) | crítico |
+| `saudavel` | AST-K | nenhuma (caso de controle) | — (0 alertas) |
+
+Cada cenário começa num período normal e evolui até o nível indicado, para exercitar as
+diretivas em todos os seus níveis de uma vez. Para rodar um deles:
+
+```bash
+python3 examples/generate_scenarios.py   # gera/regenera todos os *_telemetry.json e *_profile.json
+python3 engine/rules_engine.py --telemetry examples/scenarios/cardiaca_telemetry.json \
+                                --profile examples/scenarios/cardiaca_profile.json
+```
 
 ## Como adicionar uma diretiva
 

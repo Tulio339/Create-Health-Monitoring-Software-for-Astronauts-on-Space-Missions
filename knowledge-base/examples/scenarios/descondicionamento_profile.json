@@ -1,0 +1,16 @@
+{
+ "astronaut_id": "AST-E",
+ "name": "Tripulante E",
+ "role": "Médica de voo (CMO)",
+ "age": 50,
+ "mission": {
+  "name": "ARTEMIS-SIM",
+  "day": 150,
+  "phase": "transito"
+ },
+ "baseline": {
+  "vitals.hr_rest": 58,
+  "vitals.hrv_rmssd_ms": 52,
+  "fitness.vo2max_ml_kg_min": 48
+ }
+}
