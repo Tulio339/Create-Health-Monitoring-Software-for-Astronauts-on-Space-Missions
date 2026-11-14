@@ -1,0 +1,11 @@
+{
+ "astronaut_id": "AST-J",
+ "name": "Tripulante J",
+ "role": "Especialista de missão",
+ "age": 52,
+ "mission": {
+  "name": "ARTEMIS-SIM",
+  "day": 400,
+  "phase": "transito_profundo"
+ }
+}

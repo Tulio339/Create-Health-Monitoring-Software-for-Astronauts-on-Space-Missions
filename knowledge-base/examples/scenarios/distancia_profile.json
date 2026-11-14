@@ -1,0 +1,11 @@
+{
+ "astronaut_id": "AST-I",
+ "name": "Tripulante I",
+ "role": "Comandante",
+ "age": 47,
+ "mission": {
+  "name": "ARTEMIS-SIM",
+  "day": 300,
+  "phase": "transito_profundo"
+ }
+}

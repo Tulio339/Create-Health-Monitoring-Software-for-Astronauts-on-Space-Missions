@@ -1,0 +1,87 @@
+id: DIR-GRAV-001
+title: Síndrome neuro-ocular associada ao voo espacial (SANS)
+version: 1.0.0
+hazards: [GRAV, ENV]
+body_system: ocular
+summary: >
+  O deslocamento de fluidos para a cabeça causa edema do disco óptico, dobras de coroide e piora da
+  visão de perto. Monitora OCT, acuidade visual, cefaleia e CO₂ (possível fator agravante).
+kb_refs: [hazards/gravity.md, hazards/hostile-environment.md]
+
+triggers:
+  - id: acuidade-perto-piora
+    level: atencao
+    description: Acuidade visual de perto piorou ≥ 0,1 logMAR (1 linha) em relação ao baseline
+    when: { metric: ocular.near_visual_acuity_logmar_delta, agg: last, op: ">=", value: 0.1 }
+
+  - id: cefaleia-recorrente
+    level: atencao
+    description: Cefaleia com nota média ≥ 3/10 em 3 dias
+    when: { metric: ocular.headache_score, agg: mean, window: 3d, op: ">=", value: 3 }
+
+  - id: rnfl-aumento
+    level: alerta
+    description: Espessura da camada de fibras nervosas da retina (RNFL) ≥ 15% acima do baseline (sinal de edema de disco)
+    when: { metric: ocular.rnfl_thickness_um, agg: last, op: ">=", value: 15, relative_to: baseline }
+
+  - id: rnfl-grave-ou-sintomas
+    level: critico
+    description: RNFL ≥ 30% acima do baseline, ou RNFL ≥ 15% com piora de acuidade ≥ 0,2 logMAR
+    when:
+      any:
+        - { metric: ocular.rnfl_thickness_um, agg: last, op: ">=", value: 30, relative_to: baseline }
+        - all:
+            - { metric: ocular.rnfl_thickness_um, agg: last, op: ">=", value: 15, relative_to: baseline }
+            - { metric: ocular.near_visual_acuity_logmar_delta, agg: last, op: ">=", value: 0.2 }
+
+symptoms_to_check: [visao_turva, cefaleia, rosto_inchado, visao_dupla, zumbido_pulsatil]
+differential: [DIR-ENV-001]
+
+investigation:
+  data_to_collect:
+    - OCT do disco óptico e da mácula (os dois olhos)
+    - Teste de acuidade visual de perto e de longe; grade de Amsler
+    - CO₂ médio na área de dormir nos últimos 7 dias
+    - Ingestão de sódio e de líquidos; horas de exercício resistivo
+  questions_to_astronaut:
+    - Está com dificuldade para ler de perto ou focar em telas?
+    - Tem tido dor de cabeça? Em que hora do dia ela é pior?
+    - Notou visão dupla, manchas ou um zumbido que pulsa no ouvido?
+
+actions:
+  atencao:
+    - Agendar OCT e teste de acuidade em até 72 h
+    - Disponibilizar óculos com mais grau (kit de lentes de ajuste)
+    - Verificar CO₂ na área de dormir (DIR-ENV-001)
+  alerta:
+    - OCT semanal; enviar imagens ao oftalmologista de solo
+    - Reduzir CO₂ da cabine para ≤ 2,0 mmHg se possível
+    - Considerar sessões de manguito de coxa / LBNP, se disponível
+  critico:
+    - Consulta com oftalmologista/médico de voo na próxima janela de comunicação
+    - Reduzir tarefas que dependem de visão fina até a avaliação
+    - Seguir protocolo médico para possível pressão intracraniana elevada
+
+astronaut_message:
+  atencao: "Detectamos uma pequena mudança na sua visão de perto ou dores de cabeça frequentes. Vamos agendar um exame de OCT."
+  alerta: "O exame de retina mostrou um inchaço leve. Vamos acompanhar toda semana e tomar medidas para reduzir o CO₂."
+  critico: "Mudança importante na retina. O médico de voo vai avaliar. Evite tarefas que precisam de visão fina até lá."
+
+follow_up:
+  atencao: { interval: 3d, duration: 14d }
+  alerta:  { interval: 7d, duration: 60d }
+  critico: { interval: 1d, duration: 30d }
+
+exit_criteria:
+  - description: RNFL abaixo de +10% do baseline
+    when: { metric: ocular.rnfl_thickness_um, agg: last, op: "<", value: 10, relative_to: baseline }
+  - description: Cefaleia média < 2/10 por 7 dias
+    when: { metric: ocular.headache_score, agg: mean, window: 7d, op: "<", value: 2 }
+
+escalation:
+  notify_ground_at: alerta
+  flight_surgeon_required_at: critico
+
+references:
+  - https://www.nasa.gov/hrp/hazards/
+  - HRP Evidence Report — Spaceflight Associated Neuro-ocular Syndrome (SANS)

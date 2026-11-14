@@ -1,0 +1,83 @@
+# ─────────────────────────────────────────────────────────────────────────────
+# TEMPLATE DE DIRETIVA
+# Uma diretiva = uma condição clínica monitorável. Ela diz:
+#   QUANDO alertar (triggers) → O QUE investigar → O QUE fazer → COMO acompanhar → QUANDO encerrar
+# Arquivos que começam com "_" são ignorados pelo motor.
+# ─────────────────────────────────────────────────────────────────────────────
+id: DIR-XXX-000                 # DIR-<RISCO>-<NNN>
+title: Nome da condição
+version: 1.0.0
+hazards: [GRAV]                 # RAD | ISO | DIST | GRAV | ENV (o primeiro é o principal)
+body_system: cardiovascular     # cardiovascular | musculoesqueletico | ocular | neurologico | comportamental | respiratorio | hematologico | renal | termorregulacao | sistemico
+summary: >
+  Uma ou duas frases sobre o que é monitorado e por quê.
+kb_refs: [hazards/gravity.md]   # documentos que o agente deve ler (RAG)
+
+# ── GATILHOS ────────────────────────────────────────────────────────────────
+# Cada gatilho tem um nível: atencao | alerta | critico.
+# O alerta emitido usa o MAIOR nível disparado.
+#
+# Condição simples:
+#   metric: caminho.na.telemetria      (ver schema/telemetry.schema.json)
+#   agg:    last | mean | max | min | sum | delta | count
+#           (delta = último - primeiro da janela; count = nº de amostras com valor)
+#   window: "30m" | "6h" | "3d"        (opcional; sem janela = última amostra)
+#   op:     ">" | ">=" | "<" | "<=" | "=="
+#   value:  número
+#   relative_to: baseline              (opcional: compara a VARIAÇÃO % contra o baseline pré-voo)
+#
+# Sintomas relatados:
+#   symptoms_any: [cefaleia, nausea]   (dispara se algum aparecer na janela)
+#   window: "24h"
+#
+# Composição:  all: [cond, cond]  |  any: [cond, cond]  (podem ser aninhadas)
+triggers:
+  - id: exemplo-atencao
+    level: atencao
+    description: Texto curto que explica o gatilho
+    when:
+      metric: vitals.hr_rest
+      agg: mean
+      window: 3d
+      op: ">="
+      value: 10
+      relative_to: baseline
+
+# Sintomas que o agente deve perguntar ativamente
+symptoms_to_check: [palpitacoes, tontura]
+
+# Outras diretivas a considerar no diagnóstico diferencial
+differential: [DIR-ENV-002]
+
+investigation:
+  data_to_collect:              # dados extras que o agente pede / busca
+    - ECG de 12 derivações
+  questions_to_astronaut:       # perguntas em linguagem simples
+    - Você sentiu o coração acelerado ou falhando?
+
+actions:                        # o que fazer em cada nível (a bordo, sem depender da Terra)
+  atencao: []
+  alerta: []
+  critico: []
+
+astronaut_message:              # mensagem curta exibida na aplicação
+  atencao: ""
+  alerta: ""
+  critico: ""
+
+follow_up:                      # frequência de reavaliação pelo agente
+  atencao: { interval: 24h, duration: 3d }
+  alerta:  { interval: 6h,  duration: 3d }
+  critico: { interval: 1h,  duration: 24h }
+
+# Caso só fecha quando TODAS as condições abaixo forem verdadeiras
+exit_criteria:
+  - description: FC de repouso volta a ±10% do baseline por 3 dias
+    when: { metric: vitals.hr_rest, agg: mean, window: 3d, op: "<", value: 10, relative_to: baseline }
+
+escalation:
+  notify_ground_at: alerta      # nível a partir do qual o solo é notificado
+  flight_surgeon_required_at: critico
+
+references:
+  - https://www.nasa.gov/hrp/hazards/

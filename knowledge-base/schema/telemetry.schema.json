@@ -1,0 +1,106 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "telemetry.schema.json",
+  "title": "Amostra de telemetria",
+  "description": "Uma leitura de um astronauta num instante. Campos ausentes = sem leitura nesse instante (métricas diárias como sono aparecem uma vez por dia).",
+  "type": "object",
+  "required": ["astronaut_id", "timestamp"],
+  "properties": {
+    "astronaut_id": { "type": "string" },
+    "timestamp": { "type": "string", "format": "date-time" },
+    "module": { "type": "string", "description": "Módulo onde o astronauta está (para correlacionar com env)" },
+
+    "vitals": {
+      "type": "object",
+      "properties": {
+        "hr": { "type": "number", "description": "Frequência cardíaca instantânea (bpm)" },
+        "hr_rest": { "type": "number", "description": "FC de repouso (bpm)" },
+        "hrv_rmssd_ms": { "type": "number", "description": "Variabilidade da FC (RMSSD, ms)" },
+        "ectopic_beats_per_h": { "type": "number" },
+        "afib_detected": { "type": "integer", "enum": [0, 1] },
+        "spo2_pct": { "type": "number" },
+        "bp_sys": { "type": "number", "description": "PA sistólica (mmHg)" },
+        "bp_dia": { "type": "number", "description": "PA diastólica (mmHg)" },
+        "resp_rate": { "type": "number", "description": "Respirações por minuto" },
+        "core_temp_c": { "type": "number" },
+        "sleep_hours": { "type": "number", "description": "Sono da última noite (actigrafia)" },
+        "sleep_efficiency_pct": { "type": "number" },
+        "fluid_intake_ml": { "type": "number", "description": "Ingestão de líquidos no dia" },
+        "body_mass_kg": { "type": "number" }
+      }
+    },
+    "radiation": {
+      "type": "object",
+      "properties": {
+        "dose_rate_msv_h": { "type": "number" },
+        "cumulative_mission_msv": { "type": "number" },
+        "cumulative_career_msv": { "type": "number" }
+      }
+    },
+    "env": {
+      "type": "object",
+      "properties": {
+        "co2_mmhg": { "type": "number" },
+        "o2_pct": { "type": "number" },
+        "cabin_temp_c": { "type": "number" },
+        "humidity_pct": { "type": "number" },
+        "noise_dba": { "type": "number" },
+        "proton_flux_10mev_pfu": { "type": "number", "description": "Fluxo de prótons > 10 MeV (pfu)" }
+      }
+    },
+    "ocular": {
+      "type": "object",
+      "properties": {
+        "near_visual_acuity_logmar_delta": { "type": "number", "description": "Variação da acuidade de perto vs. pré-voo (positivo = pior)" },
+        "rnfl_thickness_um": { "type": "number", "description": "Espessura da RNFL peripapilar no OCT (µm)" },
+        "headache_score": { "type": "number", "minimum": 0, "maximum": 10 }
+      }
+    },
+    "lab": {
+      "type": "object",
+      "properties": {
+        "ctx_ng_ml": { "type": "number" },
+        "urine_calcium_mg_day": { "type": "number" },
+        "lymphocytes_10e9_l": { "type": "number" }
+      }
+    },
+    "fitness": {
+      "type": "object",
+      "properties": {
+        "exercise_minutes": { "type": "number", "description": "Minutos de exercício no dia" },
+        "resistive_load_pct_baseline": { "type": "number" },
+        "leg_strength_pct_baseline": { "type": "number" },
+        "vo2max_ml_kg_min": { "type": "number" }
+      }
+    },
+    "cognitive": {
+      "type": "object",
+      "properties": {
+        "pvt_lapses": { "type": "number", "description": "Lapsos (> 355 ms) no PVT de 3 min" },
+        "pvt_mean_rt_ms": { "type": "number" }
+      }
+    },
+    "behavioral": {
+      "type": "object",
+      "properties": {
+        "mood_score": { "type": "number", "minimum": 0, "maximum": 10 },
+        "stress_score": { "type": "number", "minimum": 0, "maximum": 10 },
+        "private_comm_minutes": { "type": "number" }
+      }
+    },
+    "mission": {
+      "type": "object",
+      "properties": {
+        "comm_latency_s": { "type": "number" },
+        "comm_available": { "type": "integer", "enum": [0, 1] },
+        "medkit_min_stock_pct": { "type": "number" },
+        "open_cases_alerta_or_above": { "type": "integer" }
+      }
+    },
+    "symptoms": {
+      "type": "array",
+      "description": "Códigos de sintomas relatados (ver symptoms/index.yaml)",
+      "items": { "type": "string" }
+    }
+  }
+}

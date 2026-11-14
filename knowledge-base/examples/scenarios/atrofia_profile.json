@@ -1,0 +1,11 @@
+{
+ "astronaut_id": "AST-F",
+ "name": "Tripulante F",
+ "role": "Especialista de missão",
+ "age": 36,
+ "mission": {
+  "name": "ARTEMIS-SIM",
+  "day": 95,
+  "phase": "superficie"
+ }
+}

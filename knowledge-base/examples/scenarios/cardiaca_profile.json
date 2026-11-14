@@ -1,0 +1,15 @@
+{
+ "astronaut_id": "AST-C",
+ "name": "Tripulante C",
+ "role": "Piloto",
+ "age": 38,
+ "mission": {
+  "name": "ARTEMIS-SIM",
+  "day": 70,
+  "phase": "superficie"
+ },
+ "baseline": {
+  "vitals.hr_rest": 58,
+  "vitals.hrv_rmssd_ms": 52
+ }
+}

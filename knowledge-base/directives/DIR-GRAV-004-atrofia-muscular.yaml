@@ -1,0 +1,77 @@
+id: DIR-GRAV-004
+title: Atrofia muscular e adesão ao exercício
+version: 1.0.0
+hazards: [GRAV]
+body_system: musculoesqueletico
+summary: >
+  Os músculos antigravitacionais (panturrilha, coxa, costas) atrofiam sem carga. Monitora
+  adesão ao exercício, carga resistiva e testes de força.
+kb_refs: [hazards/gravity.md]
+
+triggers:
+  - id: sessoes-perdidas
+    level: atencao
+    description: Exercício total < 60 min em 2 dias seguidos
+    when: { metric: fitness.exercise_minutes, agg: max, window: 2d, op: "<", value: 60 }
+
+  - id: carga-resistiva-caindo
+    level: atencao
+    description: Carga resistiva ≥ 10% abaixo do baseline
+    when: { metric: fitness.resistive_load_pct_baseline, agg: last, op: "<=", value: 90 }
+
+  - id: forca-perna-queda
+    level: alerta
+    description: Força de perna ≤ 85% do baseline
+    when: { metric: fitness.leg_strength_pct_baseline, agg: last, op: "<=", value: 85 }
+
+  - id: forca-perna-grave
+    level: critico
+    description: Força de perna ≤ 75% do baseline (compromete EVA e a saída de emergência no pouso)
+    when: { metric: fitness.leg_strength_pct_baseline, agg: last, op: "<=", value: 75 }
+
+symptoms_to_check: [fraqueza_muscular, dor_muscular, dor_lombar, fadiga]
+differential: [DIR-GRAV-002, DIR-ISO-002]
+
+investigation:
+  data_to_collect:
+    - Registro do ARED (cargas, séries, repetições) dos últimos 14 dias
+    - Motivo das sessões perdidas (agenda, lesão, equipamento, motivação)
+    - Ingestão calórica e proteica
+  questions_to_astronaut:
+    - O que atrapalhou o exercício nos últimos dias (agenda, dor, equipamento, cansaço)?
+    - Está com alguma dor ou lesão que limite os exercícios?
+
+actions:
+  atencao:
+    - Reagendar sessões perdidas e proteger o horário de exercício na agenda
+    - Se a causa for motivacional, cruzar com DIR-ISO-002
+  alerta:
+    - Fisiologista ajusta o protocolo (mais carga e volume nos membros inferiores)
+    - Rever a ingestão de proteína (meta ~1,2–1,6 g/kg/dia)
+  critico:
+    - Rever a aptidão para EVA e para a saída de emergência no pouso
+    - Caso com o médico de voo e o fisiologista
+
+astronaut_message:
+  atencao: "Você perdeu algumas sessões de exercício. Reagendamos para manter seus músculos fortes."
+  alerta: "Sua força de perna caiu. O plano de treino vai ser ajustado."
+  critico: "Sua força de perna caiu bastante. Sua aptidão para EVA vai ser reavaliada."
+
+follow_up:
+  atencao: { interval: 1d, duration: 7d }
+  alerta:  { interval: 7d, duration: 30d }
+  critico: { interval: 3d, duration: 30d }
+
+exit_criteria:
+  - description: Exercício ≥ 90 min/dia em média por 7 dias
+    when: { metric: fitness.exercise_minutes, agg: mean, window: 7d, op: ">=", value: 90 }
+  - description: Força de perna ≥ 90% do baseline
+    when: { metric: fitness.leg_strength_pct_baseline, agg: last, op: ">=", value: 90 }
+
+escalation:
+  notify_ground_at: alerta
+  flight_surgeon_required_at: critico
+
+references:
+  - https://www.nasa.gov/hrp/hazards/
+  - HRP Evidence Report — Risk of Impaired Performance due to Reduced Muscle Mass, Strength & Endurance

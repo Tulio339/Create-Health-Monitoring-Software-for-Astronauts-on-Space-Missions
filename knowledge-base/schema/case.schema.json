@@ -1,0 +1,66 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "case.schema.json",
+  "title": "Caso de acompanhamento",
+  "description": "Aberto pelo agente de IA a partir de um ou mais alertas. Registra a investigação e o acompanhamento até o critério de saída.",
+  "type": "object",
+  "required": ["case_id", "astronaut_id", "status", "level", "directives", "opened_at"],
+  "properties": {
+    "case_id": { "type": "string" },
+    "astronaut_id": { "type": "string" },
+    "status": { "enum": ["aberto", "investigando", "acompanhando", "aguardando_solo", "encerrado"] },
+    "level": { "enum": ["atencao", "alerta", "critico"] },
+    "directives": { "type": "array", "items": { "type": "string" }, "description": "Diretivas envolvidas (casos correlacionados agrupam várias)" },
+    "alert_ids": { "type": "array", "items": { "type": "string" } },
+    "opened_at": { "type": "string", "format": "date-time" },
+    "closed_at": { "type": ["string", "null"], "format": "date-time" },
+    "summary": { "type": "string", "description": "Resumo de uma linha" },
+
+    "hypotheses": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "directive_id": { "type": "string" },
+          "likelihood": { "enum": ["alta", "media", "baixa", "descartada"] },
+          "evidence_for": { "type": "array", "items": { "type": "string" } },
+          "evidence_against": { "type": "array", "items": { "type": "string" } }
+        }
+      }
+    },
+    "timeline": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "at": { "type": "string", "format": "date-time" },
+          "type": { "enum": ["alerta", "pergunta", "resposta_astronauta", "acao", "dado_coletado", "nota_agente", "mensagem_solo", "resposta_solo", "mudanca_nivel"] },
+          "content": { "type": "string" }
+        }
+      }
+    },
+    "pending_questions": { "type": "array", "items": { "type": "string" } },
+    "next_review_at": { "type": "string", "format": "date-time" },
+    "follow_up_until": { "type": "string", "format": "date-time" },
+    "exit_criteria_status": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "description": { "type": "string" },
+          "met": { "type": "boolean" }
+        }
+      }
+    },
+    "ground_packet": {
+      "type": "object",
+      "description": "Pacote assíncrono (protocols/escalation.md)",
+      "properties": {
+        "one_liner": { "type": "string" },
+        "questions": { "type": "array", "items": { "type": "string" } },
+        "default_plan_if_no_answer": { "type": "string" },
+        "answer_deadline": { "type": "string", "format": "date-time" }
+      }
+    }
+  }
+}

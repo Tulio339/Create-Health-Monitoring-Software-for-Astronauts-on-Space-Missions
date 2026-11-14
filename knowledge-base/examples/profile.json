@@ -1,0 +1,18 @@
+{
+  "astronaut_id": "AST-B",
+  "name": "Tripulante B",
+  "role": "Especialista de missão",
+  "age": 41,
+  "mission": { "name": "ARTEMIS-SIM", "day": 42, "phase": "transito", "medical_officer": false },
+  "baseline": {
+    "_comment": "Médias pré-voo (L-180 a L-30). Usadas pelas condições com relative_to: baseline.",
+    "vitals.hr_rest": 58,
+    "vitals.hrv_rmssd_ms": 52,
+    "ocular.rnfl_thickness_um": 98,
+    "lab.ctx_ng_ml": 0.35,
+    "fitness.vo2max_ml_kg_min": 46,
+    "cognitive.pvt_lapses": 4,
+    "behavioral.mood_score": 7.5,
+    "behavioral.private_comm_minutes": 40
+  }
+}

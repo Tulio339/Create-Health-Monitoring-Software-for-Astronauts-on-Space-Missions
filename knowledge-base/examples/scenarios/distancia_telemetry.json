@@ -1,0 +1,2666 @@
+[
+ {
+  "astronaut_id": "AST-I",
+  "timestamp": "2026-11-07T00:00:00Z",
+  "module": "hab",
+  "vitals": {
+   "hr": 66.36,
+   "hr_rest": 57.21,
+   "hrv_rmssd_ms": 55.24,
+   "ectopic_beats_per_h": 5.61,
+   "afib_detected": 0,
+   "spo2_pct": 97.89,
+   "bp_sys": 120.56,
+   "bp_dia": 73.24,
+   "resp_rate": 14.61,
+   "core_temp_c": 36.84
+  },
+  "radiation": {
+   "dose_rate_msv_h": 0.04,
+   "cumulative_mission_msv": 80.0,
+   "cumulative_career_msv": 220.0
+  },
+  "env": {
+   "co2_mmhg": 2.15,
+   "o2_pct": 21.0,
+   "cabin_temp_c": 22.52,
+   "humidity_pct": 42.76,
+   "noise_dba": 50.85,
+   "proton_flux_10mev_pfu": 0.5
+  },
+  "mission": {
+   "comm_latency_s": 95,
+   "comm_available": 1,
+   "medkit_min_stock_pct": 70,
+   "open_cases_alerta_or_above": 0
+  },
+  "symptoms": []
+ },
+ {
+  "astronaut_id": "AST-I",
+  "timestamp": "2026-11-07T01:00:00Z",
+  "module": "hab",
+  "vitals": {
+   "hr": 62.59,
+   "hr_rest": 56.72,
+   "hrv_rmssd_ms": 55.08,
+   "ectopic_beats_per_h": 8.06,
+   "afib_detected": 0,
+   "spo2_pct": 97.94,
+   "bp_sys": 115.6,
+   "bp_dia": 72.46,
+   "resp_rate": 13.98,
+   "core_temp_c": 36.76
+  },
+  "radiation": {
+   "dose_rate_msv_h": 0.04,
+   "cumulative_mission_msv": 80.0,
+   "cumulative_career_msv": 220.0
+  },
+  "env": {
+   "co2_mmhg": 2.29,
+   "o2_pct": 21.0,
+   "cabin_temp_c": 22.13,
+   "humidity_pct": 43.19,
+   "noise_dba": 50.32,
+   "proton_flux_10mev_pfu": 0.5
+  },
+  "mission": {
+   "comm_latency_s": 95,
+   "comm_available": 1,
+   "medkit_min_stock_pct": 70,
+   "open_cases_alerta_or_above": 0
+  },
+  "symptoms": []
+ },
+ {
+  "astronaut_id": "AST-I",
+  "timestamp": "2026-11-07T02:00:00Z",
+  "module": "hab",
+  "vitals": {
+   "hr": 66.07,
+   "hr_rest": 57.55,
+   "hrv_rmssd_ms": 48.97,
+   "ectopic_beats_per_h": 8.66,
+   "afib_detected": 0,
+   "spo2_pct": 97.96,
+   "bp_sys": 116.46,
+   "bp_dia": 72.71,
+   "resp_rate": 14.0,
+   "core_temp_c": 36.72
+  },
+  "radiation": {
+   "dose_rate_msv_h": 0.04,
+   "cumulative_mission_msv": 80.0,
+   "cumulative_career_msv": 220.0
+  },
+  "env": {
+   "co2_mmhg": 2.11,
+   "o2_pct": 21.0,
+   "cabin_temp_c": 22.34,
+   "humidity_pct": 44.3,
+   "noise_dba": 53.66,
+   "proton_flux_10mev_pfu": 0.5
+  },
+  "mission": {
+   "comm_latency_s": 95,
+   "comm_available": 1,
+   "medkit_min_stock_pct": 70,
+   "open_cases_alerta_or_above": 0
+  },
+  "symptoms": []
+ },
+ {
+  "astronaut_id": "AST-I",
+  "timestamp": "2026-11-07T03:00:00Z",
+  "module": "hab",
+  "vitals": {
+   "hr": 65.27,
+   "hr_rest": 59.5,
+   "hrv_rmssd_ms": 48.95,
+   "ectopic_beats_per_h": 6.88,
+   "afib_detected": 0,
+   "spo2_pct": 97.11,
+   "bp_sys": 118.88,
+   "bp_dia": 71.33,
+   "resp_rate": 14.13,
+   "core_temp_c": 36.8
+  },
+  "radiation": {
+   "dose_rate_msv_h": 0.04,
+   "cumulative_mission_msv": 80.0,
+   "cumulative_career_msv": 220.0
+  },
+  "env": {
+   "co2_mmhg": 2.25,
+   "o2_pct": 21.0,
+   "cabin_temp_c": 22.52,
+   "humidity_pct": 43.73,
+   "noise_dba": 54.69,
+   "proton_flux_10mev_pfu": 0.5
+  },
+  "mission": {
+   "comm_latency_s": 95,
+   "comm_available": 1,
+   "medkit_min_stock_pct": 70,
+   "open_cases_alerta_or_above": 0
+  },
+  "symptoms": []
+ },
+ {
+  "astronaut_id": "AST-I",
+  "timestamp": "2026-11-07T04:00:00Z",
+  "module": "hab",
+  "vitals": {
+   "hr": 65.87,
+   "hr_rest": 56.66,
+   "hrv_rmssd_ms": 52.36,
+   "ectopic_beats_per_h": 8.08,
+   "afib_detected": 0,
+   "spo2_pct": 97.01,
+   "bp_sys": 111.41,
+   "bp_dia": 73.97,
+   "resp_rate": 14.43,
+   "core_temp_c": 36.76
+  },
+  "radiation": {
+   "dose_rate_msv_h": 0.04,
+   "cumulative_mission_msv": 80.0,
+   "cumulative_career_msv": 220.0
+  },
+  "env": {
+   "co2_mmhg": 2.23,
+   "o2_pct": 21.0,
+   "cabin_temp_c": 22.31,
+   "humidity_pct": 46.36,
+   "noise_dba": 53.77,
+   "proton_flux_10mev_pfu": 0.5
+  },
+  "mission": {
+   "comm_latency_s": 95,
+   "comm_available": 1,
+   "medkit_min_stock_pct": 70,
+   "open_cases_alerta_or_above": 0
+  },
+  "symptoms": []
+ },
+ {
+  "astronaut_id": "AST-I",
+  "timestamp": "2026-11-07T05:00:00Z",
+  "module": "hab",
+  "vitals": {
+   "hr": 66.27,
+   "hr_rest": 59.68,
+   "hrv_rmssd_ms": 51.27,
+   "ectopic_beats_per_h": 7.27,
+   "afib_detected": 0,
+   "spo2_pct": 96.91,
+   "bp_sys": 114.77,
+   "bp_dia": 76.11,
+   "resp_rate": 14.54,
+   "core_temp_c": 36.78
+  },
+  "radiation": {
+   "dose_rate_msv_h": 0.04,
+   "cumulative_mission_msv": 80.0,
+   "cumulative_career_msv": 220.0
+  },
+  "env": {
+   "co2_mmhg": 2.19,
+   "o2_pct": 21.0,
+   "cabin_temp_c": 22.59,
+   "humidity_pct": 42.33,
+   "noise_dba": 52.13,
+   "proton_flux_10mev_pfu": 0.5
+  },
+  "mission": {
+   "comm_latency_s": 95,
+   "comm_available": 1,
+   "medkit_min_stock_pct": 70,
+   "open_cases_alerta_or_above": 0
+  },
+  "symptoms": []
+ },
+ {
+  "astronaut_id": "AST-I",
+  "timestamp": "2026-11-07T06:00:00Z",
+  "module": "hab",
+  "vitals": {
+   "hr": 68.77,
+   "hr_rest": 56.51,
+   "hrv_rmssd_ms": 48.62,
+   "ectopic_beats_per_h": 7.98,
+   "afib_detected": 0,
+   "spo2_pct": 97.63,
+   "bp_sys": 114.78,
+   "bp_dia": 73.33,
+   "resp_rate": 14.87,
+   "core_temp_c": 36.95
+  },
+  "radiation": {
+   "dose_rate_msv_h": 0.04,
+   "cumulative_mission_msv": 80.0,
+   "cumulative_career_msv": 220.0
+  },
+  "env": {
+   "co2_mmhg": 2.3,
+   "o2_pct": 21.0,
+   "cabin_temp_c": 22.24,
+   "humidity_pct": 43.92,
+   "noise_dba": 50.59,
+   "proton_flux_10mev_pfu": 0.5
+  },
+  "mission": {
+   "comm_latency_s": 95,
+   "comm_available": 1,
+   "medkit_min_stock_pct": 70,
+   "open_cases_alerta_or_above": 0
+  },
+  "symptoms": []
+ },
+ {
+  "astronaut_id": "AST-I",
+  "timestamp": "2026-11-07T07:00:00Z",
+  "module": "hab",
+  "vitals": {
+   "hr": 69.26,
+   "hr_rest": 58.47,
+   "hrv_rmssd_ms": 52.45,
+   "ectopic_beats_per_h": 5.52,
+   "afib_detected": 0,
+   "spo2_pct": 97.85,
+   "bp_sys": 120.76,
+   "bp_dia": 71.83,
+   "resp_rate": 13.58,
+   "core_temp_c": 36.65
+  },
+  "radiation": {
+   "dose_rate_msv_h": 0.04,
+   "cumulative_mission_msv": 80.0,
+   "cumulative_career_msv": 220.0
+  },
+  "env": {
+   "co2_mmhg": 2.27,
+   "o2_pct": 21.0,
+   "cabin_temp_c": 22.29,
+   "humidity_pct": 43.02,
+   "noise_dba": 54.22,
+   "proton_flux_10mev_pfu": 0.5
+  },
+  "mission": {
+   "comm_latency_s": 95,
+   "comm_available": 1,
+   "medkit_min_stock_pct": 70,
+   "open_cases_alerta_or_above": 0
+  },
+  "symptoms": []
+ },
+ {
+  "astronaut_id": "AST-I",
+  "timestamp": "2026-11-07T08:00:00Z",
+  "module": "hab",
+  "vitals": {
+   "hr": 67.4,
+   "hr_rest": 57.78,
+   "hrv_rmssd_ms": 49.94,
+   "ectopic_beats_per_h": 10.74,
+   "afib_detected": 0,
+   "spo2_pct": 97.31,
+   "bp_sys": 118.38,
+   "bp_dia": 75.12,
+   "resp_rate": 13.78,
+   "core_temp_c": 36.94
+  },
+  "radiation": {
+   "dose_rate_msv_h": 0.04,
+   "cumulative_mission_msv": 80.0,
+   "cumulative_career_msv": 220.0
+  },
+  "env": {
+   "co2_mmhg": 2.18,
+   "o2_pct": 21.0,
+   "cabin_temp_c": 22.31,
+   "humidity_pct": 43.36,
+   "noise_dba": 49.21,
+   "proton_flux_10mev_pfu": 0.5
+  },
+  "mission": {
+   "comm_latency_s": 95,
+   "comm_available": 1,
+   "medkit_min_stock_pct": 70,
+   "open_cases_alerta_or_above": 0
+  },
+  "symptoms": []
+ },
+ {
+  "astronaut_id": "AST-I",
+  "timestamp": "2026-11-07T09:00:00Z",
+  "module": "hab",
+  "vitals": {
+   "hr": 65.61,
+   "hr_rest": 59.72,
+   "hrv_rmssd_ms": 53.83,
+   "ectopic_beats_per_h": 7.08,
+   "afib_detected": 0,
+   "spo2_pct": 97.26,
+   "bp_sys": 119.04,
+   "bp_dia": 76.58,
+   "resp_rate": 13.62,
+   "core_temp_c": 36.73
+  },
+  "radiation": {
+   "dose_rate_msv_h": 0.04,
+   "cumulative_mission_msv": 80.0,
+   "cumulative_career_msv": 220.0
+  },
+  "env": {
+   "co2_mmhg": 2.15,
+   "o2_pct": 21.0,
+   "cabin_temp_c": 22.75,
+   "humidity_pct": 44.87,
+   "noise_dba": 53.05,
+   "proton_flux_10mev_pfu": 0.5
+  },
+  "mission": {
+   "comm_latency_s": 95,
+   "comm_available": 1,
+   "medkit_min_stock_pct": 70,
+   "open_cases_alerta_or_above": 0
+  },
+  "symptoms": []
+ },
+ {
+  "astronaut_id": "AST-I",
+  "timestamp": "2026-11-07T10:00:00Z",
+  "module": "hab",
+  "vitals": {
+   "hr": 67.42,
+   "hr_rest": 59.2,
+   "hrv_rmssd_ms": 52.33,
+   "ectopic_beats_per_h": 5.15,
+   "afib_detected": 0,
+   "spo2_pct": 97.69,
+   "bp_sys": 113.42,
+   "bp_dia": 76.84,
+   "resp_rate": 14.17,
+   "core_temp_c": 36.86
+  },
+  "radiation": {
+   "dose_rate_msv_h": 0.04,
+   "cumulative_mission_msv": 80.0,
+   "cumulative_career_msv": 220.0
+  },
+  "env": {
+   "co2_mmhg": 2.24,
+   "o2_pct": 21.0,
+   "cabin_temp_c": 22.78,
+   "humidity_pct": 46.9,
+   "noise_dba": 54.51,
+   "proton_flux_10mev_pfu": 0.5
+  },
+  "mission": {
+   "comm_latency_s": 95,
+   "comm_available": 1,
+   "medkit_min_stock_pct": 70,
+   "open_cases_alerta_or_above": 0
+  },
+  "symptoms": []
+ },
+ {
+  "astronaut_id": "AST-I",
+  "timestamp": "2026-11-07T11:00:00Z",
+  "module": "hab",
+  "vitals": {
+   "hr": 68.6,
+   "hr_rest": 57.02,
+   "hrv_rmssd_ms": 53.96,
+   "ectopic_beats_per_h": 7.11,
+   "afib_detected": 0,
+   "spo2_pct": 97.8,
+   "bp_sys": 116.57,
+   "bp_dia": 74.59,
+   "resp_rate": 13.19,
+   "core_temp_c": 36.7
+  },
+  "radiation": {
+   "dose_rate_msv_h": 0.04,
+   "cumulative_mission_msv": 80.0,
+   "cumulative_career_msv": 220.0
+  },
+  "env": {
+   "co2_mmhg": 2.13,
+   "o2_pct": 21.0,
+   "cabin_temp_c": 22.18,
+   "humidity_pct": 47.21,
+   "noise_dba": 54.46,
+   "proton_flux_10mev_pfu": 0.5
+  },
+  "mission": {
+   "comm_latency_s": 95,
+   "comm_available": 1,
+   "medkit_min_stock_pct": 70,
+   "open_cases_alerta_or_above": 0
+  },
+  "symptoms": []
+ },
+ {
+  "astronaut_id": "AST-I",
+  "timestamp": "2026-11-07T12:00:00Z",
+  "module": "hab",
+  "vitals": {
+   "hr": 64.8,
+   "hr_rest": 57.82,
+   "hrv_rmssd_ms": 52.59,
+   "ectopic_beats_per_h": 9.17,
+   "afib_detected": 0,
+   "spo2_pct": 97.0,
+   "bp_sys": 120.72,
+   "bp_dia": 70.24,
+   "resp_rate": 13.23,
+   "core_temp_c": 36.87
+  },
+  "radiation": {
+   "dose_rate_msv_h": 0.04,
+   "cumulative_mission_msv": 80.0,
+   "cumulative_career_msv": 220.0
+  },
+  "env": {
+   "co2_mmhg": 2.17,
+   "o2_pct": 21.0,
+   "cabin_temp_c": 22.61,
+   "humidity_pct": 45.35,
+   "noise_dba": 51.88,
+   "proton_flux_10mev_pfu": 0.5
+  },
+  "mission": {
+   "comm_latency_s": 95,
+   "comm_available": 1,
+   "medkit_min_stock_pct": 70,
+   "open_cases_alerta_or_above": 0
+  },
+  "symptoms": []
+ },
+ {
+  "astronaut_id": "AST-I",
+  "timestamp": "2026-11-07T13:00:00Z",
+  "module": "hab",
+  "vitals": {
+   "hr": 66.14,
+   "hr_rest": 59.26,
+   "hrv_rmssd_ms": 51.24,
+   "ectopic_beats_per_h": 9.59,
+   "afib_detected": 0,
+   "spo2_pct": 97.61,
+   "bp_sys": 119.85,
+   "bp_dia": 70.85,
+   "resp_rate": 13.59,
+   "core_temp_c": 36.66
+  },
+  "radiation": {
+   "dose_rate_msv_h": 0.04,
+   "cumulative_mission_msv": 80.0,
+   "cumulative_career_msv": 220.0
+  },
+  "env": {
+   "co2_mmhg": 2.11,
+   "o2_pct": 21.0,
+   "cabin_temp_c": 22.53,
+   "humidity_pct": 44.74,
+   "noise_dba": 50.1,
+   "proton_flux_10mev_pfu": 0.5
+  },
+  "mission": {
+   "comm_latency_s": 95,
+   "comm_available": 1,
+   "medkit_min_stock_pct": 70,
+   "open_cases_alerta_or_above": 0
+  },
+  "symptoms": []
+ },
+ {
+  "astronaut_id": "AST-I",
+  "timestamp": "2026-11-07T14:00:00Z",
+  "module": "hab",
+  "vitals": {
+   "hr": 63.24,
+   "hr_rest": 56.8,
+   "hrv_rmssd_ms": 55.13,
+   "ectopic_beats_per_h": 8.37,
+   "afib_detected": 0,
+   "spo2_pct": 97.4,
+   "bp_sys": 116.69,
+   "bp_dia": 73.47,
+   "resp_rate": 13.98,
+   "core_temp_c": 36.67
+  },
+  "radiation": {
+   "dose_rate_msv_h": 0.04,
+   "cumulative_mission_msv": 80.0,
+   "cumulative_career_msv": 220.0
+  },
+  "env": {
+   "co2_mmhg": 2.3,
+   "o2_pct": 21.0,
+   "cabin_temp_c": 22.57,
+   "humidity_pct": 46.35,
+   "noise_dba": 54.4,
+   "proton_flux_10mev_pfu": 0.5
+  },
+  "mission": {
+   "comm_latency_s": 95,
+   "comm_available": 1,
+   "medkit_min_stock_pct": 70,
+   "open_cases_alerta_or_above": 0
+  },
+  "symptoms": []
+ },
+ {
+  "astronaut_id": "AST-I",
+  "timestamp": "2026-11-07T15:00:00Z",
+  "module": "hab",
+  "vitals": {
+   "hr": 62.8,
+   "hr_rest": 56.24,
+   "hrv_rmssd_ms": 49.79,
+   "ectopic_beats_per_h": 6.02,
+   "afib_detected": 0,
+   "spo2_pct": 97.13,
+   "bp_sys": 114.93,
+   "bp_dia": 76.64,
+   "resp_rate": 14.18,
+   "core_temp_c": 36.87
+  },
+  "radiation": {
+   "dose_rate_msv_h": 0.04,
+   "cumulative_mission_msv": 80.0,
+   "cumulative_career_msv": 220.0
+  },
+  "env": {
+   "co2_mmhg": 2.2,
+   "o2_pct": 21.0,
+   "cabin_temp_c": 22.84,
+   "humidity_pct": 47.28,
+   "noise_dba": 49.78,
+   "proton_flux_10mev_pfu": 0.5
+  },
+  "mission": {
+   "comm_latency_s": 95,
+   "comm_available": 1,
+   "medkit_min_stock_pct": 70,
+   "open_cases_alerta_or_above": 0
+  },
+  "symptoms": []
+ },
+ {
+  "astronaut_id": "AST-I",
+  "timestamp": "2026-11-07T16:00:00Z",
+  "module": "hab",
+  "vitals": {
+   "hr": 67.39,
+   "hr_rest": 59.81,
+   "hrv_rmssd_ms": 54.55,
+   "ectopic_beats_per_h": 8.31,
+   "afib_detected": 0,
+   "spo2_pct": 97.38,
+   "bp_sys": 111.89,
+   "bp_dia": 72.17,
+   "resp_rate": 13.18,
+   "core_temp_c": 36.67
+  },
+  "radiation": {
+   "dose_rate_msv_h": 0.04,
+   "cumulative_mission_msv": 80.0,
+   "cumulative_career_msv": 220.0
+  },
+  "env": {
+   "co2_mmhg": 2.26,
+   "o2_pct": 21.0,
+   "cabin_temp_c": 22.5,
+   "humidity_pct": 44.2,
+   "noise_dba": 53.26,
+   "proton_flux_10mev_pfu": 0.5
+  },
+  "mission": {
+   "comm_latency_s": 95,
+   "comm_available": 1,
+   "medkit_min_stock_pct": 70,
+   "open_cases_alerta_or_above": 0
+  },
+  "symptoms": []
+ },
+ {
+  "astronaut_id": "AST-I",
+  "timestamp": "2026-11-07T17:00:00Z",
+  "module": "hab",
+  "vitals": {
+   "hr": 64.55,
+   "hr_rest": 59.66,
+   "hrv_rmssd_ms": 49.85,
+   "ectopic_beats_per_h": 6.19,
+   "afib_detected": 0,
+   "spo2_pct": 97.16,
+   "bp_sys": 120.54,
+   "bp_dia": 77.07,
+   "resp_rate": 13.4,
+   "core_temp_c": 36.93
+  },
+  "radiation": {
+   "dose_rate_msv_h": 0.04,
+   "cumulative_mission_msv": 80.0,
+   "cumulative_career_msv": 220.0
+  },
+  "env": {
+   "co2_mmhg": 2.11,
+   "o2_pct": 21.0,
+   "cabin_temp_c": 22.66,
+   "humidity_pct": 44.75,
+   "noise_dba": 50.36,
+   "proton_flux_10mev_pfu": 0.5
+  },
+  "mission": {
+   "comm_latency_s": 95,
+   "comm_available": 1,
+   "medkit_min_stock_pct": 70,
+   "open_cases_alerta_or_above": 0
+  },
+  "symptoms": []
+ },
+ {
+  "astronaut_id": "AST-I",
+  "timestamp": "2026-11-07T18:00:00Z",
+  "module": "hab",
+  "vitals": {
+   "hr": 66.77,
+   "hr_rest": 56.9,
+   "hrv_rmssd_ms": 52.21,
+   "ectopic_beats_per_h": 9.47,
+   "afib_detected": 0,
+   "spo2_pct": 97.41,
+   "bp_sys": 120.02,
+   "bp_dia": 77.16,
+   "resp_rate": 13.36,
+   "core_temp_c": 36.71
+  },
+  "radiation": {
+   "dose_rate_msv_h": 0.04,
+   "cumulative_mission_msv": 80.0,
+   "cumulative_career_msv": 220.0
+  },
+  "env": {
+   "co2_mmhg": 2.1,
+   "o2_pct": 21.0,
+   "cabin_temp_c": 22.38,
+   "humidity_pct": 42.45,
+   "noise_dba": 50.81,
+   "proton_flux_10mev_pfu": 0.5
+  },
+  "mission": {
+   "comm_latency_s": 95,
+   "comm_available": 1,
+   "medkit_min_stock_pct": 70,
+   "open_cases_alerta_or_above": 0
+  },
+  "symptoms": []
+ },
+ {
+  "astronaut_id": "AST-I",
+  "timestamp": "2026-11-07T19:00:00Z",
+  "module": "hab",
+  "vitals": {
+   "hr": 62.97,
+   "hr_rest": 57.92,
+   "hrv_rmssd_ms": 50.06,
+   "ectopic_beats_per_h": 10.56,
+   "afib_detected": 0,
+   "spo2_pct": 97.86,
+   "bp_sys": 114.55,
+   "bp_dia": 74.29,
+   "resp_rate": 13.17,
+   "core_temp_c": 36.67
+  },
+  "radiation": {
+   "dose_rate_msv_h": 0.04,
+   "cumulative_mission_msv": 80.0,
+   "cumulative_career_msv": 220.0
+  },
+  "env": {
+   "co2_mmhg": 2.26,
+   "o2_pct": 21.0,
+   "cabin_temp_c": 22.17,
+   "humidity_pct": 44.21,
+   "noise_dba": 50.42,
+   "proton_flux_10mev_pfu": 0.5
+  },
+  "mission": {
+   "comm_latency_s": 95,
+   "comm_available": 1,
+   "medkit_min_stock_pct": 70,
+   "open_cases_alerta_or_above": 0
+  },
+  "symptoms": []
+ },
+ {
+  "astronaut_id": "AST-I",
+  "timestamp": "2026-11-07T20:00:00Z",
+  "module": "hab",
+  "vitals": {
+   "hr": 63.68,
+   "hr_rest": 56.87,
+   "hrv_rmssd_ms": 49.76,
+   "ectopic_beats_per_h": 10.6,
+   "afib_detected": 0,
+   "spo2_pct": 97.19,
+   "bp_sys": 117.5,
+   "bp_dia": 71.92,
+   "resp_rate": 14.86,
+   "core_temp_c": 36.92
+  },
+  "radiation": {
+   "dose_rate_msv_h": 0.04,
+   "cumulative_mission_msv": 80.0,
+   "cumulative_career_msv": 220.0
+  },
+  "env": {
+   "co2_mmhg": 2.2,
+   "o2_pct": 21.0,
+   "cabin_temp_c": 22.86,
+   "humidity_pct": 46.35,
+   "noise_dba": 54.38,
+   "proton_flux_10mev_pfu": 0.5
+  },
+  "mission": {
+   "comm_latency_s": 95,
+   "comm_available": 1,
+   "medkit_min_stock_pct": 70,
+   "open_cases_alerta_or_above": 0
+  },
+  "symptoms": []
+ },
+ {
+  "astronaut_id": "AST-I",
+  "timestamp": "2026-11-07T21:00:00Z",
+  "module": "hab",
+  "vitals": {
+   "hr": 66.18,
+   "hr_rest": 56.32,
+   "hrv_rmssd_ms": 48.61,
+   "ectopic_beats_per_h": 10.04,
+   "afib_detected": 0,
+   "spo2_pct": 98.05,
+   "bp_sys": 115.18,
+   "bp_dia": 77.1,
+   "resp_rate": 14.81,
+   "core_temp_c": 36.74
+  },
+  "radiation": {
+   "dose_rate_msv_h": 0.04,
+   "cumulative_mission_msv": 80.0,
+   "cumulative_career_msv": 220.0
+  },
+  "env": {
+   "co2_mmhg": 2.25,
+   "o2_pct": 21.0,
+   "cabin_temp_c": 22.72,
+   "humidity_pct": 46.01,
+   "noise_dba": 50.39,
+   "proton_flux_10mev_pfu": 0.5
+  },
+  "mission": {
+   "comm_latency_s": 95,
+   "comm_available": 1,
+   "medkit_min_stock_pct": 70,
+   "open_cases_alerta_or_above": 0
+  },
+  "symptoms": []
+ },
+ {
+  "astronaut_id": "AST-I",
+  "timestamp": "2026-11-07T22:00:00Z",
+  "module": "hab",
+  "vitals": {
+   "hr": 62.42,
+   "hr_rest": 57.33,
+   "hrv_rmssd_ms": 50.15,
+   "ectopic_beats_per_h": 8.13,
+   "afib_detected": 0,
+   "spo2_pct": 97.32,
+   "bp_sys": 115.01,
+   "bp_dia": 72.51,
+   "resp_rate": 13.27,
+   "core_temp_c": 36.73
+  },
+  "radiation": {
+   "dose_rate_msv_h": 0.04,
+   "cumulative_mission_msv": 80.0,
+   "cumulative_career_msv": 220.0
+  },
+  "env": {
+   "co2_mmhg": 2.23,
+   "o2_pct": 21.0,
+   "cabin_temp_c": 22.32,
+   "humidity_pct": 47.36,
+   "noise_dba": 54.23,
+   "proton_flux_10mev_pfu": 0.5
+  },
+  "mission": {
+   "comm_latency_s": 95,
+   "comm_available": 1,
+   "medkit_min_stock_pct": 70,
+   "open_cases_alerta_or_above": 0
+  },
+  "symptoms": []
+ },
+ {
+  "astronaut_id": "AST-I",
+  "timestamp": "2026-11-07T23:00:00Z",
+  "module": "hab",
+  "vitals": {
+   "hr": 65.68,
+   "hr_rest": 57.18,
+   "hrv_rmssd_ms": 53.23,
+   "ectopic_beats_per_h": 10.33,
+   "afib_detected": 0,
+   "spo2_pct": 97.88,
+   "bp_sys": 113.11,
+   "bp_dia": 71.7,
+   "resp_rate": 13.1,
+   "core_temp_c": 36.93
+  },
+  "radiation": {
+   "dose_rate_msv_h": 0.04,
+   "cumulative_mission_msv": 80.0,
+   "cumulative_career_msv": 220.0
+  },
+  "env": {
+   "co2_mmhg": 2.16,
+   "o2_pct": 21.0,
+   "cabin_temp_c": 22.41,
+   "humidity_pct": 46.6,
+   "noise_dba": 50.75,
+   "proton_flux_10mev_pfu": 0.5
+  },
+  "mission": {
+   "comm_latency_s": 95,
+   "comm_available": 1,
+   "medkit_min_stock_pct": 70,
+   "open_cases_alerta_or_above": 0
+  },
+  "symptoms": []
+ },
+ {
+  "astronaut_id": "AST-I",
+  "timestamp": "2026-11-08T00:00:00Z",
+  "module": "hab",
+  "vitals": {
+   "hr": 67.78,
+   "hr_rest": 56.07,
+   "hrv_rmssd_ms": 51.25,
+   "ectopic_beats_per_h": 5.16,
+   "afib_detected": 0,
+   "spo2_pct": 97.88,
+   "bp_sys": 113.86,
+   "bp_dia": 76.51,
+   "resp_rate": 14.51,
+   "core_temp_c": 36.68
+  },
+  "radiation": {
+   "dose_rate_msv_h": 0.04,
+   "cumulative_mission_msv": 80.0,
+   "cumulative_career_msv": 220.0
+  },
+  "env": {
+   "co2_mmhg": 2.16,
+   "o2_pct": 21.0,
+   "cabin_temp_c": 22.74,
+   "humidity_pct": 46.11,
+   "noise_dba": 51.52,
+   "proton_flux_10mev_pfu": 0.5
+  },
+  "mission": {
+   "comm_latency_s": 95,
+   "comm_available": 1,
+   "medkit_min_stock_pct": 70,
+   "open_cases_alerta_or_above": 0
+  },
+  "symptoms": []
+ },
+ {
+  "astronaut_id": "AST-I",
+  "timestamp": "2026-11-08T01:00:00Z",
+  "module": "hab",
+  "vitals": {
+   "hr": 63.06,
+   "hr_rest": 56.67,
+   "hrv_rmssd_ms": 50.79,
+   "ectopic_beats_per_h": 7.95,
+   "afib_detected": 0,
+   "spo2_pct": 97.68,
+   "bp_sys": 119.69,
+   "bp_dia": 75.53,
+   "resp_rate": 14.11,
+   "core_temp_c": 36.81
+  },
+  "radiation": {
+   "dose_rate_msv_h": 0.04,
+   "cumulative_mission_msv": 80.0,
+   "cumulative_career_msv": 220.0
+  },
+  "env": {
+   "co2_mmhg": 2.22,
+   "o2_pct": 21.0,
+   "cabin_temp_c": 22.14,
+   "humidity_pct": 42.26,
+   "noise_dba": 52.26,
+   "proton_flux_10mev_pfu": 0.5
+  },
+  "mission": {
+   "comm_latency_s": 95,
+   "comm_available": 1,
+   "medkit_min_stock_pct": 70,
+   "open_cases_alerta_or_above": 0
+  },
+  "symptoms": []
+ },
+ {
+  "astronaut_id": "AST-I",
+  "timestamp": "2026-11-08T02:00:00Z",
+  "module": "hab",
+  "vitals": {
+   "hr": 65.44,
+   "hr_rest": 59.46,
+   "hrv_rmssd_ms": 49.86,
+   "ectopic_beats_per_h": 7.09,
+   "afib_detected": 0,
+   "spo2_pct": 97.2,
+   "bp_sys": 117.54,
+   "bp_dia": 76.42,
+   "resp_rate": 13.2,
+   "core_temp_c": 36.77
+  },
+  "radiation": {
+   "dose_rate_msv_h": 0.04,
+   "cumulative_mission_msv": 80.0,
+   "cumulative_career_msv": 220.0
+  },
+  "env": {
+   "co2_mmhg": 2.24,
+   "o2_pct": 21.0,
+   "cabin_temp_c": 22.69,
+   "humidity_pct": 46.62,
+   "noise_dba": 49.99,
+   "proton_flux_10mev_pfu": 0.5
+  },
+  "mission": {
+   "comm_latency_s": 95,
+   "comm_available": 1,
+   "medkit_min_stock_pct": 70,
+   "open_cases_alerta_or_above": 0
+  },
+  "symptoms": []
+ },
+ {
+  "astronaut_id": "AST-I",
+  "timestamp": "2026-11-08T03:00:00Z",
+  "module": "hab",
+  "vitals": {
+   "hr": 67.77,
+   "hr_rest": 57.8,
+   "hrv_rmssd_ms": 55.1,
+   "ectopic_beats_per_h": 6.18,
+   "afib_detected": 0,
+   "spo2_pct": 97.91,
+   "bp_sys": 120.16,
+   "bp_dia": 74.86,
+   "resp_rate": 13.34,
+   "core_temp_c": 36.75
+  },
+  "radiation": {
+   "dose_rate_msv_h": 0.04,
+   "cumulative_mission_msv": 80.0,
+   "cumulative_career_msv": 220.0
+  },
+  "env": {
+   "co2_mmhg": 2.17,
+   "o2_pct": 21.0,
+   "cabin_temp_c": 22.81,
+   "humidity_pct": 43.03,
+   "noise_dba": 51.48,
+   "proton_flux_10mev_pfu": 0.5
+  },
+  "mission": {
+   "comm_latency_s": 95,
+   "comm_available": 1,
+   "medkit_min_stock_pct": 70,
+   "open_cases_alerta_or_above": 0
+  },
+  "symptoms": []
+ },
+ {
+  "astronaut_id": "AST-I",
+  "timestamp": "2026-11-08T04:00:00Z",
+  "module": "hab",
+  "vitals": {
+   "hr": 64.95,
+   "hr_rest": 58.13,
+   "hrv_rmssd_ms": 53.83,
+   "ectopic_beats_per_h": 5.18,
+   "afib_detected": 0,
+   "spo2_pct": 97.18,
+   "bp_sys": 111.82,
+   "bp_dia": 73.94,
+   "resp_rate": 14.29,
+   "core_temp_c": 36.89
+  },
+  "radiation": {
+   "dose_rate_msv_h": 0.04,
+   "cumulative_mission_msv": 80.0,
+   "cumulative_career_msv": 220.0
+  },
+  "env": {
+   "co2_mmhg": 2.25,
+   "o2_pct": 21.0,
+   "cabin_temp_c": 22.23,
+   "humidity_pct": 47.95,
+   "noise_dba": 49.1,
+   "proton_flux_10mev_pfu": 0.5
+  },
+  "mission": {
+   "comm_latency_s": 95,
+   "comm_available": 1,
+   "medkit_min_stock_pct": 70,
+   "open_cases_alerta_or_above": 0
+  },
+  "symptoms": []
+ },
+ {
+  "astronaut_id": "AST-I",
+  "timestamp": "2026-11-08T05:00:00Z",
+  "module": "hab",
+  "vitals": {
+   "hr": 63.56,
+   "hr_rest": 58.52,
+   "hrv_rmssd_ms": 53.16,
+   "ectopic_beats_per_h": 7.34,
+   "afib_detected": 0,
+   "spo2_pct": 97.72,
+   "bp_sys": 115.52,
+   "bp_dia": 72.51,
+   "resp_rate": 13.63,
+   "core_temp_c": 36.78
+  },
+  "radiation": {
+   "dose_rate_msv_h": 0.04,
+   "cumulative_mission_msv": 80.0,
+   "cumulative_career_msv": 220.0
+  },
+  "env": {
+   "co2_mmhg": 2.12,
+   "o2_pct": 21.0,
+   "cabin_temp_c": 22.67,
+   "humidity_pct": 43.01,
+   "noise_dba": 52.48,
+   "proton_flux_10mev_pfu": 0.5
+  },
+  "mission": {
+   "comm_latency_s": 95,
+   "comm_available": 1,
+   "medkit_min_stock_pct": 70,
+   "open_cases_alerta_or_above": 0
+  },
+  "symptoms": []
+ },
+ {
+  "astronaut_id": "AST-I",
+  "timestamp": "2026-11-08T06:00:00Z",
+  "module": "hab",
+  "vitals": {
+   "hr": 69.42,
+   "hr_rest": 59.25,
+   "hrv_rmssd_ms": 54.54,
+   "ectopic_beats_per_h": 6.11,
+   "afib_detected": 0,
+   "spo2_pct": 97.87,
+   "bp_sys": 111.13,
+   "bp_dia": 71.81,
+   "resp_rate": 13.55,
+   "core_temp_c": 36.85
+  },
+  "radiation": {
+   "dose_rate_msv_h": 0.04,
+   "cumulative_mission_msv": 80.0,
+   "cumulative_career_msv": 220.0
+  },
+  "env": {
+   "co2_mmhg": 2.3,
+   "o2_pct": 21.0,
+   "cabin_temp_c": 22.27,
+   "humidity_pct": 44.99,
+   "noise_dba": 50.72,
+   "proton_flux_10mev_pfu": 0.5
+  },
+  "mission": {
+   "comm_latency_s": 95,
+   "comm_available": 1,
+   "medkit_min_stock_pct": 70,
+   "open_cases_alerta_or_above": 0
+  },
+  "symptoms": []
+ },
+ {
+  "astronaut_id": "AST-I",
+  "timestamp": "2026-11-08T07:00:00Z",
+  "module": "hab",
+  "vitals": {
+   "hr": 67.79,
+   "hr_rest": 56.04,
+   "hrv_rmssd_ms": 55.25,
+   "ectopic_beats_per_h": 6.8,
+   "afib_detected": 0,
+   "spo2_pct": 97.11,
+   "bp_sys": 119.26,
+   "bp_dia": 75.83,
+   "resp_rate": 14.58,
+   "core_temp_c": 36.91
+  },
+  "radiation": {
+   "dose_rate_msv_h": 0.04,
+   "cumulative_mission_msv": 80.0,
+   "cumulative_career_msv": 220.0
+  },
+  "env": {
+   "co2_mmhg": 2.19,
+   "o2_pct": 21.0,
+   "cabin_temp_c": 22.44,
+   "humidity_pct": 46.76,
+   "noise_dba": 51.97,
+   "proton_flux_10mev_pfu": 0.5
+  },
+  "mission": {
+   "comm_latency_s": 95,
+   "comm_available": 1,
+   "medkit_min_stock_pct": 70,
+   "open_cases_alerta_or_above": 0
+  },
+  "symptoms": []
+ },
+ {
+  "astronaut_id": "AST-I",
+  "timestamp": "2026-11-08T08:00:00Z",
+  "module": "hab",
+  "vitals": {
+   "hr": 63.95,
+   "hr_rest": 58.46,
+   "hrv_rmssd_ms": 51.5,
+   "ectopic_beats_per_h": 9.57,
+   "afib_detected": 0,
+   "spo2_pct": 97.95,
+   "bp_sys": 118.93,
+   "bp_dia": 70.55,
+   "resp_rate": 14.1,
+   "core_temp_c": 36.78
+  },
+  "radiation": {
+   "dose_rate_msv_h": 0.04,
+   "cumulative_mission_msv": 80.0,
+   "cumulative_career_msv": 220.0
+  },
+  "env": {
+   "co2_mmhg": 2.11,
+   "o2_pct": 21.0,
+   "cabin_temp_c": 22.33,
+   "humidity_pct": 42.04,
+   "noise_dba": 53.24,
+   "proton_flux_10mev_pfu": 0.5
+  },
+  "mission": {
+   "comm_latency_s": 95,
+   "comm_available": 1,
+   "medkit_min_stock_pct": 70,
+   "open_cases_alerta_or_above": 0
+  },
+  "symptoms": []
+ },
+ {
+  "astronaut_id": "AST-I",
+  "timestamp": "2026-11-08T09:00:00Z",
+  "module": "hab",
+  "vitals": {
+   "hr": 63.71,
+   "hr_rest": 56.71,
+   "hrv_rmssd_ms": 54.93,
+   "ectopic_beats_per_h": 6.61,
+   "afib_detected": 0,
+   "spo2_pct": 97.72,
+   "bp_sys": 117.64,
+   "bp_dia": 75.07,
+   "resp_rate": 13.15,
+   "core_temp_c": 36.71
+  },
+  "radiation": {
+   "dose_rate_msv_h": 0.04,
+   "cumulative_mission_msv": 80.0,
+   "cumulative_career_msv": 220.0
+  },
+  "env": {
+   "co2_mmhg": 2.26,
+   "o2_pct": 21.0,
+   "cabin_temp_c": 22.41,
+   "humidity_pct": 43.81,
+   "noise_dba": 51.97,
+   "proton_flux_10mev_pfu": 0.5
+  },
+  "mission": {
+   "comm_latency_s": 95,
+   "comm_available": 1,
+   "medkit_min_stock_pct": 70,
+   "open_cases_alerta_or_above": 0
+  },
+  "symptoms": []
+ },
+ {
+  "astronaut_id": "AST-I",
+  "timestamp": "2026-11-08T10:00:00Z",
+  "module": "hab",
+  "vitals": {
+   "hr": 62.28,
+   "hr_rest": 58.84,
+   "hrv_rmssd_ms": 54.18,
+   "ectopic_beats_per_h": 10.8,
+   "afib_detected": 0,
+   "spo2_pct": 97.28,
+   "bp_sys": 117.9,
+   "bp_dia": 77.5,
+   "resp_rate": 14.72,
+   "core_temp_c": 36.79
+  },
+  "radiation": {
+   "dose_rate_msv_h": 0.04,
+   "cumulative_mission_msv": 80.0,
+   "cumulative_career_msv": 220.0
+  },
+  "env": {
+   "co2_mmhg": 2.29,
+   "o2_pct": 21.0,
+   "cabin_temp_c": 22.53,
+   "humidity_pct": 45.39,
+   "noise_dba": 52.45,
+   "proton_flux_10mev_pfu": 0.5
+  },
+  "mission": {
+   "comm_latency_s": 95,
+   "comm_available": 1,
+   "medkit_min_stock_pct": 70,
+   "open_cases_alerta_or_above": 0
+  },
+  "symptoms": []
+ },
+ {
+  "astronaut_id": "AST-I",
+  "timestamp": "2026-11-08T11:00:00Z",
+  "module": "hab",
+  "vitals": {
+   "hr": 63.49,
+   "hr_rest": 57.57,
+   "hrv_rmssd_ms": 52.03,
+   "ectopic_beats_per_h": 9.72,
+   "afib_detected": 0,
+   "spo2_pct": 97.57,
+   "bp_sys": 114.46,
+   "bp_dia": 77.77,
+   "resp_rate": 13.16,
+   "core_temp_c": 36.7
+  },
+  "radiation": {
+   "dose_rate_msv_h": 0.04,
+   "cumulative_mission_msv": 80.0,
+   "cumulative_career_msv": 220.0
+  },
+  "env": {
+   "co2_mmhg": 2.17,
+   "o2_pct": 21.0,
+   "cabin_temp_c": 22.88,
+   "humidity_pct": 44.8,
+   "noise_dba": 51.4,
+   "proton_flux_10mev_pfu": 0.5
+  },
+  "mission": {
+   "comm_latency_s": 95,
+   "comm_available": 1,
+   "medkit_min_stock_pct": 70,
+   "open_cases_alerta_or_above": 0
+  },
+  "symptoms": []
+ },
+ {
+  "astronaut_id": "AST-I",
+  "timestamp": "2026-11-08T12:00:00Z",
+  "module": "hab",
+  "vitals": {
+   "hr": 68.58,
+   "hr_rest": 56.93,
+   "hrv_rmssd_ms": 54.4,
+   "ectopic_beats_per_h": 5.46,
+   "afib_detected": 0,
+   "spo2_pct": 97.61,
+   "bp_sys": 120.4,
+   "bp_dia": 74.83,
+   "resp_rate": 13.49,
+   "core_temp_c": 36.71
+  },
+  "radiation": {
+   "dose_rate_msv_h": 0.04,
+   "cumulative_mission_msv": 80.0,
+   "cumulative_career_msv": 220.0
+  },
+  "env": {
+   "co2_mmhg": 2.26,
+   "o2_pct": 21.0,
+   "cabin_temp_c": 22.31,
+   "humidity_pct": 47.58,
+   "noise_dba": 51.58,
+   "proton_flux_10mev_pfu": 0.5
+  },
+  "mission": {
+   "comm_latency_s": 95,
+   "comm_available": 1,
+   "medkit_min_stock_pct": 70,
+   "open_cases_alerta_or_above": 0
+  },
+  "symptoms": []
+ },
+ {
+  "astronaut_id": "AST-I",
+  "timestamp": "2026-11-08T13:00:00Z",
+  "module": "hab",
+  "vitals": {
+   "hr": 62.8,
+   "hr_rest": 58.92,
+   "hrv_rmssd_ms": 53.91,
+   "ectopic_beats_per_h": 9.02,
+   "afib_detected": 0,
+   "spo2_pct": 96.91,
+   "bp_sys": 114.7,
+   "bp_dia": 73.92,
+   "resp_rate": 14.83,
+   "core_temp_c": 36.68
+  },
+  "radiation": {
+   "dose_rate_msv_h": 0.04,
+   "cumulative_mission_msv": 80.0,
+   "cumulative_career_msv": 220.0
+  },
+  "env": {
+   "co2_mmhg": 2.19,
+   "o2_pct": 21.0,
+   "cabin_temp_c": 22.38,
+   "humidity_pct": 45.75,
+   "noise_dba": 51.71,
+   "proton_flux_10mev_pfu": 0.5
+  },
+  "mission": {
+   "comm_latency_s": 95,
+   "comm_available": 1,
+   "medkit_min_stock_pct": 70,
+   "open_cases_alerta_or_above": 0
+  },
+  "symptoms": []
+ },
+ {
+  "astronaut_id": "AST-I",
+  "timestamp": "2026-11-08T14:00:00Z",
+  "module": "hab",
+  "vitals": {
+   "hr": 64.55,
+   "hr_rest": 57.94,
+   "hrv_rmssd_ms": 52.35,
+   "ectopic_beats_per_h": 5.24,
+   "afib_detected": 0,
+   "spo2_pct": 97.28,
+   "bp_sys": 113.52,
+   "bp_dia": 72.22,
+   "resp_rate": 13.71,
+   "core_temp_c": 36.73
+  },
+  "radiation": {
+   "dose_rate_msv_h": 0.04,
+   "cumulative_mission_msv": 80.0,
+   "cumulative_career_msv": 220.0
+  },
+  "env": {
+   "co2_mmhg": 2.17,
+   "o2_pct": 21.0,
+   "cabin_temp_c": 22.65,
+   "humidity_pct": 43.4,
+   "noise_dba": 54.72,
+   "proton_flux_10mev_pfu": 0.5
+  },
+  "mission": {
+   "comm_latency_s": 95,
+   "comm_available": 1,
+   "medkit_min_stock_pct": 70,
+   "open_cases_alerta_or_above": 0
+  },
+  "symptoms": []
+ },
+ {
+  "astronaut_id": "AST-I",
+  "timestamp": "2026-11-08T15:00:00Z",
+  "module": "hab",
+  "vitals": {
+   "hr": 62.62,
+   "hr_rest": 57.18,
+   "hrv_rmssd_ms": 53.81,
+   "ectopic_beats_per_h": 8.92,
+   "afib_detected": 0,
+   "spo2_pct": 97.27,
+   "bp_sys": 113.84,
+   "bp_dia": 75.72,
+   "resp_rate": 13.75,
+   "core_temp_c": 36.89
+  },
+  "radiation": {
+   "dose_rate_msv_h": 0.04,
+   "cumulative_mission_msv": 80.0,
+   "cumulative_career_msv": 220.0
+  },
+  "env": {
+   "co2_mmhg": 2.28,
+   "o2_pct": 21.0,
+   "cabin_temp_c": 22.22,
+   "humidity_pct": 46.04,
+   "noise_dba": 50.4,
+   "proton_flux_10mev_pfu": 0.5
+  },
+  "mission": {
+   "comm_latency_s": 95,
+   "comm_available": 1,
+   "medkit_min_stock_pct": 70,
+   "open_cases_alerta_or_above": 0
+  },
+  "symptoms": []
+ },
+ {
+  "astronaut_id": "AST-I",
+  "timestamp": "2026-11-08T16:00:00Z",
+  "module": "hab",
+  "vitals": {
+   "hr": 66.52,
+   "hr_rest": 59.58,
+   "hrv_rmssd_ms": 53.08,
+   "ectopic_beats_per_h": 10.26,
+   "afib_detected": 0,
+   "spo2_pct": 97.31,
+   "bp_sys": 113.85,
+   "bp_dia": 74.33,
+   "resp_rate": 13.72,
+   "core_temp_c": 36.81
+  },
+  "radiation": {
+   "dose_rate_msv_h": 0.04,
+   "cumulative_mission_msv": 80.0,
+   "cumulative_career_msv": 220.0
+  },
+  "env": {
+   "co2_mmhg": 2.15,
+   "o2_pct": 21.0,
+   "cabin_temp_c": 22.27,
+   "humidity_pct": 45.65,
+   "noise_dba": 49.67,
+   "proton_flux_10mev_pfu": 0.5
+  },
+  "mission": {
+   "comm_latency_s": 95,
+   "comm_available": 1,
+   "medkit_min_stock_pct": 70,
+   "open_cases_alerta_or_above": 0
+  },
+  "symptoms": []
+ },
+ {
+  "astronaut_id": "AST-I",
+  "timestamp": "2026-11-08T17:00:00Z",
+  "module": "hab",
+  "vitals": {
+   "hr": 63.84,
+   "hr_rest": 56.36,
+   "hrv_rmssd_ms": 53.52,
+   "ectopic_beats_per_h": 5.95,
+   "afib_detected": 0,
+   "spo2_pct": 97.23,
+   "bp_sys": 119.57,
+   "bp_dia": 74.17,
+   "resp_rate": 13.93,
+   "core_temp_c": 36.75
+  },
+  "radiation": {
+   "dose_rate_msv_h": 0.04,
+   "cumulative_mission_msv": 80.0,
+   "cumulative_career_msv": 220.0
+  },
+  "env": {
+   "co2_mmhg": 2.2,
+   "o2_pct": 21.0,
+   "cabin_temp_c": 22.72,
+   "humidity_pct": 44.16,
+   "noise_dba": 49.83,
+   "proton_flux_10mev_pfu": 0.5
+  },
+  "mission": {
+   "comm_latency_s": 95,
+   "comm_available": 1,
+   "medkit_min_stock_pct": 70,
+   "open_cases_alerta_or_above": 0
+  },
+  "symptoms": []
+ },
+ {
+  "astronaut_id": "AST-I",
+  "timestamp": "2026-11-08T18:00:00Z",
+  "module": "hab",
+  "vitals": {
+   "hr": 63.47,
+   "hr_rest": 58.8,
+   "hrv_rmssd_ms": 51.83,
+   "ectopic_beats_per_h": 10.58,
+   "afib_detected": 0,
+   "spo2_pct": 97.16,
+   "bp_sys": 118.14,
+   "bp_dia": 73.12,
+   "resp_rate": 13.56,
+   "core_temp_c": 36.87
+  },
+  "radiation": {
+   "dose_rate_msv_h": 0.04,
+   "cumulative_mission_msv": 80.0,
+   "cumulative_career_msv": 220.0
+  },
+  "env": {
+   "co2_mmhg": 2.16,
+   "o2_pct": 21.0,
+   "cabin_temp_c": 22.28,
+   "humidity_pct": 44.69,
+   "noise_dba": 51.55,
+   "proton_flux_10mev_pfu": 0.5
+  },
+  "mission": {
+   "comm_latency_s": 95,
+   "comm_available": 1,
+   "medkit_min_stock_pct": 70,
+   "open_cases_alerta_or_above": 0
+  },
+  "symptoms": []
+ },
+ {
+  "astronaut_id": "AST-I",
+  "timestamp": "2026-11-08T19:00:00Z",
+  "module": "hab",
+  "vitals": {
+   "hr": 62.67,
+   "hr_rest": 59.94,
+   "hrv_rmssd_ms": 51.19,
+   "ectopic_beats_per_h": 7.18,
+   "afib_detected": 0,
+   "spo2_pct": 97.05,
+   "bp_sys": 112.47,
+   "bp_dia": 71.47,
+   "resp_rate": 13.14,
+   "core_temp_c": 36.81
+  },
+  "radiation": {
+   "dose_rate_msv_h": 0.04,
+   "cumulative_mission_msv": 80.0,
+   "cumulative_career_msv": 220.0
+  },
+  "env": {
+   "co2_mmhg": 2.23,
+   "o2_pct": 21.0,
+   "cabin_temp_c": 22.78,
+   "humidity_pct": 43.57,
+   "noise_dba": 53.83,
+   "proton_flux_10mev_pfu": 0.5
+  },
+  "mission": {
+   "comm_latency_s": 95,
+   "comm_available": 1,
+   "medkit_min_stock_pct": 70,
+   "open_cases_alerta_or_above": 0
+  },
+  "symptoms": []
+ },
+ {
+  "astronaut_id": "AST-I",
+  "timestamp": "2026-11-08T20:00:00Z",
+  "module": "hab",
+  "vitals": {
+   "hr": 67.98,
+   "hr_rest": 56.23,
+   "hrv_rmssd_ms": 49.58,
+   "ectopic_beats_per_h": 6.21,
+   "afib_detected": 0,
+   "spo2_pct": 97.95,
+   "bp_sys": 118.47,
+   "bp_dia": 70.5,
+   "resp_rate": 13.48,
+   "core_temp_c": 36.7
+  },
+  "radiation": {
+   "dose_rate_msv_h": 0.04,
+   "cumulative_mission_msv": 80.0,
+   "cumulative_career_msv": 220.0
+  },
+  "env": {
+   "co2_mmhg": 2.23,
+   "o2_pct": 21.0,
+   "cabin_temp_c": 22.44,
+   "humidity_pct": 47.66,
+   "noise_dba": 54.02,
+   "proton_flux_10mev_pfu": 0.5
+  },
+  "mission": {
+   "comm_latency_s": 95,
+   "comm_available": 1,
+   "medkit_min_stock_pct": 70,
+   "open_cases_alerta_or_above": 0
+  },
+  "symptoms": []
+ },
+ {
+  "astronaut_id": "AST-I",
+  "timestamp": "2026-11-08T21:00:00Z",
+  "module": "hab",
+  "vitals": {
+   "hr": 64.28,
+   "hr_rest": 57.09,
+   "hrv_rmssd_ms": 52.01,
+   "ectopic_beats_per_h": 7.43,
+   "afib_detected": 0,
+   "spo2_pct": 97.85,
+   "bp_sys": 112.92,
+   "bp_dia": 76.93,
+   "resp_rate": 14.18,
+   "core_temp_c": 36.77
+  },
+  "radiation": {
+   "dose_rate_msv_h": 0.04,
+   "cumulative_mission_msv": 80.0,
+   "cumulative_career_msv": 220.0
+  },
+  "env": {
+   "co2_mmhg": 2.29,
+   "o2_pct": 21.0,
+   "cabin_temp_c": 22.38,
+   "humidity_pct": 46.63,
+   "noise_dba": 54.78,
+   "proton_flux_10mev_pfu": 0.5
+  },
+  "mission": {
+   "comm_latency_s": 95,
+   "comm_available": 1,
+   "medkit_min_stock_pct": 70,
+   "open_cases_alerta_or_above": 0
+  },
+  "symptoms": []
+ },
+ {
+  "astronaut_id": "AST-I",
+  "timestamp": "2026-11-08T22:00:00Z",
+  "module": "hab",
+  "vitals": {
+   "hr": 69.14,
+   "hr_rest": 59.93,
+   "hrv_rmssd_ms": 51.54,
+   "ectopic_beats_per_h": 9.65,
+   "afib_detected": 0,
+   "spo2_pct": 97.9,
+   "bp_sys": 113.98,
+   "bp_dia": 73.62,
+   "resp_rate": 14.84,
+   "core_temp_c": 36.88
+  },
+  "radiation": {
+   "dose_rate_msv_h": 0.04,
+   "cumulative_mission_msv": 80.0,
+   "cumulative_career_msv": 220.0
+  },
+  "env": {
+   "co2_mmhg": 2.16,
+   "o2_pct": 21.0,
+   "cabin_temp_c": 22.72,
+   "humidity_pct": 42.7,
+   "noise_dba": 51.36,
+   "proton_flux_10mev_pfu": 0.5
+  },
+  "mission": {
+   "comm_latency_s": 95,
+   "comm_available": 1,
+   "medkit_min_stock_pct": 70,
+   "open_cases_alerta_or_above": 0
+  },
+  "symptoms": []
+ },
+ {
+  "astronaut_id": "AST-I",
+  "timestamp": "2026-11-08T23:00:00Z",
+  "module": "hab",
+  "vitals": {
+   "hr": 66.59,
+   "hr_rest": 57.23,
+   "hrv_rmssd_ms": 48.08,
+   "ectopic_beats_per_h": 8.45,
+   "afib_detected": 0,
+   "spo2_pct": 97.64,
+   "bp_sys": 117.62,
+   "bp_dia": 71.33,
+   "resp_rate": 13.14,
+   "core_temp_c": 36.66
+  },
+  "radiation": {
+   "dose_rate_msv_h": 0.04,
+   "cumulative_mission_msv": 80.0,
+   "cumulative_career_msv": 220.0
+  },
+  "env": {
+   "co2_mmhg": 2.21,
+   "o2_pct": 21.0,
+   "cabin_temp_c": 22.13,
+   "humidity_pct": 43.22,
+   "noise_dba": 51.99,
+   "proton_flux_10mev_pfu": 0.5
+  },
+  "mission": {
+   "comm_latency_s": 95,
+   "comm_available": 1,
+   "medkit_min_stock_pct": 70,
+   "open_cases_alerta_or_above": 0
+  },
+  "symptoms": []
+ },
+ {
+  "astronaut_id": "AST-I",
+  "timestamp": "2026-11-09T00:00:00Z",
+  "module": "hab",
+  "vitals": {
+   "hr": 65.01,
+   "hr_rest": 58.74,
+   "hrv_rmssd_ms": 49.07,
+   "ectopic_beats_per_h": 8.1,
+   "afib_detected": 0,
+   "spo2_pct": 97.41,
+   "bp_sys": 112.96,
+   "bp_dia": 77.27,
+   "resp_rate": 14.86,
+   "core_temp_c": 36.94
+  },
+  "radiation": {
+   "dose_rate_msv_h": 0.04,
+   "cumulative_mission_msv": 80.0,
+   "cumulative_career_msv": 220.0
+  },
+  "env": {
+   "co2_mmhg": 2.15,
+   "o2_pct": 21.0,
+   "cabin_temp_c": 22.12,
+   "humidity_pct": 46.18,
+   "noise_dba": 54.41,
+   "proton_flux_10mev_pfu": 0.5
+  },
+  "mission": {
+   "comm_latency_s": 95,
+   "comm_available": 1,
+   "medkit_min_stock_pct": 70,
+   "open_cases_alerta_or_above": 0
+  },
+  "symptoms": []
+ },
+ {
+  "astronaut_id": "AST-I",
+  "timestamp": "2026-11-09T01:00:00Z",
+  "module": "hab",
+  "vitals": {
+   "hr": 64.79,
+   "hr_rest": 57.19,
+   "hrv_rmssd_ms": 54.45,
+   "ectopic_beats_per_h": 8.32,
+   "afib_detected": 0,
+   "spo2_pct": 97.61,
+   "bp_sys": 118.11,
+   "bp_dia": 74.17,
+   "resp_rate": 14.64,
+   "core_temp_c": 36.82
+  },
+  "radiation": {
+   "dose_rate_msv_h": 0.04,
+   "cumulative_mission_msv": 80.0,
+   "cumulative_career_msv": 220.0
+  },
+  "env": {
+   "co2_mmhg": 2.25,
+   "o2_pct": 21.0,
+   "cabin_temp_c": 22.11,
+   "humidity_pct": 44.89,
+   "noise_dba": 54.43,
+   "proton_flux_10mev_pfu": 0.5
+  },
+  "mission": {
+   "comm_latency_s": 95,
+   "comm_available": 1,
+   "medkit_min_stock_pct": 70,
+   "open_cases_alerta_or_above": 0
+  },
+  "symptoms": []
+ },
+ {
+  "astronaut_id": "AST-I",
+  "timestamp": "2026-11-09T02:00:00Z",
+  "module": "hab",
+  "vitals": {
+   "hr": 65.9,
+   "hr_rest": 58.77,
+   "hrv_rmssd_ms": 52.25,
+   "ectopic_beats_per_h": 10.59,
+   "afib_detected": 0,
+   "spo2_pct": 96.99,
+   "bp_sys": 113.82,
+   "bp_dia": 71.33,
+   "resp_rate": 14.74,
+   "core_temp_c": 36.94
+  },
+  "radiation": {
+   "dose_rate_msv_h": 0.04,
+   "cumulative_mission_msv": 80.0,
+   "cumulative_career_msv": 220.0
+  },
+  "env": {
+   "co2_mmhg": 2.14,
+   "o2_pct": 21.0,
+   "cabin_temp_c": 22.33,
+   "humidity_pct": 43.48,
+   "noise_dba": 52.63,
+   "proton_flux_10mev_pfu": 0.5
+  },
+  "mission": {
+   "comm_latency_s": 95,
+   "comm_available": 1,
+   "medkit_min_stock_pct": 70,
+   "open_cases_alerta_or_above": 0
+  },
+  "symptoms": []
+ },
+ {
+  "astronaut_id": "AST-I",
+  "timestamp": "2026-11-09T03:00:00Z",
+  "module": "hab",
+  "vitals": {
+   "hr": 67.68,
+   "hr_rest": 57.02,
+   "hrv_rmssd_ms": 54.62,
+   "ectopic_beats_per_h": 7.71,
+   "afib_detected": 0,
+   "spo2_pct": 97.5,
+   "bp_sys": 114.65,
+   "bp_dia": 73.65,
+   "resp_rate": 13.07,
+   "core_temp_c": 36.66
+  },
+  "radiation": {
+   "dose_rate_msv_h": 0.04,
+   "cumulative_mission_msv": 80.0,
+   "cumulative_career_msv": 220.0
+  },
+  "env": {
+   "co2_mmhg": 2.29,
+   "o2_pct": 21.0,
+   "cabin_temp_c": 22.33,
+   "humidity_pct": 44.1,
+   "noise_dba": 54.87,
+   "proton_flux_10mev_pfu": 0.5
+  },
+  "mission": {
+   "comm_latency_s": 95,
+   "comm_available": 1,
+   "medkit_min_stock_pct": 70,
+   "open_cases_alerta_or_above": 0
+  },
+  "symptoms": []
+ },
+ {
+  "astronaut_id": "AST-I",
+  "timestamp": "2026-11-09T04:00:00Z",
+  "module": "hab",
+  "vitals": {
+   "hr": 64.48,
+   "hr_rest": 56.37,
+   "hrv_rmssd_ms": 54.96,
+   "ectopic_beats_per_h": 7.4,
+   "afib_detected": 0,
+   "spo2_pct": 97.68,
+   "bp_sys": 113.98,
+   "bp_dia": 71.01,
+   "resp_rate": 13.44,
+   "core_temp_c": 36.88
+  },
+  "radiation": {
+   "dose_rate_msv_h": 0.04,
+   "cumulative_mission_msv": 80.0,
+   "cumulative_career_msv": 220.0
+  },
+  "env": {
+   "co2_mmhg": 2.21,
+   "o2_pct": 21.0,
+   "cabin_temp_c": 22.63,
+   "humidity_pct": 46.38,
+   "noise_dba": 52.43,
+   "proton_flux_10mev_pfu": 0.5
+  },
+  "mission": {
+   "comm_latency_s": 95,
+   "comm_available": 1,
+   "medkit_min_stock_pct": 70,
+   "open_cases_alerta_or_above": 0
+  },
+  "symptoms": []
+ },
+ {
+  "astronaut_id": "AST-I",
+  "timestamp": "2026-11-09T05:00:00Z",
+  "module": "hab",
+  "vitals": {
+   "hr": 67.44,
+   "hr_rest": 56.77,
+   "hrv_rmssd_ms": 49.47,
+   "ectopic_beats_per_h": 7.62,
+   "afib_detected": 0,
+   "spo2_pct": 97.91,
+   "bp_sys": 113.24,
+   "bp_dia": 76.23,
+   "resp_rate": 14.65,
+   "core_temp_c": 36.87
+  },
+  "radiation": {
+   "dose_rate_msv_h": 0.04,
+   "cumulative_mission_msv": 80.0,
+   "cumulative_career_msv": 220.0
+  },
+  "env": {
+   "co2_mmhg": 2.12,
+   "o2_pct": 21.0,
+   "cabin_temp_c": 22.2,
+   "humidity_pct": 46.85,
+   "noise_dba": 50.32,
+   "proton_flux_10mev_pfu": 0.5
+  },
+  "mission": {
+   "comm_latency_s": 95,
+   "comm_available": 1,
+   "medkit_min_stock_pct": 70,
+   "open_cases_alerta_or_above": 0
+  },
+  "symptoms": []
+ },
+ {
+  "astronaut_id": "AST-I",
+  "timestamp": "2026-11-09T06:00:00Z",
+  "module": "hab",
+  "vitals": {
+   "hr": 62.18,
+   "hr_rest": 58.33,
+   "hrv_rmssd_ms": 53.57,
+   "ectopic_beats_per_h": 9.94,
+   "afib_detected": 0,
+   "spo2_pct": 97.76,
+   "bp_sys": 116.97,
+   "bp_dia": 72.88,
+   "resp_rate": 14.85,
+   "core_temp_c": 36.73
+  },
+  "radiation": {
+   "dose_rate_msv_h": 0.04,
+   "cumulative_mission_msv": 80.0,
+   "cumulative_career_msv": 220.0
+  },
+  "env": {
+   "co2_mmhg": 2.19,
+   "o2_pct": 21.0,
+   "cabin_temp_c": 22.19,
+   "humidity_pct": 45.45,
+   "noise_dba": 53.12,
+   "proton_flux_10mev_pfu": 0.5
+  },
+  "mission": {
+   "comm_latency_s": 95,
+   "comm_available": 1,
+   "medkit_min_stock_pct": 70,
+   "open_cases_alerta_or_above": 0
+  },
+  "symptoms": []
+ },
+ {
+  "astronaut_id": "AST-I",
+  "timestamp": "2026-11-09T07:00:00Z",
+  "module": "hab",
+  "vitals": {
+   "hr": 66.13,
+   "hr_rest": 57.5,
+   "hrv_rmssd_ms": 48.36,
+   "ectopic_beats_per_h": 8.81,
+   "afib_detected": 0,
+   "spo2_pct": 96.95,
+   "bp_sys": 118.59,
+   "bp_dia": 74.94,
+   "resp_rate": 14.72,
+   "core_temp_c": 36.85
+  },
+  "radiation": {
+   "dose_rate_msv_h": 0.04,
+   "cumulative_mission_msv": 80.0,
+   "cumulative_career_msv": 220.0
+  },
+  "env": {
+   "co2_mmhg": 2.25,
+   "o2_pct": 21.0,
+   "cabin_temp_c": 22.33,
+   "humidity_pct": 47.64,
+   "noise_dba": 52.52,
+   "proton_flux_10mev_pfu": 0.5
+  },
+  "mission": {
+   "comm_latency_s": 95,
+   "comm_available": 1,
+   "medkit_min_stock_pct": 70,
+   "open_cases_alerta_or_above": 0
+  },
+  "symptoms": []
+ },
+ {
+  "astronaut_id": "AST-I",
+  "timestamp": "2026-11-09T08:00:00Z",
+  "module": "hab",
+  "vitals": {
+   "hr": 66.39,
+   "hr_rest": 57.54,
+   "hrv_rmssd_ms": 54.75,
+   "ectopic_beats_per_h": 8.79,
+   "afib_detected": 0,
+   "spo2_pct": 97.56,
+   "bp_sys": 117.13,
+   "bp_dia": 76.28,
+   "resp_rate": 14.98,
+   "core_temp_c": 36.71
+  },
+  "radiation": {
+   "dose_rate_msv_h": 0.04,
+   "cumulative_mission_msv": 80.0,
+   "cumulative_career_msv": 220.0
+  },
+  "env": {
+   "co2_mmhg": 2.29,
+   "o2_pct": 21.0,
+   "cabin_temp_c": 22.33,
+   "humidity_pct": 44.61,
+   "noise_dba": 53.41,
+   "proton_flux_10mev_pfu": 0.5
+  },
+  "mission": {
+   "comm_latency_s": 95,
+   "comm_available": 1,
+   "medkit_min_stock_pct": 70,
+   "open_cases_alerta_or_above": 0
+  },
+  "symptoms": []
+ },
+ {
+  "astronaut_id": "AST-I",
+  "timestamp": "2026-11-09T09:00:00Z",
+  "module": "hab",
+  "vitals": {
+   "hr": 68.5,
+   "hr_rest": 57.37,
+   "hrv_rmssd_ms": 50.46,
+   "ectopic_beats_per_h": 8.18,
+   "afib_detected": 0,
+   "spo2_pct": 97.48,
+   "bp_sys": 115.02,
+   "bp_dia": 72.4,
+   "resp_rate": 13.02,
+   "core_temp_c": 36.93
+  },
+  "radiation": {
+   "dose_rate_msv_h": 0.04,
+   "cumulative_mission_msv": 80.0,
+   "cumulative_career_msv": 220.0
+  },
+  "env": {
+   "co2_mmhg": 2.17,
+   "o2_pct": 21.0,
+   "cabin_temp_c": 22.83,
+   "humidity_pct": 45.76,
+   "noise_dba": 49.66,
+   "proton_flux_10mev_pfu": 0.5
+  },
+  "mission": {
+   "comm_latency_s": 95,
+   "comm_available": 1,
+   "medkit_min_stock_pct": 70,
+   "open_cases_alerta_or_above": 0
+  },
+  "symptoms": []
+ },
+ {
+  "astronaut_id": "AST-I",
+  "timestamp": "2026-11-09T10:00:00Z",
+  "module": "hab",
+  "vitals": {
+   "hr": 63.43,
+   "hr_rest": 57.5,
+   "hrv_rmssd_ms": 49.57,
+   "ectopic_beats_per_h": 5.63,
+   "afib_detected": 0,
+   "spo2_pct": 97.82,
+   "bp_sys": 115.92,
+   "bp_dia": 71.22,
+   "resp_rate": 14.03,
+   "core_temp_c": 36.85
+  },
+  "radiation": {
+   "dose_rate_msv_h": 0.04,
+   "cumulative_mission_msv": 80.0,
+   "cumulative_career_msv": 220.0
+  },
+  "env": {
+   "co2_mmhg": 2.27,
+   "o2_pct": 21.0,
+   "cabin_temp_c": 22.45,
+   "humidity_pct": 43.27,
+   "noise_dba": 49.23,
+   "proton_flux_10mev_pfu": 0.5
+  },
+  "mission": {
+   "comm_latency_s": 95,
+   "comm_available": 1,
+   "medkit_min_stock_pct": 70,
+   "open_cases_alerta_or_above": 0
+  },
+  "symptoms": []
+ },
+ {
+  "astronaut_id": "AST-I",
+  "timestamp": "2026-11-09T11:00:00Z",
+  "module": "hab",
+  "vitals": {
+   "hr": 66.72,
+   "hr_rest": 58.11,
+   "hrv_rmssd_ms": 55.96,
+   "ectopic_beats_per_h": 6.49,
+   "afib_detected": 0,
+   "spo2_pct": 96.96,
+   "bp_sys": 116.3,
+   "bp_dia": 75.56,
+   "resp_rate": 13.47,
+   "core_temp_c": 36.73
+  },
+  "radiation": {
+   "dose_rate_msv_h": 0.04,
+   "cumulative_mission_msv": 80.0,
+   "cumulative_career_msv": 220.0
+  },
+  "env": {
+   "co2_mmhg": 2.14,
+   "o2_pct": 21.0,
+   "cabin_temp_c": 22.78,
+   "humidity_pct": 45.45,
+   "noise_dba": 50.65,
+   "proton_flux_10mev_pfu": 0.5
+  },
+  "mission": {
+   "comm_latency_s": 95,
+   "comm_available": 1,
+   "medkit_min_stock_pct": 70,
+   "open_cases_alerta_or_above": 0
+  },
+  "symptoms": []
+ },
+ {
+  "astronaut_id": "AST-I",
+  "timestamp": "2026-11-09T12:00:00Z",
+  "module": "hab",
+  "vitals": {
+   "hr": 64.88,
+   "hr_rest": 57.02,
+   "hrv_rmssd_ms": 48.18,
+   "ectopic_beats_per_h": 9.99,
+   "afib_detected": 0,
+   "spo2_pct": 97.82,
+   "bp_sys": 114.15,
+   "bp_dia": 72.75,
+   "resp_rate": 14.86,
+   "core_temp_c": 36.73
+  },
+  "radiation": {
+   "dose_rate_msv_h": 0.04,
+   "cumulative_mission_msv": 80.0,
+   "cumulative_career_msv": 220.0
+  },
+  "env": {
+   "co2_mmhg": 2.24,
+   "o2_pct": 21.0,
+   "cabin_temp_c": 22.83,
+   "humidity_pct": 43.83,
+   "noise_dba": 53.7,
+   "proton_flux_10mev_pfu": 0.5
+  },
+  "mission": {
+   "comm_latency_s": 95,
+   "comm_available": 1,
+   "medkit_min_stock_pct": 70,
+   "open_cases_alerta_or_above": 0
+  },
+  "symptoms": []
+ },
+ {
+  "astronaut_id": "AST-I",
+  "timestamp": "2026-11-09T13:00:00Z",
+  "module": "hab",
+  "vitals": {
+   "hr": 64.54,
+   "hr_rest": 59.92,
+   "hrv_rmssd_ms": 49.16,
+   "ectopic_beats_per_h": 6.05,
+   "afib_detected": 0,
+   "spo2_pct": 97.74,
+   "bp_sys": 114.45,
+   "bp_dia": 73.65,
+   "resp_rate": 14.71,
+   "core_temp_c": 36.7
+  },
+  "radiation": {
+   "dose_rate_msv_h": 0.04,
+   "cumulative_mission_msv": 80.0,
+   "cumulative_career_msv": 220.0
+  },
+  "env": {
+   "co2_mmhg": 2.15,
+   "o2_pct": 21.0,
+   "cabin_temp_c": 22.59,
+   "humidity_pct": 43.41,
+   "noise_dba": 51.71,
+   "proton_flux_10mev_pfu": 0.5
+  },
+  "mission": {
+   "comm_latency_s": 95,
+   "comm_available": 1,
+   "medkit_min_stock_pct": 70,
+   "open_cases_alerta_or_above": 0
+  },
+  "symptoms": []
+ },
+ {
+  "astronaut_id": "AST-I",
+  "timestamp": "2026-11-09T14:00:00Z",
+  "module": "hab",
+  "vitals": {
+   "hr": 63.75,
+   "hr_rest": 58.54,
+   "hrv_rmssd_ms": 53.24,
+   "ectopic_beats_per_h": 5.29,
+   "afib_detected": 0,
+   "spo2_pct": 97.85,
+   "bp_sys": 120.37,
+   "bp_dia": 72.4,
+   "resp_rate": 14.57,
+   "core_temp_c": 36.74
+  },
+  "radiation": {
+   "dose_rate_msv_h": 0.04,
+   "cumulative_mission_msv": 80.0,
+   "cumulative_career_msv": 220.0
+  },
+  "env": {
+   "co2_mmhg": 2.28,
+   "o2_pct": 21.0,
+   "cabin_temp_c": 22.86,
+   "humidity_pct": 46.24,
+   "noise_dba": 51.46,
+   "proton_flux_10mev_pfu": 0.5
+  },
+  "mission": {
+   "comm_latency_s": 95,
+   "comm_available": 1,
+   "medkit_min_stock_pct": 70,
+   "open_cases_alerta_or_above": 0
+  },
+  "symptoms": []
+ },
+ {
+  "astronaut_id": "AST-I",
+  "timestamp": "2026-11-09T15:00:00Z",
+  "module": "hab",
+  "vitals": {
+   "hr": 64.76,
+   "hr_rest": 56.74,
+   "hrv_rmssd_ms": 55.06,
+   "ectopic_beats_per_h": 10.59,
+   "afib_detected": 0,
+   "spo2_pct": 97.75,
+   "bp_sys": 120.18,
+   "bp_dia": 72.68,
+   "resp_rate": 13.16,
+   "core_temp_c": 36.79
+  },
+  "radiation": {
+   "dose_rate_msv_h": 0.04,
+   "cumulative_mission_msv": 80.0,
+   "cumulative_career_msv": 220.0
+  },
+  "env": {
+   "co2_mmhg": 2.3,
+   "o2_pct": 21.0,
+   "cabin_temp_c": 22.58,
+   "humidity_pct": 47.02,
+   "noise_dba": 52.9,
+   "proton_flux_10mev_pfu": 0.5
+  },
+  "mission": {
+   "comm_latency_s": 95,
+   "comm_available": 1,
+   "medkit_min_stock_pct": 70,
+   "open_cases_alerta_or_above": 0
+  },
+  "symptoms": []
+ },
+ {
+  "astronaut_id": "AST-I",
+  "timestamp": "2026-11-09T16:00:00Z",
+  "module": "hab",
+  "vitals": {
+   "hr": 65.29,
+   "hr_rest": 57.95,
+   "hrv_rmssd_ms": 49.93,
+   "ectopic_beats_per_h": 7.34,
+   "afib_detected": 0,
+   "spo2_pct": 98.05,
+   "bp_sys": 120.21,
+   "bp_dia": 74.9,
+   "resp_rate": 14.41,
+   "core_temp_c": 36.75
+  },
+  "radiation": {
+   "dose_rate_msv_h": 0.04,
+   "cumulative_mission_msv": 80.0,
+   "cumulative_career_msv": 220.0
+  },
+  "env": {
+   "co2_mmhg": 2.23,
+   "o2_pct": 21.0,
+   "cabin_temp_c": 22.82,
+   "humidity_pct": 42.46,
+   "noise_dba": 54.85,
+   "proton_flux_10mev_pfu": 0.5
+  },
+  "mission": {
+   "comm_latency_s": 95,
+   "comm_available": 1,
+   "medkit_min_stock_pct": 70,
+   "open_cases_alerta_or_above": 0
+  },
+  "symptoms": []
+ },
+ {
+  "astronaut_id": "AST-I",
+  "timestamp": "2026-11-09T17:00:00Z",
+  "module": "hab",
+  "vitals": {
+   "hr": 63.38,
+   "hr_rest": 56.18,
+   "hrv_rmssd_ms": 48.18,
+   "ectopic_beats_per_h": 7.43,
+   "afib_detected": 0,
+   "spo2_pct": 97.79,
+   "bp_sys": 113.41,
+   "bp_dia": 77.55,
+   "resp_rate": 14.53,
+   "core_temp_c": 36.69
+  },
+  "radiation": {
+   "dose_rate_msv_h": 0.04,
+   "cumulative_mission_msv": 80.0,
+   "cumulative_career_msv": 220.0
+  },
+  "env": {
+   "co2_mmhg": 2.26,
+   "o2_pct": 21.0,
+   "cabin_temp_c": 22.27,
+   "humidity_pct": 46.27,
+   "noise_dba": 49.3,
+   "proton_flux_10mev_pfu": 0.5
+  },
+  "mission": {
+   "comm_latency_s": 95,
+   "comm_available": 1,
+   "medkit_min_stock_pct": 70,
+   "open_cases_alerta_or_above": 0
+  },
+  "symptoms": []
+ },
+ {
+  "astronaut_id": "AST-I",
+  "timestamp": "2026-11-09T18:00:00Z",
+  "module": "hab",
+  "vitals": {
+   "hr": 68.4,
+   "hr_rest": 57.4,
+   "hrv_rmssd_ms": 53.51,
+   "ectopic_beats_per_h": 5.42,
+   "afib_detected": 0,
+   "spo2_pct": 97.5,
+   "bp_sys": 114.86,
+   "bp_dia": 71.17,
+   "resp_rate": 13.85,
+   "core_temp_c": 36.94
+  },
+  "radiation": {
+   "dose_rate_msv_h": 0.04,
+   "cumulative_mission_msv": 80.0,
+   "cumulative_career_msv": 220.0
+  },
+  "env": {
+   "co2_mmhg": 2.11,
+   "o2_pct": 21.0,
+   "cabin_temp_c": 22.87,
+   "humidity_pct": 44.05,
+   "noise_dba": 53.83,
+   "proton_flux_10mev_pfu": 0.5
+  },
+  "mission": {
+   "comm_latency_s": 95,
+   "comm_available": 1,
+   "medkit_min_stock_pct": 70,
+   "open_cases_alerta_or_above": 0
+  },
+  "symptoms": []
+ },
+ {
+  "astronaut_id": "AST-I",
+  "timestamp": "2026-11-09T19:00:00Z",
+  "module": "hab",
+  "vitals": {
+   "hr": 68.51,
+   "hr_rest": 58.33,
+   "hrv_rmssd_ms": 52.94,
+   "ectopic_beats_per_h": 10.82,
+   "afib_detected": 0,
+   "spo2_pct": 97.43,
+   "bp_sys": 119.08,
+   "bp_dia": 73.86,
+   "resp_rate": 13.65,
+   "core_temp_c": 36.95
+  },
+  "radiation": {
+   "dose_rate_msv_h": 0.04,
+   "cumulative_mission_msv": 80.0,
+   "cumulative_career_msv": 220.0
+  },
+  "env": {
+   "co2_mmhg": 2.13,
+   "o2_pct": 21.0,
+   "cabin_temp_c": 22.86,
+   "humidity_pct": 46.46,
+   "noise_dba": 50.05,
+   "proton_flux_10mev_pfu": 0.5
+  },
+  "mission": {
+   "comm_latency_s": 95,
+   "comm_available": 1,
+   "medkit_min_stock_pct": 70,
+   "open_cases_alerta_or_above": 0
+  },
+  "symptoms": []
+ },
+ {
+  "astronaut_id": "AST-I",
+  "timestamp": "2026-11-09T20:00:00Z",
+  "module": "hab",
+  "vitals": {
+   "hr": 69.11,
+   "hr_rest": 56.16,
+   "hrv_rmssd_ms": 53.76,
+   "ectopic_beats_per_h": 10.77,
+   "afib_detected": 0,
+   "spo2_pct": 97.82,
+   "bp_sys": 120.18,
+   "bp_dia": 75.58,
+   "resp_rate": 14.46,
+   "core_temp_c": 36.92
+  },
+  "radiation": {
+   "dose_rate_msv_h": 0.04,
+   "cumulative_mission_msv": 80.0,
+   "cumulative_career_msv": 220.0
+  },
+  "env": {
+   "co2_mmhg": 2.29,
+   "o2_pct": 21.0,
+   "cabin_temp_c": 22.39,
+   "humidity_pct": 43.04,
+   "noise_dba": 51.28,
+   "proton_flux_10mev_pfu": 0.5
+  },
+  "mission": {
+   "comm_latency_s": 95,
+   "comm_available": 1,
+   "medkit_min_stock_pct": 70,
+   "open_cases_alerta_or_above": 0
+  },
+  "symptoms": []
+ },
+ {
+  "astronaut_id": "AST-I",
+  "timestamp": "2026-11-09T21:00:00Z",
+  "module": "hab",
+  "vitals": {
+   "hr": 62.83,
+   "hr_rest": 59.62,
+   "hrv_rmssd_ms": 51.44,
+   "ectopic_beats_per_h": 10.86,
+   "afib_detected": 0,
+   "spo2_pct": 97.03,
+   "bp_sys": 115.57,
+   "bp_dia": 74.83,
+   "resp_rate": 13.74,
+   "core_temp_c": 36.86
+  },
+  "radiation": {
+   "dose_rate_msv_h": 0.04,
+   "cumulative_mission_msv": 80.0,
+   "cumulative_career_msv": 220.0
+  },
+  "env": {
+   "co2_mmhg": 2.15,
+   "o2_pct": 21.0,
+   "cabin_temp_c": 22.12,
+   "humidity_pct": 47.33,
+   "noise_dba": 52.23,
+   "proton_flux_10mev_pfu": 0.5
+  },
+  "mission": {
+   "comm_latency_s": 95,
+   "comm_available": 1,
+   "medkit_min_stock_pct": 70,
+   "open_cases_alerta_or_above": 0
+  },
+  "symptoms": []
+ },
+ {
+  "astronaut_id": "AST-I",
+  "timestamp": "2026-11-09T22:00:00Z",
+  "module": "hab",
+  "vitals": {
+   "hr": 64.61,
+   "hr_rest": 59.14,
+   "hrv_rmssd_ms": 48.82,
+   "ectopic_beats_per_h": 6.82,
+   "afib_detected": 0,
+   "spo2_pct": 97.49,
+   "bp_sys": 119.57,
+   "bp_dia": 74.69,
+   "resp_rate": 13.92,
+   "core_temp_c": 36.84
+  },
+  "radiation": {
+   "dose_rate_msv_h": 0.04,
+   "cumulative_mission_msv": 80.0,
+   "cumulative_career_msv": 220.0
+  },
+  "env": {
+   "co2_mmhg": 2.29,
+   "o2_pct": 21.0,
+   "cabin_temp_c": 22.4,
+   "humidity_pct": 43.12,
+   "noise_dba": 52.23,
+   "proton_flux_10mev_pfu": 0.5
+  },
+  "mission": {
+   "comm_latency_s": 95,
+   "comm_available": 1,
+   "medkit_min_stock_pct": 70,
+   "open_cases_alerta_or_above": 0
+  },
+  "symptoms": []
+ },
+ {
+  "astronaut_id": "AST-I",
+  "timestamp": "2026-11-09T23:00:00Z",
+  "module": "hab",
+  "vitals": {
+   "hr": 63.08,
+   "hr_rest": 56.98,
+   "hrv_rmssd_ms": 53.27,
+   "ectopic_beats_per_h": 7.7,
+   "afib_detected": 0,
+   "spo2_pct": 97.11,
+   "bp_sys": 111.02,
+   "bp_dia": 77.78,
+   "resp_rate": 14.69,
+   "core_temp_c": 36.84
+  },
+  "radiation": {
+   "dose_rate_msv_h": 0.04,
+   "cumulative_mission_msv": 80.0,
+   "cumulative_career_msv": 220.0
+  },
+  "env": {
+   "co2_mmhg": 2.21,
+   "o2_pct": 21.0,
+   "cabin_temp_c": 22.48,
+   "humidity_pct": 47.81,
+   "noise_dba": 54.94,
+   "proton_flux_10mev_pfu": 0.5
+  },
+  "mission": {
+   "comm_latency_s": 320,
+   "comm_available": 0,
+   "medkit_min_stock_pct": 15,
+   "open_cases_alerta_or_above": 1
+  },
+  "symptoms": []
+ }
+]

@@ -1,0 +1,83 @@
+id: DIR-GRAV-003
+title: Descondicionamento cardiovascular
+version: 1.0.0
+hazards: [GRAV]
+body_system: cardiovascular
+summary: >
+  Em microgravidade, o volume plasmático cai e o coração se descondiciona, o que leva à
+  intolerância ortostática na volta à gravidade. Monitora FC de repouso, PA, VFC e VO₂máx.
+kb_refs: [hazards/gravity.md]
+
+triggers:
+  - id: fc-repouso-alterada
+    level: atencao
+    description: FC de repouso média de 3 dias ≥ 15% acima do baseline
+    when: { metric: vitals.hr_rest, agg: mean, window: 3d, op: ">=", value: 15, relative_to: baseline }
+
+  - id: vfc-queda
+    level: atencao
+    description: VFC (RMSSD) média de 3 dias ≥ 25% abaixo do baseline
+    when: { metric: vitals.hrv_rmssd_ms, agg: mean, window: 3d, op: "<=", value: -25, relative_to: baseline }
+
+  - id: vo2-queda
+    level: alerta
+    description: VO₂máx estimado ≥ 15% abaixo do baseline
+    when: { metric: fitness.vo2max_ml_kg_min, agg: last, op: "<=", value: -15, relative_to: baseline }
+
+  - id: hipotensao-sintomatica
+    level: critico
+    description: PA sistólica < 90 mmHg junto com tontura ou desmaio
+    when:
+      all:
+        - { metric: vitals.bp_sys, agg: min, window: 1h, op: "<", value: 90 }
+        - { symptoms_any: [tontura, sincope, pre_sincope, visao_escurecida], window: 1h }
+
+symptoms_to_check: [tontura, pre_sincope, fadiga, palpitacoes, intolerancia_exercicio]
+differential: [DIR-CARD-001, DIR-ENV-002, DIR-ISO-001]
+
+investigation:
+  data_to_collect:
+    - Tendência de 14 dias de FC de repouso, PA e VFC
+    - Ingestão de líquidos e massa corporal (desidratação)
+    - Teste submáximo de exercício no cicloergômetro
+    - ECG se houver palpitações (DIR-CARD-001)
+  questions_to_astronaut:
+    - Sentiu tontura ao mudar de posição ou ao fazer esforço?
+    - Está mais cansado que o normal durante o exercício aeróbico?
+    - Como está a sua hidratação?
+
+actions:
+  atencao:
+    - Verificar hidratação e sono antes de atribuir a causa ao descondicionamento
+    - Reforçar o exercício aeróbico intervalado (esteira/cicloergômetro)
+  alerta:
+    - Aumentar o volume de exercício aeróbico de alta intensidade, conforme plano do fisiologista
+    - Teste de VO₂ a cada 2 semanas
+    - Se faltarem < 30 dias para pouso: planejar carga de fluido e traje anti-G
+  critico:
+    - Deitar (ou prender os pés e elevar as pernas em 1 g/gravidade parcial); hidratação oral
+    - Monitorar PA a cada 5 min até estabilizar
+    - Caso médico prioritário; descartar arritmia e desidratação
+
+astronaut_message:
+  atencao: "Seu coração mostra sinais de adaptação à microgravidade. Mantenha o exercício aeróbico e a hidratação em dia."
+  alerta: "Sua capacidade aeróbica caiu. Vamos reforçar o plano de exercício para proteger seu coração."
+  critico: "Pressão baixa com tontura. Deite ou fique preso numa posição estável, beba líquido e aguarde a reavaliação."
+
+follow_up:
+  atencao: { interval: 1d, duration: 7d }
+  alerta:  { interval: 3d, duration: 30d }
+  critico: { interval: 15m, duration: 6h }
+
+exit_criteria:
+  - description: FC de repouso a menos de 10% do baseline por 3 dias
+    when: { metric: vitals.hr_rest, agg: mean, window: 3d, op: "<", value: 10, relative_to: baseline }
+
+escalation:
+  notify_ground_at: alerta
+  flight_surgeon_required_at: critico
+
+references:
+  - https://www.nasa.gov/hrp/hazards/
+  - HRP Evidence Report — Risk of Orthostatic Intolerance during Re-exposure to Gravity
+  - HRP Evidence Report — Risk of Reduced Physical Performance Capabilities due to Reduced Aerobic Capacity
