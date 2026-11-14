@@ -107,3 +107,36 @@ export const needsReminder = (task: Task): boolean => task.state === 'overdue' |
 
 /** "08:00" (UTC). */
 export const hourLabel = (hour: number): string => `${String(hour).padStart(2, '0')}:00`
+
+// Só o que depende do astronauta vira tarefa; sono, exercício, SpO₂, FC, temperatura e
+// radiação vêm de sensores e não entram na lista de hoje.
+export const MANUAL_PANELS: readonly PanelId[] = ['blood_pressure', 'glucose', 'mood', 'reaction_time', 'amsler']
+
+const MANUAL_TITLES: Partial<Record<PanelId, string>> = {
+  blood_pressure: 'Pressão arterial',
+  glucose: 'Glicemia',
+  mood: 'Humor e estresse',
+  reaction_time: 'Teste de reação',
+  amsler: 'Grade de Amsler',
+}
+
+export const isManualTask = (def: TaskDef): boolean => MANUAL_PANELS.includes(def.panelId)
+
+/** Tarefas manuais de hoje; um indicador que nunca foi medido ainda vira tarefa (pendente). */
+export function manualTasksForDay(panels: Panel[], nowMs: number): Task[] {
+  const placeholders: Panel[] = MANUAL_PANELS.filter((id) => !panels.some((p) => p.id === id)).map((id) => ({
+    id,
+    title: MANUAL_TITLES[id] ?? id,
+    shortTitle: MANUAL_TITLES[id] ?? id,
+    value: '',
+    unit: '',
+    classification: { status: 'green', reason: '' },
+    history: [],
+    spark: [],
+    charts: [],
+    infos: [],
+  }))
+  return tasksForDay([...panels, ...placeholders], nowMs)
+    .filter((t) => isManualTask(t.def))
+    .map((t) => ({ ...t, title: MANUAL_TITLES[t.def.panelId] ?? t.title }))
+}

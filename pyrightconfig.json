@@ -1,0 +1,6 @@
+{
+  "executionEnvironments": [
+    { "root": "backend", "extraPaths": ["backend", "knowledge-base"] },
+    { "root": "knowledge-base", "extraPaths": ["knowledge-base"] }
+  ]
+}

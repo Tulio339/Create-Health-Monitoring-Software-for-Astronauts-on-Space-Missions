@@ -7,6 +7,12 @@ import type {
   Astronaut,
   Baseline,
   BodyRegion,
+  CaseDetail,
+  Directive,
+  IndicatorLevels,
+  IndicatorThresholds,
+  MissionStatus,
+  TelemetryResponse,
   Environment,
   EnvironmentId,
   IndicatorId,
@@ -144,6 +150,38 @@ export async function getMeasurements(filter: MeasurementFilter = {}): Promise<M
 export async function getBaselines(astronautId?: string): Promise<Baseline[]> {
   const path = astronautId ? `/api/baselines?astronaut_id=${encodeURIComponent(astronautId)}` : '/api/baselines'
   return load<Baseline[]>(path)
+}
+
+// --- Motor de regras (fonte de verdade do nível) ------------------------------
+
+const enc = encodeURIComponent
+
+/** Dia, fase, latência, modo de operação, casos abertos e alertas recentes. */
+export const getStatus = (astronautId: string) => load<MissionStatus>(`/api/astronauts/${enc(astronautId)}/status`)
+
+/** Nível de cada indicador segundo as diretivas disparadas (backend/api.py, niveis_por_indicador). */
+export const getIndicatorLevels = (astronautId: string) =>
+  load<IndicatorLevels>(`/api/astronauts/${enc(astronautId)}/indicator-levels`)
+
+/** Limiares absolutos das diretivas por indicador (linhas tracejadas do gráfico de detalhe). */
+export const getIndicatorThresholds = () => load<IndicatorThresholds>('/api/indicator-thresholds')
+
+export const getDirective = (directiveId: string) => load<Directive>(`/api/directives/${enc(directiveId)}`)
+
+export const getCase = (caseId: string) => load<CaseDetail>(`/api/cases/${enc(caseId)}`)
+
+/** Dose de carreira já acumulada e taxa de dose, direto da telemetria (sem somar no navegador). */
+export const getRadiationSeries = (astronautId: string, window = '30d') =>
+  load<TelemetryResponse>(
+    `/api/astronauts/${enc(astronautId)}/telemetry?metrics=radiation.cumulative_career_msv,radiation.dose_rate_msv_h&window=${window}`,
+  )
+
+// Rotas que não mudam durante a sessão ficam em cache; o resto é relido a cada atualização.
+const STATIC_PREFIXES = ['/api/directives', '/api/indicator-thresholds']
+
+/** Descarta os dados vivos do cache para a próxima leitura ir ao backend (atualização periódica). */
+export function refreshLive(): void {
+  for (const key of cache.keys()) if (!STATIC_PREFIXES.some((p) => key.startsWith(p))) cache.delete(key)
 }
 
 // Os textos ficam em knowledge/*.json, fora do código; o Vite os empacota
