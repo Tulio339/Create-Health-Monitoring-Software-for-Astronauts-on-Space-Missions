@@ -1,7 +1,7 @@
 // Única porta de acesso a dados do front.
-// Hoje lê os arquivos estáticos de /public/mock e guarda o que o astronauta registra
-// no localStorage do navegador (funciona offline). Quando o backend existir, basta
-// trocar o corpo das funções deste arquivo — as telas não mudam.
+// getAstronauts/getMeasurements/getBaselines chamam a API real (backend/api.py); o resto
+// (textos de knowledge/, o que o astronauta registra) continua no localStorage do navegador
+// (funciona offline). Ver ../../FLUXO.md para o mapeamento completo rota-a-rota.
 import type {
   AlertStatus,
   Astronaut,
@@ -14,19 +14,21 @@ import type {
   Measurement,
 } from './types'
 
-const MOCK_BASE = `${import.meta.env.BASE_URL}mock`
+// Pode ser trocado com VITE_API_BASE_URL (ver .env.example) se o backend rodar em outro host/porta.
+const API_BASE = import.meta.env.VITE_API_BASE_URL ?? 'http://127.0.0.1:8000'
 
 const cache = new Map<string, Promise<unknown>>()
 
-function load<T>(resource: 'astronauts' | 'measurements' | 'baselines'): Promise<T> {
-  let pending = cache.get(resource)
+/** `path` já inclui query string quando houver (ex.: "/api/measurements?astronaut_id=AST-C"). */
+function load<T>(path: string): Promise<T> {
+  let pending = cache.get(path)
   if (!pending) {
-    pending = fetch(`${MOCK_BASE}/${resource}.json`).then((res) => {
-      if (!res.ok) throw new Error(`Falha ao carregar ${resource} (HTTP ${res.status})`)
+    pending = fetch(`${API_BASE}${path}`).then((res) => {
+      if (!res.ok) throw new Error(`Falha ao chamar ${path} (HTTP ${res.status}). O backend está rodando (python api.py)?`)
       return res.json()
     })
-    pending.catch(() => cache.delete(resource)) // não guardar erro em cache
-    cache.set(resource, pending)
+    pending.catch(() => cache.delete(path)) // não guardar erro em cache
+    cache.set(path, pending)
   }
   return pending as Promise<T>
 }
@@ -78,8 +80,27 @@ const notify = () => listeners.forEach((listener) => listener())
 
 // --- Leitura -----------------------------------------------------------------
 
-export function getAstronauts(): Promise<Astronaut[]> {
-  return load<Astronaut[]>('astronauts')
+/** Forma crua de GET /api/astronauts (backend/api.py) — superset do que o frontend usa. */
+interface BackendAstronaut {
+  id: string
+  name: string
+  role: string
+  /** AAAA-MM-DD; null se o astronauta ainda não recebeu nenhuma amostra de telemetria. */
+  mission_start: string | null
+}
+
+// Astronautas sem telemetria ainda não têm mission_start calculável (ver motor.mission_start_date);
+// cai no início da janela de exemplo do knowledge-base pra não quebrar o cálculo de dia de missão.
+const FALLBACK_MISSION_START = '2026-11-07'
+
+export async function getAstronauts(): Promise<Astronaut[]> {
+  const rows = await load<BackendAstronaut[]>('/api/astronauts')
+  return rows.map((r) => ({
+    id: r.id,
+    name: r.name,
+    role: r.role,
+    mission_start: r.mission_start ?? FALLBACK_MISSION_START,
+  }))
 }
 
 export interface MeasurementFilter {
@@ -90,9 +111,14 @@ export interface MeasurementFilter {
   to?: string
 }
 
-/** Medições (mock + registradas neste navegador) em ordem cronológica. */
+/** Medições (API + registradas neste navegador) em ordem cronológica.
+ * glucose/amsler_marks/amsler_central não têm equivalente no knowledge-base: só vêm do
+ * localStorage (teste/registro manual), nunca da API — ver FLUXO.md. */
 export async function getMeasurements(filter: MeasurementFilter = {}): Promise<Measurement[]> {
-  const all = [...(await load<Measurement[]>('measurements')), ...localMeasurements()]
+  const path = filter.astronautId
+    ? `/api/measurements?astronaut_id=${encodeURIComponent(filter.astronautId)}`
+    : '/api/measurements'
+  const all = [...(await load<Measurement[]>(path)), ...localMeasurements()]
   const from = filter.from ? Date.parse(filter.from) : -Infinity
   const to = filter.to ? Date.parse(filter.to) : Infinity
   return all
@@ -105,9 +131,11 @@ export async function getMeasurements(filter: MeasurementFilter = {}): Promise<M
     .sort((a, b) => a.timestamp.localeCompare(b.timestamp))
 }
 
+/** Baseline pré-voo. O knowledge-base só guarda a média; `std` vem aproximado pelo backend
+ * (5% da média) — não é um desvio-padrão medido. Ver GET /api/baselines em backend/api.py. */
 export async function getBaselines(astronautId?: string): Promise<Baseline[]> {
-  const all = await load<Baseline[]>('baselines')
-  return astronautId ? all.filter((b) => b.astronaut_id === astronautId) : all
+  const path = astronautId ? `/api/baselines?astronaut_id=${encodeURIComponent(astronautId)}` : '/api/baselines'
+  return load<Baseline[]>(path)
 }
 
 // Os textos ficam em knowledge/*.json, fora do código; o Vite os empacota

@@ -1,58 +1,54 @@
 import json
-from pathlib import Path
 
 from mcp.server.fastmcp import FastMCP
 
-from assistente import (avaliar_status, consultar_medicoes, enviar_relatorio_terra,
-                        explicar_indicador, recomendar_acoes)
-from ferramentas import RANGES, exportar_lote, gerar_cenario, gerar_indicador, listar_lotes
-from simulador import ASTRONAUTS, INDICATORS, SCENARIOS
-
-DIRETIVAS = Path(__file__).parent / "diretivas"
+import ferramentas_kb as kb
+from motor import DIRECTIVES
+from prompt_kb import diretiva_investigacao_texto
 
 mcp = FastMCP("monitor-saude-astronautas")
 
-# Tools do agente gerador de dados
-for funcao in (gerar_indicador, gerar_cenario, listar_lotes, exportar_lote):
+# As 11 ferramentas de knowledge-base/agent/tools.json + get_open_cases (contexto dinâmico do
+# caso, no lugar do "## Contexto do caso atual" que o prompt original esperava pré-preenchido)
+FERRAMENTAS = (
+    kb.get_telemetry, kb.get_baseline, kb.get_directive, kb.search_knowledge, kb.lookup_symptom,
+    kb.evaluate_exit_criteria, kb.get_open_cases, kb.ask_astronaut, kb.send_astronaut_message,
+    kb.update_case, kb.log_case_note, kb.schedule_followup, kb.notify_crew_medical,
+    kb.send_ground_packet, kb.check_medkit,
+)
+for funcao in FERRAMENTAS:
     mcp.tool()(funcao)
-
-# Tools do assistente de saúde
-for funcao in (avaliar_status, consultar_medicoes, explicar_indicador, recomendar_acoes, enviar_relatorio_terra):
-    mcp.tool()(funcao)
-
-
-# Prompts: as diretivas que definem o comportamento de cada agente
-@mcp.prompt()
-def diretiva_gerador() -> str:
-    """Diretiva do agente gerador de dados simulados de saúde de astronautas."""
-    return (DIRETIVAS / "DIRETIVA.md").read_text(encoding="utf-8")
 
 
 @mcp.prompt()
-def diretiva_assistente() -> str:
-    """Diretiva do assistente de saúde que conversa com o astronauta."""
-    return (DIRETIVAS / "DIRETIVA_ASSISTENTE.md").read_text(encoding="utf-8")
+def diretiva_investigacao() -> str:
+    """Diretiva do agente de acompanhamento de saúde (knowledge-base/agent/system-prompt.md)."""
+    return diretiva_investigacao_texto()
 
 
-# Resources: dados só de leitura que o agente consulta para não adivinhar nomes
 @mcp.resource("saude://astronautas")
 def listar_astronautas() -> str:
-    """Astronautas disponíveis na simulação."""
-    return json.dumps([{"id": a["id"], "nome": a["name"], "ambiente": a["env"]} for a in ASTRONAUTS],
+    """Astronautas disponíveis no banco de dados."""
+    from motor import conectar
+    conn = conectar()
+    linhas = conn.execute("SELECT id, name, role, mission_name, mission_phase FROM astronaut").fetchall()
+    conn.close()
+    return json.dumps([dict(r) for r in linhas], ensure_ascii=False)
+
+
+@mcp.resource("saude://diretivas")
+def listar_diretivas() -> str:
+    """Diretivas clínicas disponíveis (knowledge-base/directives/*.yaml)."""
+    return json.dumps([{"id": d["id"], "title": d["title"], "hazards": d["hazards"]} for d in DIRECTIVES],
                       ensure_ascii=False)
 
 
-@mcp.resource("saude://indicadores")
-def listar_indicadores() -> str:
-    """Indicadores de saúde com unidade e faixa normal."""
-    return json.dumps({name: {"unidade": INDICATORS[name]["unit"], "faixa_normal": list(RANGES[name])}
-                       for name in RANGES}, ensure_ascii=False)
-
-
-@mcp.resource("saude://cenarios")
-def listar_cenarios() -> str:
-    """Cenários de problemas de saúde que podem ser simulados."""
-    return json.dumps(list(SCENARIOS), ensure_ascii=False)
+@mcp.resource("saude://hazards")
+def listar_hazards() -> str:
+    """Os 5 riscos do NASA Human Research Program monitorados pelo sistema."""
+    return json.dumps({"RAD": "Radiação espacial", "ISO": "Isolamento e confinamento",
+                       "DIST": "Distância da Terra", "GRAV": "Campos de gravidade alterados",
+                       "ENV": "Ambientes hostis/fechados"}, ensure_ascii=False)
 
 
 if __name__ == "__main__":
