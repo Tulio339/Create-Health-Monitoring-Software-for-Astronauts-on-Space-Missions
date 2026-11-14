@@ -1,0 +1,54 @@
+{
+  "indicator": "temperature",
+  "name": "Temperatura corporal",
+  "short_name": "Temperatura",
+  "unit": "°C",
+  "what": "Temperatura do corpo, indicador de febre ou de dificuldade em dissipar calor.",
+  "why_in_space": "Uma infecção a bordo afeta a tripulação inteira e o tratamento é limitado. A temperatura é o sinal mais simples para perceber isso cedo.",
+  "hazards": [
+    {
+      "id": "environment",
+      "name": "Ambiente fechado",
+      "relation": "A nave é um ambiente fechado: microrganismos passam facilmente de uma pessoa para outra e se acumulam em superfícies e no ar."
+    },
+    {
+      "id": "gravity",
+      "name": "Gravidade alterada",
+      "relation": "Em microgravidade o ar quente não sobe e o suor não escorre, então o corpo dissipa menos calor; a temperatura de repouso tende a ficar um pouco acima da medida na Terra."
+    },
+    {
+      "id": "isolation",
+      "name": "Isolamento e confinamento",
+      "relation": "Estresse e sono ruim enfraquecem o sistema imunológico e podem reativar vírus latentes."
+    },
+    {
+      "id": "distance",
+      "name": "Distância da Terra",
+      "relation": "Com estoque limitado de remédios e sem evacuação rápida, identificar a febre no primeiro dia faz diferença."
+    }
+  ],
+  "how_to_measure": [
+    "Espere 30 minutos após exercício, refeição ou bebida quente.",
+    "Posicione o termômetro (ou o sensor de pele) como indicado no aparelho.",
+    "Fique parado até o sinal de leitura concluída.",
+    "Registre o valor e, se estiver alto, repita após 15 minutos."
+  ],
+  "explanations": {
+    "green": "Dentro da faixa esperada e próximo da sua linha de base pessoal.",
+    "yellow": "Fora do seu padrão habitual ou no limite da faixa esperada. Vale agir e acompanhar.",
+    "red": "Fora da faixa segura. Precisa de avaliação do médico de voo."
+  },
+  "actions": {
+    "yellow": [
+      "Medir de novo em 1 hora.",
+      "Aumentar a ingestão de líquidos e descansar.",
+      "Observar outros sintomas (dor, tosse, calafrios).",
+      "Reduzir o contato próximo com a tripulação e higienizar as mãos e as superfícies."
+    ],
+    "red": [
+      "Encaminhar ao médico de voo: enviar as medições e descrever os sintomas.",
+      "Ficar em repouso, hidratar-se e medir a cada 2 horas.",
+      "Manter distância dos colegas e usar máscara até a avaliação."
+    ]
+  }
+}

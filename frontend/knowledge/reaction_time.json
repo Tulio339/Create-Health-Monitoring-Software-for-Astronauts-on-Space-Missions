@@ -1,0 +1,54 @@
+{
+  "indicator": "reaction_time",
+  "name": "Tempo de reação",
+  "short_name": "Reação",
+  "unit": "ms",
+  "what": "Tempo médio de resposta em um teste rápido de atenção, em milissegundos.",
+  "why_in_space": "Respostas mais lentas indicam fadiga antes que a pessoa perceba, e aumentam o risco em tarefas como acoplagem, operação de braço robótico e atividades fora da nave.",
+  "hazards": [
+    {
+      "id": "isolation",
+      "name": "Isolamento e confinamento",
+      "relation": "Sono curto, carga de trabalho alta e monotonia reduzem a atenção ao longo da missão."
+    },
+    {
+      "id": "environment",
+      "name": "Ambiente fechado",
+      "relation": "Dióxido de carbono acima do normal na cabine prejudica a concentração e a tomada de decisão."
+    },
+    {
+      "id": "radiation",
+      "name": "Radiação",
+      "relation": "A exposição prolongada à radiação espacial pode afetar o sistema nervoso central; o tema ainda é estudado."
+    },
+    {
+      "id": "gravity",
+      "name": "Gravidade alterada",
+      "relation": "O cérebro precisa reaprender equilíbrio e coordenação sem gravidade, o que afeta os movimentos nas primeiras semanas."
+    }
+  ],
+  "how_to_measure": [
+    "Faça o teste sempre no mesmo horário, em um local sem distrações.",
+    "Prenda o corpo e apoie o dispositivo para manter a mão firme.",
+    "Toque na tela assim que o sinal aparecer, durante os 3 minutos do teste.",
+    "Registre o tempo médio de resposta mostrado no fim."
+  ],
+  "explanations": {
+    "green": "Dentro da faixa esperada e próximo da sua linha de base pessoal.",
+    "yellow": "Fora do seu padrão habitual ou no limite da faixa esperada. Vale agir e acompanhar.",
+    "red": "Fora da faixa segura. Precisa de avaliação do médico de voo."
+  },
+  "actions": {
+    "yellow": [
+      "Repetir o teste após uma pausa.",
+      "Priorizar o sono na próxima noite.",
+      "Evitar tarefas críticas sem dupla checagem.",
+      "Conferir o nível de dióxido de carbono da cabine."
+    ],
+    "red": [
+      "Encaminhar ao médico de voo: enviar as medições e descrever os sintomas.",
+      "Não operar sistemas críticos até a avaliação.",
+      "Descansar e repetir o teste depois de dormir."
+    ]
+  }
+}

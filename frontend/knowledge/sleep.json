@@ -1,0 +1,49 @@
+{
+  "indicator": "sleep",
+  "name": "Sono",
+  "short_name": "Sono",
+  "unit": "h",
+  "what": "Horas dormidas no último período de sono.",
+  "why_in_space": "Dormir pouco por vários dias piora a atenção, o humor e a imunidade, justamente em um trabalho em que erros custam caro.",
+  "hazards": [
+    {
+      "id": "isolation",
+      "name": "Isolamento e confinamento",
+      "relation": "Em órbita baixa o Sol nasce cerca de 16 vezes por dia e não há ciclo natural de dia e noite; com a carga de trabalho alta, o relógio biológico se desajusta."
+    },
+    {
+      "id": "environment",
+      "name": "Ambiente fechado",
+      "relation": "Ruído constante de ventiladores e bombas, luz, temperatura e dióxido de carbono atrapalham o sono."
+    },
+    {
+      "id": "gravity",
+      "name": "Gravidade alterada",
+      "relation": "Dormir flutuando, preso a um saco de dormir, exige adaptação, e a congestão causada pelo deslocamento de fluidos incomoda."
+    }
+  ],
+  "how_to_measure": [
+    "Use o sensor de pulso durante todo o período de sono.",
+    "Ao acordar, confira no sensor a hora em que adormeceu e a hora em que acordou.",
+    "Registre o total de horas dormidas, sem contar o tempo acordado no saco de dormir.",
+    "Se estiver sem o sensor, anote os horários manualmente."
+  ],
+  "explanations": {
+    "green": "Dentro da faixa esperada e próximo da sua linha de base pessoal.",
+    "yellow": "Fora do seu padrão habitual ou no limite da faixa esperada. Vale agir e acompanhar.",
+    "red": "Fora da faixa segura. Precisa de avaliação do médico de voo."
+  },
+  "actions": {
+    "yellow": [
+      "Antecipar o horário de dormir hoje.",
+      "Reduzir luz e telas 1 hora antes do sono.",
+      "Evitar cafeína na segunda metade do dia.",
+      "Usar máscara de olhos e protetor auricular."
+    ],
+    "red": [
+      "Encaminhar ao médico de voo: enviar as medições e descrever os sintomas.",
+      "Pedir a revisão da agenda para proteger o próximo período de sono.",
+      "Não realizar tarefas críticas sozinho até recuperar o sono."
+    ]
+  }
+}

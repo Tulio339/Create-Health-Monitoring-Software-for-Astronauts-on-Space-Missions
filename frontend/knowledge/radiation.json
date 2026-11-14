@@ -1,0 +1,49 @@
+{
+  "indicator": "radiation",
+  "name": "Radiação",
+  "short_name": "Radiação",
+  "unit": "mSv",
+  "what": "Dose de radiação recebida, em milisieverts. O painel acompanha a dose acumulada em relação ao limite de carreira de 600 mSv.",
+  "why_in_space": "A radiação é considerada o perigo mais difícil de contornar no voo espacial: não se sente, não se vê e o efeito se acumula ao longo da carreira.",
+  "hazards": [
+    {
+      "id": "radiation",
+      "name": "Radiação",
+      "relation": "Fora da proteção da atmosfera e do campo magnético da Terra, a tripulação recebe raios cósmicos e partículas solares. A exposição aumenta o risco de câncer e pode afetar o sistema nervoso e o coração."
+    },
+    {
+      "id": "distance",
+      "name": "Distância da Terra",
+      "relation": "Quanto mais longe e mais longa a missão, maior a dose: além da órbita baixa não há a proteção do campo magnético da Terra."
+    },
+    {
+      "id": "environment",
+      "name": "Ambiente fechado",
+      "relation": "A blindagem da nave é a principal proteção; durante tempestades solares a tripulação se abriga nas áreas mais protegidas."
+    }
+  ],
+  "how_to_measure": [
+    "Mantenha o dosímetro pessoal preso ao corpo durante todo o dia, inclusive ao dormir.",
+    "No horário combinado, leia a dose do dia no dosímetro.",
+    "Registre o valor em mSv; o painel soma à dose acumulada.",
+    "Confira se o dosímetro está carregado e sem alertas."
+  ],
+  "explanations": {
+    "green": "Dentro da faixa esperada e próximo da sua linha de base pessoal.",
+    "yellow": "Fora do seu padrão habitual ou no limite da faixa esperada. Vale agir e acompanhar.",
+    "red": "Fora da faixa segura. Precisa de avaliação do médico de voo."
+  },
+  "actions": {
+    "yellow": [
+      "Permanecer mais tempo nas áreas mais blindadas da nave.",
+      "Conferir se o dosímetro está posicionado corretamente.",
+      "Acompanhar os alertas de atividade solar.",
+      "Rever com a equipe a exposição planejada para o restante da missão."
+    ],
+    "red": [
+      "Encaminhar ao médico de voo: enviar as medições e descrever os sintomas.",
+      "Abrigar-se na área mais blindada durante alertas de tempestade solar.",
+      "Suspender atividades fora da nave até a avaliação."
+    ]
+  }
+}

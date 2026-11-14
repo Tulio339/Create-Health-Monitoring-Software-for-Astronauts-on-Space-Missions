@@ -1,0 +1,49 @@
+{
+  "indicator": "heart_rate",
+  "name": "Frequência cardíaca em repouso",
+  "short_name": "FC",
+  "unit": "bpm",
+  "what": "Número de batimentos do coração por minuto, medido em repouso.",
+  "why_in_space": "A frequência de repouso resume como o corpo está lidando com a missão: sobe com descondicionamento, estresse, falta de sono, desidratação e infecção.",
+  "hazards": [
+    {
+      "id": "gravity",
+      "name": "Gravidade alterada",
+      "relation": "Sem o esforço de bombear contra a gravidade, o coração perde condicionamento e o volume de sangue cai; a frequência de repouso tende a subir se o exercício não compensar."
+    },
+    {
+      "id": "isolation",
+      "name": "Isolamento e confinamento",
+      "relation": "Estresse e privação de sono mantêm o corpo em alerta e elevam a frequência de repouso."
+    },
+    {
+      "id": "environment",
+      "name": "Ambiente fechado",
+      "relation": "Calor e dióxido de carbono acumulado na cabine fazem o coração trabalhar mais."
+    }
+  ],
+  "how_to_measure": [
+    "Meça ao acordar ou após 5 minutos de repouso, sem cafeína nem exercício recente.",
+    "Ajuste o sensor de pulso (relógio ou cinta) firme sobre a pele.",
+    "Fique imóvel e em silêncio por 1 minuto.",
+    "Registre o valor estável mostrado pelo sensor."
+  ],
+  "explanations": {
+    "green": "Dentro da faixa esperada e próximo da sua linha de base pessoal.",
+    "yellow": "Fora do seu padrão habitual ou no limite da faixa esperada. Vale agir e acompanhar.",
+    "red": "Fora da faixa segura. Precisa de avaliação do médico de voo."
+  },
+  "actions": {
+    "yellow": [
+      "Repetir a medição em repouso, sem cafeína recente.",
+      "Verificar hidratação e qualidade do sono.",
+      "Conferir a temperatura: febre eleva a frequência cardíaca.",
+      "Ajustar a intensidade do exercício do dia."
+    ],
+    "red": [
+      "Encaminhar ao médico de voo: enviar as medições e descrever os sintomas.",
+      "Parar o esforço físico e ficar em repouso.",
+      "Avisar imediatamente se houver palpitação, tontura, dor no peito ou desmaio."
+    ]
+  }
+}
